@@ -11,7 +11,7 @@ Notes:
 
 - Tasks should be small, reviewable units of work.
 - Each user story (`UC-...`) should be independently implementable and testable.
-- Tests SHOULD be added or updated before or together with implementation.
+- Tests MUST be added or updated before or together with implementation.
 
 ---
 
@@ -19,19 +19,21 @@ Notes:
 
 Format for each task line:
 
-- `[ID] [P?] [Story?] Description`
+- `[ID] [P?] [Story?] [Spec?] Description (include primary file path)`
 
 Examples:
 
-- `[T-001] [P1] [UC-001] Add API endpoint for basic sales recording`
-- `[T-002] [P1] [UC-001] Add unit tests for sales recording service`
-- `[T-003] [P2] [UC-002] Implement UI for filtering customer list`
+- `[T-001] [P1] [UC-001] [S-LEADS-001] Add API endpoint for basic sales recording in backend/src/api/sales.ts`
+- `[T-002] [P1] [UC-001] [S-LEADS-001] Add unit tests for sales recording service in backend/tests/unit/sales.spec.ts`
+- `[T-003] [P2] [UC-002] [S-LEADS-002] Implement UI for filtering customer list in frontend/src/pages/clients.tsx`
 
 Where:
 
 - `ID` is a unique task ID (for example `T-001`).
 - `[P?]` is optional priority label (for example `P1`, `P2`).
-- `[Story?]` is optional user story ID (`UC-...`).
+- `[Story?]` is the user story ID (`UC-...`).
+- `[Spec?]` is the relevant spec ID (`S-...`) when applicable.
+- Include at least one primary file path to reduce conflicts and improve clarity.
 
 ---
 
@@ -43,7 +45,7 @@ Where:
 
 ---
 
-## 3. Phase 1: Backend – Contracts and Data
+## 3. Phase 1: Backend / Contracts and Data
 
 - `[T-010] [P1] Update or add domain models for this feature`
 - `[T-011] [P1] Apply schema changes (migrations) for referenced masters or entities`
@@ -75,7 +77,7 @@ Where:
 
 - `[T-040] [P1] Run all tests (unit, integration, E2E) and capture results`
 - `[T-041] [P1] Investigate any failing tests; classify failure (spec, tests, implementation, environment)`
-- `[T-042] [P1] Ensure no tests were weakened or removed solely to pass CI`
+- `[T-042] [P1] Ensure no tests were weakened or removed solely to pass CI; if weakening is necessary, record Issue and approval path`
 - `[T-043] [P2] Remove dead code and temporary instrumentation`
 - `[T-044] [P2] Verify code style and linting (for example npm run lint)`
 
@@ -91,9 +93,9 @@ Where:
 
 ---
 
-## 8. Optional Story-Based Grouping
+## 8. Story-Based Grouping (Recommended)
 
-If you want to group tasks by user story, you can add sections like:
+Group tasks by user story so each slice is independently implementable/testable:
 
 - `User Story UC-001: [Title]`
   - `[T-101] [P1] Implement domain logic for UC-001`
@@ -109,7 +111,9 @@ If you want to group tasks by user story, you can add sections like:
 ## 9. Notes
 
 - Tasks should minimize cross-file conflicts between developers and AI agents.
-- Each task should have a clear “definition of done” aligned with the spec.
+- Each task should have a clear "definition of done" aligned with the spec.
 - Prefer more tasks with smaller scope over fewer tasks with vague scope.
 - When shared masters or APIs are impacted, ensure the Overview spec and
   dependent Feature specs are updated and tasks reflect this.
+- Verify tests fail before implementing, commit after each logical group,
+  and stop at checkpoints to validate each story independently.

@@ -2,7 +2,7 @@
 ================================================================================
 SYNC IMPACT REPORT
 ================================================================================
-Version change: 1.0.0 → 1.2.0 (MINOR - added explicit Overview/Feature structure and shared domain rules)
+Version change: 1.0.0 -> 1.2.0 (MINOR - added explicit Overview/Feature structure and shared domain rules)
 
 Modified principles:
   - Clarified spec-driven workflow (Overview + Feature spec structure)
@@ -25,9 +25,20 @@ Follow-up TODOs:
 
 This constitution defines the foundational principles for projects that adopt
 spec-driven development using Spec Kit, GitHub, and AI coding assistants.
+These principles apply to humans and AI agents; all development decisions,
+code reviews, and architectural choices MUST align with them.
 
-All development decisions, code reviews, and architectural choices MUST align
-with these principles.
+---
+
+## Terminology and Scope
+
+- **Overview spec**: Single source of truth for shared master data (`M-*`),
+  shared API contracts (`API-*`), cross-cutting rules, and domain vocabulary.
+- **Feature spec**: One per feature slice (screen, user flow, change set).
+  Feature specs do not redefine shared masters/APIs; they reference Overview IDs.
+- **Specification IDs**: Stable identifiers (for example `S-001`, `UC-001`,
+  `M-CLIENTS`, `API-PROJECT_ORDERS-LIST`) used across specs, plans, tasks,
+  PRs, and tests for traceability.
 
 ---
 
@@ -169,7 +180,7 @@ Non-negotiable rules:
   AI agents MUST NOT create branches, commits, or pushes that violate this workflow.
 
 - After a PR is merged, the corresponding feature branch SHOULD be deleted
-  (GitHub’s automatic branch deletion is recommended).
+  (GitHub's automatic branch deletion is recommended).
 
 Rationale: A disciplined Git workflow ensures that every change is reviewable,
 auditable, and traceable back to its underlying requirements.
@@ -214,7 +225,7 @@ traceability, and quality of the codebase.
 ## VII. Test Integrity and Problem Diagnosis
 
 Tests exist to enforce specified behavior, not to merely satisfy tooling or
-achieve a “green” CI state.
+achieve a "green" CI state.
 
 Non-negotiable rules:
 
@@ -228,8 +239,7 @@ Non-negotiable rules:
 
 - It is strictly prohibited to:
 
-  - Change implementation code solely to “make a test pass”
-    when that behavior conflicts with the specification.
+  - Change implementation code solely to "make a test pass" when that behavior conflicts with the specification.
   - Change, relax, or delete tests solely to achieve a green CI
     without documenting the underlying reasoning.
 
@@ -257,9 +267,16 @@ Non-negotiable rules:
 
 - AI agents MUST NOT:
 
-  - Mark tests as “skipped”, “expected to fail”, or remove them,
+  - Mark tests as "skipped" or "expected to fail" or remove them,
 
   without explicit human approval and corresponding Issue documentation.
+
+- Any intentional weakening of tests (loosening assertions, lowering coverage,
+  skipping execution) requires:
+
+  - An Issue capturing the rationale and impacted spec IDs.
+  - Reviewer approval recorded in the PR.
+  - A follow-up task if behavior is temporarily allowed to drift.
 
 Rationale: High test coverage without integrity leads to false confidence.
 Aligning tests, specs, and implementation ensures that green builds truly
@@ -288,8 +305,8 @@ Non-negotiable rules:
 
   - MUST NOT re-define shared master data or shared API contracts.
   - MUST declare which masters and APIs they depend on by referencing IDs
-    from the Overview spec (for example “Depends on `M-CLIENTS` and
-    `API-PROJECT_ORDERS-LIST`”).
+    from the Overview spec (for example "Depends on `M-CLIENTS` and
+    `API-PROJECT_ORDERS-LIST`").
   - Focus on specific user stories, flows, UI behavior, and how they use
     the shared domain model.
 

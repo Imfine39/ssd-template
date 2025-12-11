@@ -1,11 +1,10 @@
 # [PROJECT NAME] Agent Guide
 
-Auto-generated from all specs and plans.  
+Auto-generated from specs and plans.  
 Last updated: [DATE]
 
-This document summarizes how AI coding assistants (for example Claude Code) should
-behave in this repository, based on the Engineering Constitution and the current
-set of specifications.
+This document summarizes how AI coding assistants should behave in this repository,
+based on the Engineering Constitution and the current set of specifications.
 
 ---
 
@@ -19,7 +18,7 @@ set of specifications.
 
 ## 2. Active Technologies
 
-To be filled automatically from plans and specs:
+Filled automatically from plans and specs:
 
 - Languages:
 - Frameworks:
@@ -42,82 +41,70 @@ Summarize the main directories and their roles. For example:
 
 ---
 
-## 4. Specification Structure
+## 4. Context Priority for Agents
 
-- There is exactly one Overview (domain) spec per major system (or per bounded context).
-- Feature specs are organized per feature slice (screen, user flow, or change set).
-- Shared masters and APIs are defined only in the Overview spec, with IDs such as:
+When working on a change, read in this order:
+
+1) Overview spec (shared masters/APIs, domain rules)  
+2) Relevant Feature spec(s) for the change  
+3) Plan (`plan.md`) for technical approach and file targets  
+4) Tasks (`tasks.md`) for concrete steps and file paths  
+5) Recent changes (last merged features) for surrounding context
+
+---
+
+## 5. Specification Structure
+
+- Exactly one Overview spec per major system/bounded context.
+- Feature specs are per feature slice (screen, flow, change set).
+- Shared masters/APIs are defined only in the Overview spec:
 
   - Masters: `M-CLIENTS`, `M-PROJECT_ORDERS`, ...
   - APIs: `API-PROJECT_ORDERS-LIST`, ...
 
-- Feature specs reference these IDs and must not redefine the underlying models.
+- Feature specs reference these IDs and MUST NOT redefine the models.
+- If a shared master/API changes:
 
-AI agents MUST:
-
-- Read the Overview spec when shared domain behavior is involved.
-- Read the relevant Feature spec(s) for the specific change being implemented.
-- Respect the spec-driven workflow: `/speckit.specify → /speckit.plan → /speckit.tasks → implementation`.
+  1) Update the Overview spec.  
+  2) Review/update dependent Feature specs.  
+  3) Update implementation and tests.
 
 ---
 
-## 5. Git and Issue Workflow (for Agents)
+## 6. Git and Issue Workflow (for Agents)
 
 - All non-trivial changes MUST be linked to a GitHub Issue.
-- AI agents SHOULD:
-
-  - Create an Issue when none exists and the user has requested a change.
-  - Create or switch to an Issue-linked branch (for example `feature/123-short-title`).
-  - Keep changes small and focused on a single Issue and feature.
-
+- Use Issue-linked branches (for example `feature/123-short-title`, `spec/123-overview`).
+- Keep changes small and focused on a single Issue/feature.
 - PRs created by agents MUST:
 
   - Reference Issue(s) (for example `Fixes #123`).
   - Reference Spec ID(s) (for example `Implements S-001, UC-003`).
-  - Include a summary of tests run and results.
+  - Summarize tests run and results.
 
 ---
 
-## 6. Testing Expectations
+## 7. Testing Expectations
 
-- Before implementing, agents SHOULD:
-
-  - Identify which tests need to be added or updated according to the spec.
-  - Ensure that tests fail when behavior is missing or incorrect.
-
-- Agents MUST NOT:
-
-  - Modify tests solely to make CI green.
-  - Relax assertions or skip tests without explicit human approval.
-
-- When tests fail, agents SHOULD:
-
-  - Attempt to classify the failure (spec vs test vs implementation vs environment).
-  - Propose an Issue or update an existing one with diagnosis details.
+- Before implementing: identify tests to add/update from the spec; aim for fail-first.
+- Do NOT weaken, skip, or delete tests just to make CI pass without human approval and an Issue.
+- On failure, classify cause (spec vs test vs implementation vs environment) and record it.
+- Keep changes reviewable: prefer focused test + code pairs per user story.
 
 ---
 
-## 7. Code Style and Patterns
+## 8. Code Style and Patterns
 
-Provide high-level guidance based on actual usage in the project:
+Provide project-specific guidance:
 
-- Preferred architectural patterns (for example layered architecture, hexagonal).
-- Naming conventions for:
-
-  - Files
-  - Components
-  - APIs
-  - Tests
-
-- Guidelines for:
-
-  - Error handling
-  - Logging
-  - Feature flags
+- Preferred architectural patterns (for example layered, hexagonal).
+- Naming conventions (files, components, APIs, tests).
+- Error handling and logging expectations.
+- Feature flag guidelines (if any).
 
 ---
 
-## 8. Recent Changes (Context for Agents)
+## 9. Recent Changes (Context for Agents)
 
 Summaries of the last few merged features:
 
@@ -125,17 +112,15 @@ Summaries of the last few merged features:
 - [FEATURE-2]: [Short description and impact]
 - [FEATURE-3]: [Short description and impact]
 
-This helps agents understand current direction and context.
-
 ---
 
-## 9. Manual Notes (Human Maintained)
+## 10. Manual Notes (Human Maintained)
 
 Use this section to record human insights that AI agents should know, for example:
 
 - Domain nuances that are hard to infer from code or specs.
 - Known technical debts and temporary workarounds.
-- Preferred trade-offs for this particular organization.
+- Preferred trade-offs for this organization.
 
 Manual additions start below:
 

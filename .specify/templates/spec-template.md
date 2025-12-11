@@ -19,13 +19,15 @@ Related Plan(s): [plan-id or link]
 
 For Overview specs:
 
-- Describe the overall domain (for example “Sales Management System”).
+- Describe the overall domain (for example "Sales Management System").
 - Clarify which subsystems and feature specs this Overview covers.
 
 For Feature specs:
 
-- Describe the specific feature slice (for example “Basic sales recording”).
+- Describe the specific feature slice (for example "Basic sales recording").
 - Clarify which part of the overall system this implements.
+- Confirm how this feature will be independently testable and deliver value
+  even if other features are not present.
 
 ---
 
@@ -62,6 +64,8 @@ For Feature specs:
 
 - Feature specs MUST NOT redefine these shared models.
   They MUST refer back to the Overview spec.
+- If this feature requires a change to a shared master/API, the Overview spec
+  MUST be updated first.
 
 ### 3.2 New or Feature-Specific Domain Concepts
 
@@ -134,7 +138,8 @@ For Feature specs:
 
 ## 6. User Stories / Use Cases
 
-Each user story should be independently testable.
+Each user story should be independently testable. Give each story a priority
+and describe how it can be validated on its own.
 
 Format example:
 
@@ -150,7 +155,29 @@ List all relevant user stories for this spec.
 
 ---
 
-## 7. UI / UX Behavior (if applicable)
+## 7. Functional Requirements (FR)
+
+- Enumerate `FR-001`, `FR-002`, ... with clear, testable behaviors.
+- Mark any unclear requirement with `NEEDS CLARIFICATION` and link to open questions.
+
+---
+
+## 8. Edge Cases
+
+- Boundary conditions, error scenarios, concurrency or ordering concerns.
+- Expected behavior when dependencies are unavailable or return errors.
+
+---
+
+## 9. Success Criteria (SC)
+
+- Define measurable outcomes (`SC-001`, `SC-002`, ...), technology-agnostic.
+- Examples: user task completion time, error budget, throughput/latency targets,
+  satisfaction metrics, reduction of support tickets.
+
+---
+
+## 10. UI / UX Behavior (if applicable)
 
 - Screens or views involved:
 - Navigation and entry points:
@@ -159,7 +186,7 @@ List all relevant user stories for this spec.
 
 ---
 
-## 8. Business Rules and Constraints
+## 11. Business Rules and Constraints
 
 - Validation rules:
 - Calculation rules (for example revenue, discounts, charge rate):
@@ -171,7 +198,7 @@ spec and refer to it here by ID.
 
 ---
 
-## 9. Non-Functional Requirements
+## 12. Non-Functional Requirements
 
 - Performance constraints (latency, throughput, batch size):
 - Security and access control:
@@ -181,7 +208,7 @@ spec and refer to it here by ID.
 
 ---
 
-## 10. Testing Strategy (Spec Level)
+## 13. Testing Strategy (Spec Level)
 
 - For each `UC-XXX`:
 
@@ -190,10 +217,11 @@ spec and refer to it here by ID.
 
 - How will we verify that behavior matches this spec
   (not just that tests happen to pass)?
+- Note any tests that must be added before implementation (fail-first plan).
 
 ---
 
-## 11. Impact and Migration
+## 14. Impact and Migration
 
 - Impact on existing data:
 - Migration strategy (if schema or master data changes are involved):
@@ -201,7 +229,7 @@ spec and refer to it here by ID.
 
 ---
 
-## 12. Open Questions and Assumptions
+## 15. Open Questions and Assumptions
 
 - Open questions:
 - Assumptions that require confirmation:
@@ -209,7 +237,7 @@ spec and refer to it here by ID.
 
 ---
 
-## 13. Traceability
+## 16. Traceability
 
 - Related Overview spec ID(s) (if this is a Feature spec):
 - Related Feature spec ID(s) (if this is an Overview spec):
