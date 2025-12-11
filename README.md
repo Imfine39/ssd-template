@@ -27,14 +27,19 @@ AI コーディングアシスタント（Claude Code 等）と組み合わせ�
     .
     ├── .claude/
     │   └── commands/                 # Claude Code スラッシュコマンド
-    │       ├── speckit.specify.md        # 仕様作成
+    │       ├── speckit.branch.md         # ブランチ作成（採番）
+    │       ├── speckit.bootstrap.md      # 目的→Overview/Feature提案・生成
+    │       ├── speckit.propose-features.md # 既存OverviewからFeature提案・生成
+    │       ├── speckit.specify.md        # 仕様作成/更新
     │       ├── speckit.plan.md           # 計画作成
     │       ├── speckit.tasks.md          # タスク作成
     │       ├── speckit.implement.md      # 実装実行
-    │       ├── speckit.clarify.md        # 仕様の曖昧点確認
     │       ├── speckit.checklist.md      # チェックリスト生成
-    │       ├── speckit.analyze.md        # 整合性分析
-    │       ├── speckit.constitution.md   # 憲法更新
+    │       ├── speckit.analyze.md        # コンテキスト収集
+    │       ├── speckit.clarify.md        # 曖昧点確認
+    │       ├── speckit.constitution.md   # 憲法確認
+    │       ├── speckit.pr.md             # PR 作成ラッパー
+    │       ├── speckit.scaffold.md       # spec scaffold ガイド
     │       └── speckit.taskstoissues.md  # タスク→Issue変換
     ├── .specify/
     │   ├── memory/
@@ -46,6 +51,10 @@ AI コーディングアシスタント（Claude Code 等）と組み合わせ�
     │   │   ├── checklist-template.md
     │   │   └── agent-file-template.md
     │   └── scripts/                  # ユーティリティスクリプト
+    │       ├── branch.js                 # ブランチ作成/採番
+    │       ├── scaffold-spec.js          # Overview/Feature spec scaffold + Feature index自動追記
+    │       ├── spec-lint.js              # Overview/Feature 整合性lint
+    │       └── pr.js                     # PR作成ラッパー（spec-lint実行込み）
     └── CLAUDE.md                     # AI 向け開発ガイド
 
 ---
@@ -79,13 +88,18 @@ AI コーディングアシスタント（Claude Code 等）と組み合わせ�
 ### 2. Overview Spec の作成
 
 - 最初の Issue を作成（例: “System Overview Spec を定義する”）。
-- Claude Code に `.claude/commands/speckit.specify.md` を使って Overview Spec を作成させる。
+- ブランチを作成: `node .specify/scripts/branch.js --type spec --slug overview --issue <num>`
+- Claude Code に `.claude/commands/speckit.bootstrap.md` を使って Overview と Feature 候補を作成させる
+  （もしくは `node .specify/scripts/scaffold-spec.js --kind overview ...` で手動作成）。
   - Overview には以下を記述する。
     - ドメイン全体の概要
     - 共通マスタ定義（`M-CLIENTS` 等）
     - 共通 API 定義（`API-PROJECT_ORDERS-LIST` 等）
     - 共通ビジネスルール・ステータス定義
     - 非機能要件（性能・セキュリティ等）
+  - Feature を scaffold した場合、Overview の Feature index 表
+    `| Feature ID | Title | Path | Status |` が自動追記される。
+  - `node .specify/scripts/spec-lint.js` を実行して整合性チェック。
 
 ここで定義した Overview Spec が、全 Feature Spec から参照される「唯一の真実」となります。
 
@@ -96,7 +110,9 @@ AI コーディングアシスタント（Claude Code 等）と組み合わせ�
 1. Issue 作成  
    - 例: “#10 Basic Sales Recording 機能を追加”
 2. `/speckit.specify`  
-   - Feature Spec を作成し、対象ユースケース（UC-...）と Overview の依存マスタ/API（M-..., API-...）を明記。
+   - ブランチ: `node .specify/scripts/branch.js --type feature --slug <slug> --issue <num>`
+   - Feature Spec を作成（`/speckit.propose-features` で提案＋scaffold も可）。
+   - 対象ユースケース（UC-...）と Overview の依存マスタ/API（M-..., API-...）を明記。
 3. `/speckit.plan`  
    - Spec を元に実装計画（plan.md）を生成。
 4. `/speckit.tasks`  
@@ -106,7 +122,8 @@ AI コーディングアシスタント（Claude Code 等）と組み合わせ�
 6. テスト  
    - 単体・結合・E2E テストを実行し、結果を記録。
 7. PR 作成  
-   - `gh pr create` で PR を作成。
+   - `node .specify/scripts/pr.js --title "feat: ..." --body "Fixes #..\\nImplements S-...\\nTests: ..."`（デフォルトで spec-lint 実行）
+   - 必要ならテストコマンドを別途実行し、その結果を PR body に記載。
    - PR には以下を含める。
      - 関連 Issue（`Fixes #10` 等）
      - 関連 Spec ID（`Implements S-ORDERS-001, UC-001` 等）
