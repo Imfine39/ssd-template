@@ -21,7 +21,7 @@ incorrect behavior.
      the impact on existing work.
 3. **Create a spec branch** - `spec/<issue>-fix-<spec-id>`
 4. **Update the spec**:
-   - Run `/speckit.specify` to correct the specification.
+   - Run `/speckit.spec` to correct the specification.
    - Update the Changelog section with the correction.
    - Update affected UC, FR, and SC.
 5. **Update dependent artifacts**:

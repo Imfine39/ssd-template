@@ -2,12 +2,8 @@
 description: Record implementation feedback and discoveries back to the spec.
 handoffs:
   - label: Update Spec
-    agent: speckit.specify
+    agent: speckit.spec
     prompt: Update the spec with the recorded feedback
-    send: true
-  - label: Create Issue
-    agent: speckit.taskstoissues
-    prompt: Create an issue for the discovered problem
     send: true
 ---
 

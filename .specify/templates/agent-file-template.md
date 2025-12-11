@@ -71,11 +71,44 @@ When working on a change, read in this order:
 
 ---
 
-## 6. Git and Issue Workflow (for Agents)
+## 6. 6-Step Workflow and Commands
+
+### 6-Step Workflow
+
+```
+Step 1: Entry Point (add/fix/issue/bootstrap)
+  → Issue → Branch → Spec → Clarify loop → Human approves spec
+
+Step 2: /speckit.plan
+  → Plan → Human approves plan
+
+Step 3: /speckit.tasks
+  → Tasks → Human confirms
+
+Step 4: /speckit.implement
+  → Implementation → Human approves feedback if any
+
+Step 5: /speckit.pr
+  → Analyze (recommended) → PR creation
+
+Step 6: PR Review
+  → Human approves and merges
+```
+
+### Available Commands
+
+**Entry Points**: `bootstrap`, `add`, `fix`, `issue`
+**Base Commands**: `spec`, `plan`, `tasks`, `implement`, `pr`
+**Utilities**: `analyze`, `feedback`, `clarify`, `lint`
+
+---
+
+## 7. Git and Issue Workflow (for Agents)
 
 - All non-trivial changes MUST be linked to a GitHub Issue.
 - Use Issue-linked branches (for example `feature/123-short-title`, `spec/123-overview`).
 - Keep changes small and focused on a single Issue/feature.
+- Use `/speckit.pr` to create PRs (runs spec-lint automatically).
 - PRs created by agents MUST:
 
   - Reference Issue(s) (for example `Fixes #123`).
@@ -84,7 +117,7 @@ When working on a change, read in this order:
 
 ---
 
-## 7. Testing Expectations
+## 8. Testing Expectations
 
 - Before implementing: identify tests to add/update from the spec; aim for fail-first.
 - Do NOT weaken, skip, or delete tests just to make CI pass without human approval and an Issue.
@@ -93,7 +126,7 @@ When working on a change, read in this order:
 
 ---
 
-## 8. Code Style and Patterns
+## 9. Code Style and Patterns
 
 Provide project-specific guidance:
 
@@ -104,7 +137,7 @@ Provide project-specific guidance:
 
 ---
 
-## 9. Recent Changes (Context for Agents)
+## 10. Recent Changes (Context for Agents)
 
 Summaries of the last few merged features:
 
@@ -114,7 +147,7 @@ Summaries of the last few merged features:
 
 ---
 
-## 10. Manual Notes (Human Maintained)
+## 11. Manual Notes (Human Maintained)
 
 Use this section to record human insights that AI agents should know, for example:
 

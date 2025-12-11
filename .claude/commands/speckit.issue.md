@@ -1,82 +1,108 @@
 ---
-description: Select an existing GitHub Issue (from backlog) and start the appropriate workflow.
+description: Start from existing Issue (Entry Point). Selects Issue, creates Branch, Spec with clarify loop.
 handoffs:
-  - label: Start Feature (add)
-    agent: speckit.add
-    prompt: Start feature workflow for the selected issue
-    send: true
-  - label: Start Bug Fix (fix)
-    agent: speckit.fix
-    prompt: Start bug fix workflow for the selected issue
+  - label: Continue to Plan
+    agent: speckit.plan
+    prompt: Create plan for the approved spec
     send: true
 ---
 
 ## Purpose
 
-Select an existing Issue from the backlog and start development.
-Issues are typically created by:
-- `/speckit.bootstrap` (initial Feature batch)
-- `/speckit.propose-features` (additional Features)
-- Humans directly creating Issues in GitHub
+**Entry point** for existing Issues (from bootstrap, human creation, etc.).
+Lists Issues → User selects → Creates Branch → Creates/enhances Spec with clarify loop.
+
+**Use this when:** Issues already exist and you want to start working on one.
+**Use `/speckit.add` or `/speckit.fix` instead when:** No Issue exists yet.
 
 ## Steps
 
 1) **Fetch open issues**:
-   - Run: `gh issue list --state open --limit 30 --json number,title,labels,body`
-   - Parse the JSON response
+   ```bash
+   gh issue list --state open --limit 30 --json number,title,labels,body
+   ```
 
 2) **Categorize and display**:
-
-   **Backlog Features** (label: `feature` + `backlog`):
    ```
+   === Open Issues ===
+
    Backlog Features:
      #2 [backlog] S-INVENTORY-001: 在庫一覧・検索
      #3 [backlog] S-RECEIVING-001: 入荷処理
-     #4 [backlog] S-SHIPPING-001: 出荷処理
-   ```
 
-   **Backlog Bugs** (label: `bug` + `backlog`):
-   ```
    Backlog Bugs:
      #10 [backlog] ログイン時に特殊文字でエラー
-   ```
 
-   **In Progress** (label: `in-progress`):
-   ```
    In Progress:
      #5 [in-progress] S-STOCKTAKE-001: 棚卸し
-   ```
 
-   **Other Open Issues**:
-   ```
    Other:
      #15 タイポ修正
+
+   どのIssueを選択しますか？
    ```
 
-3) **Ask human to select**:
-   ```
-   どのIssueを選択しますか？ (番号を入力)
+3) **Validate selection**:
+   - If `in-progress`: Warn "既に作業中です。続行しますか？"
+   - If closed: Warn "このIssueは閉じられています"
+
+4) **Determine workflow type**:
+   - Labels `bug`, `fix`, `defect` → Bug fix workflow
+   - Labels `feature`, `enhancement` → Feature workflow
+   - If unclear, analyze title/body or ask human
+
+5) **Update Issue label**:
+   ```bash
+   gh issue edit <num> --remove-label backlog --add-label in-progress
    ```
 
-4) **Analyze selected issue**:
-   - Check labels:
-     - `bug`, `fix`, `defect` → Bug fix workflow (`/speckit.fix`)
-     - `feature`, `enhancement` → Feature workflow (`/speckit.add`)
-   - If no clear label, analyze title and body:
-     - Contains "bug", "error", "fix", "broken" → Bug fix
-     - Contains "add", "new", "feature", "implement" → Feature
-   - If still unclear, ask human to confirm
+6) **Create branch**:
+   - Feature: `node .specify/scripts/branch.js --type feature --slug <slug> --issue <num>`
+   - Bug fix: `node .specify/scripts/branch.js --type fix --slug <slug> --issue <num>`
 
-5) **Determine and start workflow**:
-   - Bug → `/speckit.fix #<num>`
-   - Feature → `/speckit.add #<num>`
+7) **Analyze codebase** (context collection):
+   - Use Serena to explore existing code structure
+   - Identify related components, patterns, dependencies
+   - Use context7 for library documentation if needed
+
+8) **Create or enhance spec**:
+   - Check if spec scaffold exists (from bootstrap)
+   - If exists: Read and enhance with details
+   - If not: Scaffold new spec
+   - For Feature: Fill UC/FR/SC sections
+   - For Bug fix: Update affected spec's Changelog
+   - Mark unclear items as `[NEEDS CLARIFICATION]`
+
+9) **Run lint**:
+   ```bash
+   node .specify/scripts/spec-lint.js
+   ```
+
+10) **Clarify loop**:
+    - While `[NEEDS CLARIFICATION]` items exist:
+      - Show items to human
+      - Ask for clarification
+      - Update spec
+      - Re-run lint
+    - Continue until all resolved
+
+11) **Request human review**:
+    - Show spec summary (UC/FR/SC counts)
+    - Wait for approval
 
 ## Output
 
-- Categorized list of open Issues
-- Selected Issue details
-- Workflow type (add/fix)
-- Transition to appropriate command
+- Selected Issue number and type
+- Branch name
+- Spec path
+- Spec summary
+- Next step: `/speckit.plan`
+
+## Human Checkpoints
+
+1. Select Issue to work on
+2. Answer clarification questions (in loop)
+3. Review and approve spec
 
 ## Example
 
@@ -88,7 +114,6 @@ AI: === Open Issues ===
     Backlog Features:
       #2 [backlog] S-INVENTORY-001: 在庫一覧・検索
       #3 [backlog] S-RECEIVING-001: 入荷処理
-      #4 [backlog] S-SHIPPING-001: 出荷処理
 
     Backlog Bugs:
       (なし)
@@ -96,22 +121,37 @@ AI: === Open Issues ===
     In Progress:
       #5 [in-progress] S-STOCKTAKE-001: 棚卸し
 
-    Other:
-      #15 READMEのタイポ修正
-
     どのIssueを選択しますか？
 
 人間: 2
 
 AI: Issue #2 "S-INVENTORY-001: 在庫一覧・検索" を選択しました
-    ラベル: feature, backlog
-    → Feature workflow を開始します
+    種類: Feature
 
-    /speckit.add #2 を実行します...
+    ラベルを backlog → in-progress に更新しました
+    Branch feature/2-inventory を作成しました
+
+    コードベースを分析中...
+    既存のSpec scaffoldを拡張します...
+
+    [NEEDS CLARIFICATION]:
+    1. 検索対象のフィールドは？ (名前/SKU/カテゴリ等)
+    2. ページネーションは必要？
+
+人間: 1. 名前とSKU  2. 20件ずつ
+
+AI: Spec を更新しました。
+    [NEEDS CLARIFICATION] はすべて解決しました。
+
+    Spec: .specify/specs/s-inventory-001/spec.md
+    概要:
+    - UC: 3個
+    - FR: 5個
+    - SC: 2個
+
+    レビューしてください。
+
+人間: OK
+
+AI: /speckit.plan を実行します...
 ```
-
-## Notes
-
-- Issues with `in-progress` label are shown but will warn if selected
-- Closed issues are not shown by default
-- Use `gh issue list --state all` to see closed issues if needed

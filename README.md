@@ -26,25 +26,26 @@ AI コーディングアシスタント（Claude Code 等）と組み合わせ�
 
     .
     ├── .claude/
-    │   └── commands/                 # Claude Code スラッシュコマンド
-    │       ├── speckit.add.md            # 機能追加開始（Issue自動作成→Branch→Spec）
-    │       ├── speckit.fix.md            # バグ修正開始（Issue自動作成→Branch→Spec更新）
-    │       ├── speckit.issue.md          # 既存Issue選択→add/fix自動判定
-    │       ├── speckit.plan.md           # 計画・タスク作成
-    │       ├── speckit.implement.md      # 実装（feedback時は人間確認）
-    │       ├── speckit.pr.md             # 整合性確認→PR作成
-    │       ├── speckit.feedback.md       # 実装→Specフィードバック
-    │       ├── speckit.branch.md         # ブランチ作成（採番）
-    │       ├── speckit.bootstrap.md      # 目的→Overview/Feature提案・生成
-    │       ├── speckit.propose-features.md # 既存OverviewからFeature提案・生成
-    │       ├── speckit.specify.md        # 仕様作成/更新
-    │       ├── speckit.tasks.md          # タスク作成
-    │       ├── speckit.checklist.md      # チェックリスト生成
-    │       ├── speckit.analyze.md        # コンテキスト収集
+    │   └── commands/                 # Claude Code スラッシュコマンド (13個)
+    │       │
+    │       │ # エントリーポイント (4個)
+    │       ├── speckit.bootstrap.md      # 新規プロジェクト立ち上げ or 追加Feature提案
+    │       ├── speckit.add.md            # 新機能追加（Issueなし→自動作成）
+    │       ├── speckit.fix.md            # 新バグ修正（Issueなし→自動作成）
+    │       ├── speckit.issue.md          # 既存Issue選択→開発開始
+    │       │
+    │       │ # 基本コマンド (5個) - 途中再開にも使用
+    │       ├── speckit.spec.md           # Spec作成/更新
+    │       ├── speckit.plan.md           # Plan作成（人間確認で停止）
+    │       ├── speckit.tasks.md          # Tasks作成
+    │       ├── speckit.implement.md      # 実装
+    │       ├── speckit.pr.md             # PR作成
+    │       │
+    │       │ # ユーティリティ (4個)
+    │       ├── speckit.analyze.md        # 実装とSpec/Overviewの整合性分析
+    │       ├── speckit.feedback.md       # Specへのフィードバック
     │       ├── speckit.clarify.md        # 曖昧点確認
-    │       ├── speckit.constitution.md   # 憲法確認
-    │       ├── speckit.scaffold.md       # spec scaffold ガイド
-    │       └── speckit.taskstoissues.md  # タスク→Issue変換
+    │       └── speckit.lint.md           # Spec整合性チェック
     ├── .specify/
     │   ├── memory/
     │   │   └── constitution.md       # Engineering Constitution（憲法）
@@ -90,48 +91,99 @@ AI コーディングアシスタント（Claude Code 等）と組み合わせ�
 
 | ユースケース | 開始コマンド | 説明 |
 |-------------|-------------|------|
-| **1. オンボーディング** | `/speckit.bootstrap` | 新規プロジェクト立ち上げ。Overview作成、初期Feature提案 |
-| **2. 機能追加** | `/speckit.add "説明"` | 新機能を追加。AIがIssue/Branch/Spec自動作成 |
-| **3. バグ修正** | `/speckit.fix "説明"` | バグを修正。AIがIssue/Branch/Spec更新を自動作成 |
+| **1. オンボーディング** | `/speckit.bootstrap` | 新規プロジェクト立ち上げ。Overview作成、初期Feature提案・Issue一括作成 |
+| **2. 機能追加** | `/speckit.add "説明"` | **Issueがない** 新機能を追加。AIがIssue/Branch/Spec自動作成 |
+| **3. バグ修正** | `/speckit.fix "説明"` | **Issueがない** バグを修正。AIがIssue/Branch/Spec更新を自動作成 |
 
-既存のGitHub Issueから始める場合は `/speckit.issue` を使用。
+### コマンドの使い分け
+
+| 状況 | 使うコマンド |
+|-----|------------|
+| **Issueが既にある**（bootstrap/手動作成） | `/speckit.issue` → 選択して直接開発開始 |
+| **Issueがない** 新機能 | `/speckit.add "説明"` → Issue自動作成して開発開始 |
+| **Issueがない** バグ | `/speckit.fix "説明"` → Issue自動作成して開発開始 |
+| **複数Featureを一括提案** | `/speckit.bootstrap "説明"` → Issue一括作成 |
+
+**ポイント**: `/speckit.issue` は既存Issueを選んで **直接** 開発を開始します（add/fixを呼び出すのではなく、自分でBranch/Spec作成を行います）。
 
 ---
 
-## 5ステップワークフロー（人間 vs AI）
+## コマンド構造（2層アーキテクチャ）
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│ Step 1: /speckit.add または /speckit.fix                                   │
-│   AI: Issue作成 → Branch作成 → Spec作成                                    │
-│   人間: 🔔 Specをレビュー・承認                                             │
+│ 【エントリーポイント】（ワークフロー開始用）                                │
+│   /speckit.bootstrap  - 新規プロジェクト or 追加Feature提案                 │
+│   /speckit.add        - 新機能（Issue自動作成）                             │
+│   /speckit.fix        - バグ修正（Issue自動作成）                           │
+│   /speckit.issue      - 既存Issueから開始                                   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ 【基本コマンド】（単体実行可能、途中再開にも使用）                          │
+│   /speckit.spec       - Spec作成/更新                                       │
+│   /speckit.plan       - Plan作成（人間確認で停止）                          │
+│   /speckit.tasks      - Tasks作成                                           │
+│   /speckit.implement  - 実装                                                │
+│   /speckit.pr         - PR作成                                              │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ 【ユーティリティ】（必要時に呼び出し）                                      │
+│   /speckit.analyze    - 実装とSpec/Overviewの整合性分析（PR前の安心確認）   │
+│   /speckit.feedback   - Specへのフィードバック記録                          │
+│   /speckit.clarify    - 要件の曖昧点確認                                    │
+│   /speckit.lint       - Spec整合性チェック                                  │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+**途中再開の例:**
+```
+# Planレビュー後、Tasks作成から再開
+人間: /speckit.tasks
+
+# 実装を中断後、再開
+人間: /speckit.implement
+```
+
+---
+
+## 6ステップワークフロー（人間 vs AI）
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Step 1: /speckit.add, /speckit.fix, または /speckit.issue                  │
+│   AI: Issue作成 → Branch作成 → Spec作成 → Clarifyループ                    │
+│   人間: 🔔 曖昧点に回答 → Specをレビュー・承認                             │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │ Step 2: /speckit.plan                                                      │
-│   AI: Plan作成 → Tasks作成 → 整合性チェック                                │
-│   人間: 🔔 Plan/Tasksを確認                                                │
+│   AI: コード分析 → Plan作成 → 整合性チェック                               │
+│   人間: 🔔 Planをレビュー・承認                                            │
 ├─────────────────────────────────────────────────────────────────────────────┤
-│ Step 3: /speckit.implement                                                 │
+│ Step 3: /speckit.tasks                                                     │
+│   AI: Tasks作成                                                            │
+│   人間: 🔔 Tasksを確認                                                     │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Step 4: /speckit.implement                                                 │
 │   AI: タスク実装 → テスト作成・実行                                        │
 │   人間: 🔔 Feedback発見時に許可を出す                                      │
 ├─────────────────────────────────────────────────────────────────────────────┤
-│ Step 4: /speckit.pr                                                        │
+│ Step 5: /speckit.pr                                                        │
 │   AI: 整合性確認 → 最終feedback → PR作成                                   │
 │   人間: （待機）                                                           │
 ├─────────────────────────────────────────────────────────────────────────────┤
-│ Step 5: PRレビュー                                                         │
+│ Step 6: PRレビュー                                                         │
 │   AI: レビュー指摘を修正                                                   │
 │   人間: 🔔 最終承認・マージ                                                │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
-### 人間がやること（4箇所のみ）
+### 人間がやること（6箇所）
 
 | タイミング | 人間のアクション |
 |-----------|-----------------|
-| Step 1 完了後 | Specの内容をレビューし、問題なければ「OK」と伝える |
-| Step 2 完了後 | Plan/Tasksを確認し、問題なければ次へ進むよう指示 |
-| Step 3 中 | AIがfeedback発見を報告したら、記録するか判断 |
-| Step 5 | PRをレビューし、Approve & Merge |
+| Step 1 中 | 曖昧点に回答（Clarifyループ） |
+| Step 1 完了後 | Specの内容をレビューし「OK」と伝える |
+| Step 2 完了後 | Planをレビューし「OK」と伝える |
+| Step 3 完了後 | Tasksを確認し次へ進むよう指示 |
+| Step 4 中 | AIがfeedback発見を報告したら、記録するか判断 |
+| Step 6 | PRをレビューし、Approve & Merge |
 
 ### AIが自動でやること
 
@@ -176,10 +228,19 @@ AI: 4つのFeature Issueを作成しました:
 
 人間: #2
 
-AI: /speckit.add #2 を実行します...
+AI: Issue #2 を選択しました
     ラベルを backlog → in-progress に更新
     Branch feature/2-inventory を作成
     Spec を詳細化中...
+
+    [Spec詳細化完了]
+
+    Specをレビューしてください。
+    問題なければ「OK」と伝えてください。
+
+人間: OK
+
+AI: /speckit.plan を実行します...
 ```
 
 **ポイント:**
@@ -195,10 +256,12 @@ AI: /speckit.add #2 を実行します...
 
 ### 方法1: 複数Feature を一括提案・Issue化
 
-```
-人間: /speckit.propose-features レポート機能とエクスポート機能を追加したい
+`/speckit.bootstrap` はOverviewが既に存在する場合、追加Feature提案モードで動作します。
 
-AI: Overview S-OVERVIEW-001 を読み込みました
+```
+人間: /speckit.bootstrap レポート機能とエクスポート機能を追加したい
+
+AI: Overview S-OVERVIEW-001 が見つかりました。追加Feature提案モードで実行します。
 
     Feature候補:
     1. S-REPORTS-001: レポート出力
@@ -216,10 +279,15 @@ AI: 2つのFeature Issueを作成しました:
 
 人間: #10
 
-AI: /speckit.add #10 を実行します...
+AI: Issue #10 を選択しました
+    ラベルを backlog → in-progress に更新
+    Branch feature/10-reports を作成
+    Spec を詳細化中...
+
+    Specをレビューしてください。
 ```
 
-### 方法2: 単一Feature を直接追加
+### 方法2: 単一Feature を直接追加（Issueがない場合）
 
 ```
 人間: /speckit.add PDFエクスポート機能
@@ -227,10 +295,10 @@ AI: /speckit.add #10 を実行します...
 AI: Issue #45 を作成しました
     Branch feature/45-pdf-export を作成しました
     Spec を作成しました
-    ...（5ステップフローへ）
+    ...（6ステップフローへ）
 ```
 
-### 方法3: backlogから選択して開始
+### 方法3: 既存Issueから選択して開始（backlog等）
 
 ```
 人間: /speckit.issue
@@ -241,6 +309,9 @@ AI: === Open Issues ===
       #2 [backlog] S-INVENTORY-001: 在庫一覧・検索
       #3 [backlog] S-RECEIVING-001: 入荷処理
 
+    Backlog Bugs:
+      (なし)
+
     In Progress:
       #5 [in-progress] S-STOCKTAKE-001: 棚卸し
 
@@ -248,29 +319,80 @@ AI: === Open Issues ===
 
 人間: 2
 
-AI: /speckit.add #2 を実行します...
+AI: Issue #2 "S-INVENTORY-001: 在庫一覧・検索" を選択しました
+    種類: Feature
+
+    ラベルを backlog → in-progress に更新しました
+    Branch feature/2-inventory を作成しました
+    既存のSpec scaffoldを拡張します...
+
+    [Spec詳細化中...]
+
+    Spec概要:
+    - UC: 3個
+    - FR: 5個
+    - SC: 2個
+
+    Specをレビューしてください。
+    問題なければ「OK」と伝えてください。
+
+人間: OK
+
+AI: /speckit.plan を実行します...
 ```
+
+**ポイント**: `/speckit.issue` は add/fix を呼び出さず、直接 Branch 作成・Spec 詳細化を行います。
 
 ---
 
-## チェックリストの活用
+## 整合性チェック（Lint）
 
-`/speckit.checklist` を使うと、Feature 実装前・PR前・デプロイ前に確認すべき項目を自動生成できます。
+`/speckit.lint` で Spec の整合性をチェックできます。
 
 ```bash
-# Feature ディレクトリで実行
-/speckit.checklist
+# コマンドラインから直接実行も可能
+node .specify/scripts/spec-lint.js
 ```
 
-生成されるチェックリストには以下が含まれます：
-- **Spec 整合性**: Overview/Feature の参照関係、UC/FR/SC の定義漏れ
-- **Plan 品質**: 技術設計・マイグレーション・ロールバック戦略
-- **Tasks カバレッジ**: UC ごとのタスク、テストタスクの有無
-- **Git/PR ワークフロー**: Issue 紐付け、ブランチ命名、PR 記載事項
-- **テスト整合性**: 仕様由来のテスト、CI を通すためだけの変更禁止
-- **AI 行動規範**: Serena/context7 の活用、曖昧点のエスカレーション
+チェック内容：
+- **Spec存在確認**: Spec Type, Spec ID の存在
+- **一意性**: Spec ID, UC ID の重複チェック
+- **マスタ整合性**: Feature が参照する M-*, API-* が Overview に定義済みか
+- **Feature Index**: Overview の Feature index 表との整合
+- **Plan/Tasks整合性**: Plan/Tasks が Spec ID を参照しているか
+- **品質チェック**: UC の存在、必須セクション、Deprecated の理由記載
 
-主要マイルストーン（実装開始前、PR 作成前、デプロイ前）でチェックリストを確認することを推奨します。
+このチェックは `/speckit.spec`, `/speckit.plan`, `/speckit.pr` で自動実行されます。
+
+---
+
+## 実装分析（PR前の安心確認）
+
+`/speckit.analyze` で実装が Spec/Overview の要件を満たしているか総合分析できます。
+
+```
+人間: /speckit.analyze
+
+AI: === 分析結果 ===
+
+    ✅ 充足している要件:
+      - UC-001: ログイン処理 → src/auth/login.ts
+      - FR-001〜FR-005: 全て実装済み
+
+    ⚠️ 要確認:
+      - FR-006: パスワードリセット → テストが不足
+
+    📊 カバレッジ:
+      - UC: 2/2 (100%)
+      - FR: 6/6 (100%)
+      - SC: 2/3 (66.7%)
+```
+
+**使いどころ:**
+- `/speckit.pr` の前に不安がある時
+- 大きな Feature を実装した後
+- 複数人で並行開発している時
+- レビュー前の自己チェック
 
 ---
 

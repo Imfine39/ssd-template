@@ -1,10 +1,10 @@
 ---
-description: Verify integrity and create PR (Step 4). Final step before human review.
+description: Verify integrity and create PR (Step 5). Final step before human review.
 ---
 
 ## Purpose
 
-Step 4 of the 5-step workflow. Before creating a PR, this command:
+Step 5 of the 6-step workflow. Before creating a PR, this command:
 1. Verifies spec-implementation integrity
 2. Runs final checks (lint, tests)
 3. Records any remaining feedback

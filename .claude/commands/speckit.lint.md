@@ -1,5 +1,5 @@
 ---
-description: Lint specs for Overview/Feature consistency (masters/APIs, IDs).
+description: Run spec lint to check Overview/Feature consistency.
 ---
 
 Run from the repo root:

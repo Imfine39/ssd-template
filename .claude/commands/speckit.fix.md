@@ -1,13 +1,13 @@
 ---
-description: Fix a bug (Step 1). Creates Issue, Branch, and updates Spec automatically.
+description: Fix a bug (Entry Point). Creates Issue, Branch, updates Spec with clarify loop.
 handoffs:
   - label: Continue to Plan
     agent: speckit.plan
-    prompt: Create plan and tasks for the fix
+    prompt: Create plan for the fix
     send: true
-  - label: Clarify Requirements
-    agent: speckit.clarify
-    prompt: Clarify the bug details
+  - label: Skip to Implement
+    agent: speckit.implement
+    prompt: Implement the trivial fix directly
     send: true
 ---
 
@@ -19,60 +19,110 @@ $ARGUMENTS
 
 ## Purpose
 
-This command initiates a bug fix. AI automatically:
-1. Creates a GitHub Issue (bug type)
-2. Creates a fix branch
-3. Updates the affected spec with the fix details
+**Entry point** for bug fixes when no Issue exists.
+Creates Issue → Branch → Spec update, then loops clarify until all ambiguities are resolved.
+
+**Use this when:** You found a bug and no Issue exists.
+**Use `/speckit.issue` instead when:** Bug Issues already exist.
 
 ## Steps
 
 1) **Parse bug description**:
-   - Extract the bug description from `$ARGUMENTS`
-   - If empty, ask the user to describe the bug
+   - Extract from `$ARGUMENTS`
+   - If empty, ask user to describe the bug
 
-2) **Identify affected spec**:
+2) **Analyze codebase** (context collection):
+   - Use Serena to explore related code
+   - Identify the affected component and its spec
    - Search existing specs for related UC/FR
+
+3) **Identify affected spec**:
    - Ask user to confirm which spec is affected
-   - If no spec exists, this might be a missing spec case
+   - If no spec exists, warn: "該当するSpecがありません。新規機能の可能性があります"
 
-3) **Create GitHub Issue**:
-   - Generate Issue title: "Bug: [brief description]"
-   - Generate Issue body with:
-     - Bug description
-     - Expected behavior (from spec)
-     - Actual behavior
-     - Affected Spec ID and UC/FR
-     - Label: `bug`
-   - Run: `gh issue create --title "Bug: ..." --body "..." --label bug`
+4) **Create GitHub Issue**:
+   ```bash
+   gh issue create --title "[Bug] <description>" --body "..." --label bug
+   ```
+   - Body includes: Bug description, Expected behavior (from spec), Actual behavior, Affected Spec ID/UC/FR
 
-4) **Create branch**:
-   - Run: `node .specify/scripts/branch.js --type fix --slug <slug> --issue <num>`
+5) **Create branch**:
+   ```bash
+   node .specify/scripts/branch.js --type fix --slug <slug> --issue <num>
+   ```
 
-5) **Update spec changelog**:
-   - Add entry to the affected spec's Changelog section:
-     ```
-     | [DATE] | Bug Fix | [Description] | #[Issue] |
-     ```
-   - If fix requires new FR or modifies existing FR, note in Implementation Notes
+6) **Update affected spec**:
+   - Add Changelog entry: `| [DATE] | Bug Fix | [Description] | #[Issue] |`
+   - If fix requires FR changes, note in Implementation Notes
+   - Mark unclear items as `[NEEDS CLARIFICATION]`
 
-6) **Run spec-lint**:
-   - Execute: `node .specify/scripts/spec-lint.js`
+7) **Run lint**:
+   ```bash
+   node .specify/scripts/spec-lint.js
+   ```
 
-7) **Request human review**:
-   - Show Issue number and URL
-   - Show affected spec and proposed changes
-   - Ask for approval
-   - Once approved, suggest `/speckit.plan` or direct `/speckit.implement` for small fixes
+8) **Clarify loop**:
+   - While `[NEEDS CLARIFICATION]` items exist:
+     - Show items to human
+     - Ask for clarification
+     - Update spec
+     - Re-run lint
+   - Continue until all resolved
+
+9) **Request human review**:
+   - Show Issue URL, branch, affected spec
+   - Show impact scope (UC/FR affected)
+   - For trivial fixes: Offer to skip to `/speckit.implement`
+   - For larger fixes: Suggest `/speckit.plan`
 
 ## Output
 
-- Created Issue number and URL
-- Created branch name
+- Issue number and URL
+- Branch name
 - Affected spec path
-- Changelog entry added
+- Changelog entry
 - Next step recommendation
 
-## Human Checkpoint
+## Human Checkpoints
 
-Human MUST review and approve before implementation.
-For trivial fixes (per Change Size Classification), may proceed directly to implement.
+1. Confirm affected spec
+2. Answer clarification questions (in loop)
+3. Choose plan vs direct implement
+
+## Example
+
+```
+人間: /speckit.fix ログイン画面で特殊文字パスワードがエラーになる
+
+AI: コードベースを分析中...
+    関連するSpecを検索中...
+    S-AUTH-001 (認証機能) が該当しそうです。確認してください。
+
+人間: それで合ってる
+
+AI: Issue #50 を作成しました: [Bug] 特殊文字パスワードでログインエラー
+    Branch fix/50-special-char-password を作成しました
+
+    S-AUTH-001 の Changelog を更新しました:
+    | 2025-01-15 | Bug Fix | 特殊文字パスワード対応 | #50 |
+
+    [NEEDS CLARIFICATION]:
+    1. どの特殊文字でエラーが発生しますか？
+
+人間: @, #, $ など記号全般
+
+AI: Spec を更新しました。
+    [NEEDS CLARIFICATION] はすべて解決しました。
+
+    影響範囲:
+    - UC-001: ログイン処理
+    - FR-003: パスワードバリデーション
+
+    小さな修正です。
+    - 直接実装: /speckit.implement
+    - 計画作成: /speckit.plan
+
+人間: implement で
+
+AI: /speckit.implement を実行します...
+```

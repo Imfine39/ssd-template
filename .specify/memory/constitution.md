@@ -141,12 +141,20 @@ Non-negotiable rules:
   (bug, feature, refactor, or spec change).
 - Issues SHOULD use the provided templates (feature/spec-change/bug) with
   concise summaries; detailed impact and test plans are elaborated in specs/plans.
-- For new or changed behavior, the following sequence MUST be followed:
+- For new or changed behavior, the following 6-step sequence MUST be followed:
 
-  1. `/speckit.specify` to define or update the specification.
+  1. **Entry Point** (`/speckit.add`, `/speckit.fix`, or `/speckit.issue`):
+     - Issue creation (if not exists) → Branch creation → Spec creation
+     - Clarify loop until all ambiguities resolved
+     - Human reviews and approves spec
   2. `/speckit.plan` to derive a technical implementation plan aligned with the spec.
+     - Human reviews and approves plan
   3. `/speckit.tasks` to break work into concrete, reviewable tasks.
-  4. Implementation work based on these tasks.
+     - Human confirms tasks
+  4. `/speckit.implement` for implementation work based on tasks.
+     - Human approves feedback recording if discovered
+  5. `/speckit.pr` to create pull request with integrity check.
+  6. PR review and merge.
 
 - Each specification MUST have stable identifiers (for example):
 
@@ -341,7 +349,7 @@ Non-negotiable rules:
 - When the specification is wrong:
 
   - The specification MUST be corrected first
-    (via `/speckit.specify` on a `spec/*` branch),
+    (via `/speckit.spec` on a `spec/*` branch),
   - Then tests and implementation MUST be updated to match the corrected spec.
 
 - When tests are wrong but the specification is correct:
@@ -527,4 +535,4 @@ Compliance:
 - Exceptions require documented justification and explicit team approval
   (for example via PR comments or architectural decision records).
 
-Version: 1.3.0 | Ratified: 2025-12-10 | Last Amended: 2025-12-11
+Version: 1.4.0 | Ratified: 2025-12-10 | Last Amended: 2025-12-11

@@ -1,13 +1,9 @@
 ---
-description: Start feature development (Step 1). Creates Issue or uses existing one, then Branch and Spec.
+description: Add a new feature (Entry Point). Creates Issue, Branch, Spec with clarify loop.
 handoffs:
   - label: Continue to Plan
     agent: speckit.plan
-    prompt: Create plan and tasks for the spec
-    send: true
-  - label: Clarify Requirements
-    agent: speckit.clarify
-    prompt: Clarify ambiguous requirements
+    prompt: Create plan for the approved spec
     send: true
 ---
 
@@ -19,130 +15,101 @@ $ARGUMENTS
 
 ## Purpose
 
-This command starts feature development (Step 1 of 5-step workflow).
+**Entry point** for new features when no Issue exists.
+Creates Issue → Branch → Spec, then loops clarify until all ambiguities are resolved.
 
-**Two modes:**
-1. **New Feature**: `"/speckit.add PDFエクスポート機能を追加したい"` → Creates new Issue
-2. **Existing Issue**: `"/speckit.add #45"` → Uses Issue from bootstrap/propose-features
+**Use this when:** You want to add something new and no Issue exists.
+**Use `/speckit.issue` instead when:** Issues already exist (from bootstrap or human creation).
 
 ## Steps
 
-### Mode Detection
-
-Parse `$ARGUMENTS`:
-- If starts with `#` followed by number → **Existing Issue mode**
-- Otherwise → **New Feature mode**
-
----
-
-### New Feature Mode
-
 1) **Parse feature description**:
-   - Extract the feature description from `$ARGUMENTS`
-   - If empty, ask the user to describe the feature
+   - Extract from `$ARGUMENTS`
+   - If empty, ask user to describe the feature
 
-2) **Create GitHub Issue**:
-   - Generate Issue title from description
-   - Generate Issue body with summary and initial scope
-   - Run: `gh issue create --title "[Feature] ..." --body "..." --label feature`
-   - Capture the Issue number
+2) **Check Overview exists**:
+   - Look for Overview spec in `.specify/specs/`
+   - If not found: "Overview specが見つかりません。先に `/speckit.bootstrap` を実行してください"
 
-3) **Continue to common steps** (step 4 onwards)
-
----
-
-### Existing Issue Mode
-
-1) **Fetch Issue details**:
-   - Run: `gh issue view <num> --json number,title,body,labels`
-   - Parse Issue content for Spec ID, UCs, dependencies
-
-2) **Check Issue status**:
-   - If Issue has `backlog` label → Good, proceed
-   - If Issue is already closed → Warn and ask to confirm
-   - If Issue has `in-progress` label → Warn, may already have branch
-
-3) **Update Issue label**:
-   - Remove `backlog` label
-   - Add `in-progress` label
-   - Run: `gh issue edit <num> --remove-label backlog --add-label in-progress`
-
-4) **Continue to common steps** (step 4 onwards)
-
----
-
-### Common Steps (both modes)
+3) **Create GitHub Issue**:
+   ```bash
+   gh issue create --title "[Feature] <title>" --body "..." --label feature
+   ```
 
 4) **Create branch**:
-   - Run: `node .specify/scripts/branch.js --type feature --slug <slug> --issue <num>`
+   ```bash
+   node .specify/scripts/branch.js --type feature --slug <slug> --issue <num>
+   ```
 
-5) **Locate or create spec**:
-   - Check if spec already exists (from bootstrap/propose-features scaffold)
-   - If exists: Read and enhance the scaffolded spec
-   - If not exists: Scaffold new spec:
-     ```bash
-     node .specify/scripts/scaffold-spec.js --kind feature --id S-<SLUG>-001 --title "..." --overview S-OVERVIEW-001
-     ```
+5) **Analyze codebase** (context collection):
+   - Use Serena to explore existing code structure
+   - Identify related components, patterns, dependencies
+   - Use context7 for library documentation if needed
 
-6) **Generate/enhance spec content**:
-   - Read Issue details and any existing scaffold
-   - Use Serena to explore codebase for context
-   - Use context7 for library docs if needed
-   - Fill/enhance spec sections:
-     - Purpose and Scope
-     - Actors and Context
-     - Domain Model (reference Overview IDs: M-*, API-*)
-     - User Stories (UC-XXX) - expand from Issue's initial UCs
-     - Functional Requirements (FR-XXX)
-     - Success Criteria (SC-XXX)
-     - Edge Cases
-     - Non-Functional Requirements
-   - Mark unclear items as `[NEEDS CLARIFICATION]` (max 3)
+6) **Create spec** (uses `/speckit.spec` logic):
+   - Scaffold: `node .specify/scripts/scaffold-spec.js --kind feature --id S-XXX-001 --title "..." --overview S-OVERVIEW-001`
+   - Fill sections: Purpose, Actors, Domain Model (M-*, API-*), UC, FR, SC, Edge Cases, NFR
+   - Reference analyzed code patterns and constraints
+   - Mark unclear items as `[NEEDS CLARIFICATION]`
 
-7) **Run spec-lint**:
-   - Execute: `node .specify/scripts/spec-lint.js`
-   - Fix any errors
+7) **Run lint**:
+   ```bash
+   node .specify/scripts/spec-lint.js
+   ```
 
-8) **Request human review**:
-   - Show Issue number and URL
-   - Show spec path and summary (UC/FR/SC counts)
-   - List `[NEEDS CLARIFICATION]` items
-   - Ask human to review and approve
-   - Once approved, suggest `/speckit.plan`
+8) **Clarify loop**:
+   - While `[NEEDS CLARIFICATION]` items exist:
+     - Show items to human
+     - Ask for clarification
+     - Update spec
+     - Re-run lint
+   - Continue until all resolved
+
+9) **Request human review**:
+   - Show Issue URL, branch, spec path
+   - Show spec summary (UC/FR/SC counts)
+   - Wait for approval
 
 ## Output
 
-- Issue number and URL (created or existing)
+- Issue number and URL
 - Branch name
 - Spec path
 - Spec summary
 - Next step: `/speckit.plan`
 
-## Human Checkpoint
+## Human Checkpoints
 
-Human MUST review and approve the spec before proceeding to plan.
+1. Answer clarification questions (in loop)
+2. Review and approve final spec
 
-## Examples
-
-### Example 1: New Feature (creates Issue)
+## Example
 
 ```
 人間: /speckit.add ユーザーがPDFエクスポートできる機能
 
-AI: Issue #45 を作成しました
+AI: Issue #45 を作成しました: [Feature] PDFエクスポート機能
     Branch feature/45-pdf-export を作成しました
-    Spec を作成しました: .specify/specs/s-pdf-export-001/spec.md
-    ...
-```
+    Spec を作成中...
 
-### Example 2: Existing Issue (from bootstrap)
+    [NEEDS CLARIFICATION]:
+    1. 出力するPDFのページサイズは？ (A4/Letter/指定なし)
+    2. ヘッダー/フッターは必要？
 
-```
-人間: /speckit.add #2
+人間: 1. A4固定  2. 日付とページ番号をフッターに
 
-AI: Issue #2 "S-INVENTORY-001: 在庫一覧・検索" を読み込みました
-    ラベルを backlog → in-progress に更新しました
-    Branch feature/2-inventory を作成しました
-    既存のSpec scaffoldを拡張します: .specify/specs/s-inventory-001/spec.md
-    ...
+AI: Spec を更新しました。
+    [NEEDS CLARIFICATION] はすべて解決しました。
+
+    Spec: .specify/specs/s-pdf-export-001/spec.md
+    概要:
+    - UC: 2個
+    - FR: 5個
+    - SC: 2個
+
+    レビューしてください。
+
+人間: OK
+
+AI: /speckit.plan を実行します...
 ```

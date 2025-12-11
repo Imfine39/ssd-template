@@ -1,9 +1,9 @@
 ---
-description: Bootstrap a new project (onboarding). Auto-creates Overview and batch-creates Feature Issues.
+description: Bootstrap project or propose additional Features. Creates Overview and/or batch-creates Feature Issues.
 handoffs:
   - label: Start Feature
-    agent: speckit.add
-    prompt: Start development on the selected feature issue
+    agent: speckit.issue
+    prompt: Select and start a feature from the backlog
     send: true
 ---
 
@@ -15,44 +15,53 @@ $ARGUMENTS
 
 ## Purpose
 
-This is the **onboarding command** for new projects. From a high-level purpose description, AI automatically:
-1. Creates an Overview Issue and Branch
-2. Generates the Overview spec (shared masters, APIs, rules)
-3. Proposes Feature candidates
-4. **Batch-creates GitHub Issues for adopted Features** (labeled `feature` + `backlog`)
-5. Human selects which Feature to start first
+This command handles two scenarios:
+
+1. **New Project (No Overview)**: Full onboarding - creates Overview spec, proposes Features, batch-creates Issues
+2. **Existing Project (Overview exists)**: Proposes additional Features based on user intent, batch-creates Issues
 
 ## Steps
 
-1) **Parse system purpose**:
+### Step 1: Check for existing Overview
+
+- Look for Overview spec in `.specify/specs/`
+- If found: **Additional Features mode** (skip to Step 4)
+- If not found: **Full Bootstrap mode** (continue to Step 2)
+
+---
+
+### Full Bootstrap Mode (No Overview)
+
+2) **Parse system purpose**:
    - Extract domain, actors, outcomes, core objects
    - Identify external systems and compliance needs
    - If unclear, ask clarifying questions (max 3)
 
-2) **Create Overview Issue and Branch**:
+3) **Create Overview Issue and Branch**:
    - Run: `gh issue create --title "Define System Overview Spec" --body "..." --label spec`
    - Run: `node .specify/scripts/branch.js --type spec --slug overview --issue <num>`
 
-3) **Generate Overview spec**:
-   - Use scaffold: `node .specify/scripts/scaffold-spec.js --kind overview --id S-OVERVIEW-001 --title "System Overview"`
-   - Fill in:
-     - Domain description
-     - Shared masters (`M-*`): 3-8 items
-     - Shared APIs (`API-*`): core endpoints
-     - Cross-cutting rules and constraints
-     - Non-functional requirements
+4) **Generate Overview spec**:
+   - Use `/speckit.spec` (base command) to create Overview:
+     - Scaffold: `node .specify/scripts/scaffold-spec.js --kind overview --id S-OVERVIEW-001 --title "System Overview"`
+     - Fill: Domain description, Shared masters (M-*), Shared APIs (API-*), Cross-cutting rules, NFRs
+   - Run clarify loop until all ambiguities resolved
 
-4) **Propose Feature candidates**:
-   - Generate 3-7 Feature proposals based on the domain
+---
+
+### Common Steps (Both Modes)
+
+5) **Propose Feature candidates**:
+   - Generate 3-7 Feature proposals based on domain/user intent
    - Each proposal includes:
      - Feature ID (e.g., S-INVENTORY-001)
      - Title
      - Brief description
      - 1-2 initial UCs
-     - Dependencies on masters/APIs
+     - Dependencies on masters/APIs (by ID)
    - Present numbered list to human
 
-5) **Ask human for adoption**:
+6) **Ask human for adoption**:
    ```
    どのFeatureを採用しますか？
    - 「全部」: 全Feature採用
@@ -60,7 +69,7 @@ This is the **onboarding command** for new projects. From a high-level purpose d
    - 「なし」: Issue作成をスキップ
    ```
 
-6) **Batch-create Feature Issues**:
+7) **Batch-create Feature Issues**:
    - For each adopted Feature:
      ```bash
      gh issue create \
@@ -70,55 +79,54 @@ This is the **onboarding command** for new projects. From a high-level purpose d
      ```
    - Collect all created Issue numbers
 
-7) **Scaffold Feature specs** (optional):
-   - For each adopted Feature, scaffold spec.md:
+8) **Scaffold Feature specs**:
+   - For each adopted Feature:
      ```bash
      node .specify/scripts/scaffold-spec.js --kind feature --id S-XXX-001 --title "..." --overview S-OVERVIEW-001
      ```
-   - Update Overview Feature index table with all Features (Status: Draft)
+   - Overview Feature index table is auto-updated
 
-8) **Run spec-lint**:
+9) **Run lint**:
    - Execute: `node .specify/scripts/spec-lint.js`
-   - Fix any errors
 
-9) **Present results and ask which to start**:
-   ```
-   Overview Issue: #1
-   Feature Issues created:
-     #2 [feature][backlog] S-INVENTORY-001: 在庫一覧・検索
-     #3 [feature][backlog] S-RECEIVING-001: 入荷処理
-     #4 [feature][backlog] S-SHIPPING-001: 出荷処理
+10) **Present results and ask which to start**:
+    ```
+    Feature Issues created:
+      #2 [feature][backlog] S-INVENTORY-001: 在庫一覧・検索
+      #3 [feature][backlog] S-RECEIVING-001: 入荷処理
 
-   どのFeatureから開発を始めますか？ (Issue番号で指定)
-   ```
+    どのFeatureから開発を始めますか？
+    - Issue番号で指定
+    - 「後で」: /speckit.issue で後から選択
+    ```
 
-10) **Start selected Feature**:
-    - When human selects an Issue number, transition to `/speckit.add #<num>`
-    - The Issue already exists, so add will:
-      - Create branch from the existing Issue
-      - Fill in the scaffolded spec with details
-      - Continue with normal 5-step flow
+11) **Start selected Feature** (if chosen):
+    - Use `/speckit.issue` to start the selected Issue
+    - This will: update label → create branch → detail spec → continue flow
 
 ## Output
 
-- Overview Issue number and URL
-- Overview spec path
+- Overview spec path (if created)
 - List of created Feature Issues with numbers
 - Feature index table updated
-- Next step: `/speckit.add #<num>` for selected Feature
+- Next step: `/speckit.issue` for selected Feature
 
 ## Human Checkpoints
 
-1. Review Overview spec (domain, masters, APIs)
-2. Select which Features to adopt (all/some/none)
-3. Select which Feature to start first
+1. (Full Bootstrap only) Review Overview spec
+2. Select which Features to adopt
+3. Select which Feature to start (or defer)
 
-## Example
+## Examples
+
+### Example 1: New Project (Full Bootstrap)
 
 ```
 人間: /speckit.bootstrap 在庫管理システムを作りたい
 
-AI: Overview Issue #1 を作成しました
+AI: Overviewが見つかりません。新規プロジェクトとして立ち上げます。
+
+    Overview Issue #1 を作成しました
     Branch spec/1-overview を作成しました
     Overview Spec を作成しました
 
@@ -142,5 +150,38 @@ AI: 4つのFeature Issueを作成しました:
 
 人間: #2
 
-AI: /speckit.add #2 を実行します...
+AI: Issue #2 を開始します...
+    （/speckit.issue の処理へ）
+```
+
+### Example 2: Existing Project (Additional Features)
+
+```
+人間: /speckit.bootstrap レポート機能とエクスポート機能を追加したい
+
+AI: Overview S-OVERVIEW-001 が見つかりました。追加Feature提案モードで実行します。
+
+    Feature候補:
+    1. S-REPORTS-001: レポート出力
+       - UC-001: 日次売上レポート生成
+       - 依存: M-SALES, API-SALES-LIST
+
+    2. S-EXPORT-001: データエクスポート
+       - UC-001: CSV形式でエクスポート
+       - 依存: M-SALES, M-PRODUCTS
+
+    どのFeatureを採用しますか？ [全部/番号指定/なし]
+
+人間: 全部
+
+AI: 2つのFeature Issueを作成しました:
+    #10 [feature][backlog] S-REPORTS-001: レポート出力
+    #11 [feature][backlog] S-EXPORT-001: データエクスポート
+
+    どのFeatureから始めますか？ (後で /speckit.issue でも選択可能)
+
+人間: 後で
+
+AI: 了解しました。開発を始める時は /speckit.issue で
+    backlog の Feature を選択してください。
 ```

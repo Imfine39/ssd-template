@@ -1,5 +1,5 @@
 ---
-description: Implement tasks from the plan with tests and adherence to spec (Step 3).
+description: Implement tasks from the plan with tests and adherence to spec (Step 4).
 handoffs:
   - label: Create PR
     agent: speckit.pr
@@ -13,7 +13,7 @@ handoffs:
 
 ## Purpose
 
-Step 3 of the 5-step workflow. Implements tasks from the plan while:
+Step 4 of the 6-step workflow. Implements tasks from the plan while:
 - Adhering strictly to the spec
 - Writing tests first or alongside code
 - Requesting human permission when spec feedback is needed
