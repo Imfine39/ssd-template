@@ -111,6 +111,8 @@ Non-negotiable rules:
 
 - Every non-trivial change MUST originate from a GitHub Issue
   (bug, feature, refactor, or spec change).
+- Issues SHOULD use the provided templates (feature/spec-change/bug) with
+  concise summaries; detailed impact and test plans are elaborated in specs/plans.
 - For new or changed behavior, the following sequence MUST be followed:
 
   1. `/speckit.specify` to define or update the specification.

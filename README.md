@@ -78,56 +78,50 @@ AI コーディングアシスタント（Claude Code 等）と組み合わせ�
 
 ---
 
-## 使い方（0→1 の立ち上げ）
+## 使い方（人がやること / 自動でやること）
 
-### 1. テンプレートからリポジトリを作成
+### 人がやること（最小限）
+- Issue を作成（Overview 用、各 Feature 用）。GitHub の Issue テンプレ（feature/spec-change/bug）を選び、概要と「何を変えたいか」だけ書く。詳細な影響・テスト方針は AI が spec/plan で詰める。
+- 適切なコマンドを実行する（branch/scaffold/bootstrap/plan/tasks/pr など）。
+- 仕様・計画・タスクのレビューと最終判断。
+- テスト結果の確認と承認。
 
-- GitHub の「Use this template」ボタンで、本テンプレートから新規リポジトリを作成。
-- `.specify/memory/constitution.md` と `CLAUDE.md` はそのまま利用し、必要に応じて微修正。
+### 自動/半自動で行われること
+- ブランチ採番・作成: `node .specify/scripts/branch.js ...`
+- Overview/Feature の scaffold と Feature index 自動追記: `node .specify/scripts/scaffold-spec.js ...`（または `/speckit.bootstrap` / `/speckit.propose-features`）
+- Overview/Feature 整合性 lint: `node .specify/scripts/spec-lint.js`（CIでも実行）
+- PR 作成前の spec-lint 実行＋任意テスト実行: `node .specify/scripts/pr.js ...`
 
-### 2. Overview Spec の作成
+---
 
-- 最初の Issue を作成（例: “System Overview Spec を定義する”）。
-- ブランチを作成: `node .specify/scripts/branch.js --type spec --slug overview --issue <num>`
-- Claude Code に `.claude/commands/speckit.bootstrap.md` を使って Overview と Feature 候補を作成させる
-  （もしくは `node .specify/scripts/scaffold-spec.js --kind overview ...` で手動作成）。
-  - Overview には以下を記述する。
-    - ドメイン全体の概要
-    - 共通マスタ定義（`M-CLIENTS` 等）
-    - 共通 API 定義（`API-PROJECT_ORDERS-LIST` 等）
-    - 共通ビジネスルール・ステータス定義
-    - 非機能要件（性能・セキュリティ等）
-  - Feature を scaffold した場合、Overview の Feature index 表
-    `| Feature ID | Title | Path | Status |` が自動追記される。
-  - `node .specify/scripts/spec-lint.js` を実行して整合性チェック。
+## 0→1 立ち上げフロー
 
-ここで定義した Overview Spec が、全 Feature Spec から参照される「唯一の真実」となります。
+1. Issue 作成（例: “System Overview Spec を定義する”）
+2. ブランチ作成: `node .specify/scripts/branch.js --type spec --slug overview --issue <num>`
+3. Overview 作成:
+   - 推奨: `/speckit.bootstrap` で目的を渡し、Overview 草案 + Feature 候補を生成（scaffold, Feature index 自動追記, lint まで実施）
+   - もしくは手動 scaffold: `node .specify/scripts/scaffold-spec.js --kind overview --id S-OVERVIEW-001 --title "System Overview" --masters ... --apis ...`
+   - Overview に含める: ドメイン概要 / 共通マスタ `M-*` / 共通 API `API-*` / 共通ルール・ステータス / 非機能要件
+4. Lint: `node .specify/scripts/spec-lint.js`
 
-### 3. Feature Spec ごとの開発サイクル
+※ Overview が「唯一の真実」。すべての Feature はここに定義されたマスタ/APIを参照し、Feature index表 `| Feature ID | Title | Path | Status |` に必ず登録される。
 
-新しい機能を追加するたびに、次の流れを取ります。
+---
 
-1. Issue 作成  
-   - 例: “#10 Basic Sales Recording 機能を追加”
-2. `/speckit.specify`  
-   - ブランチ: `node .specify/scripts/branch.js --type feature --slug <slug> --issue <num>`
-   - Feature Spec を作成（`/speckit.propose-features` で提案＋scaffold も可）。
-   - 対象ユースケース（UC-...）と Overview の依存マスタ/API（M-..., API-...）を明記。
-3. `/speckit.plan`  
-   - Spec を元に実装計画（plan.md）を生成。
-4. `/speckit.tasks`  
-   - Plan からタスク（tasks.md）を生成。テスト用タスクも必ず含める。
-5. 実装  
-   - `/speckit.implement` もしくは通常のコーディングでタスクを順に消化。
-6. テスト  
-   - 単体・結合・E2E テストを実行し、結果を記録。
-7. PR 作成  
-   - `node .specify/scripts/pr.js --title "feat: ..." --body "Fixes #..\\nImplements S-...\\nTests: ..."`（デフォルトで spec-lint 実行）
-   - 必要ならテストコマンドを別途実行し、その結果を PR body に記載。
-   - PR には以下を含める。
-     - 関連 Issue（`Fixes #10` 等）
-     - 関連 Spec ID（`Implements S-ORDERS-001, UC-001` 等）
-     - 実施したテストと結果の要約
+## Feature ごとのサイクル
+
+1. Issue 作成（例: “#10 Basic Sales Recording を追加”）
+2. ブランチ: `node .specify/scripts/branch.js --type feature --slug <slug> --issue <num>`
+3. Feature Spec 作成:
+   - `/speckit.propose-features` で提案＋scaffold（Overview依存をID参照）
+   - `/speckit.specify` で本文を詰める（UC/FR/SC/edge/NFR）
+4. `/speckit.plan` で plan.md 生成（Serena/context7 を参照してパスや技術を明確化）
+5. `/speckit.tasks` で tasks.md 生成（UC単位で小さく、テスト先行タスクを含める）
+6. 実装: `/speckit.implement` または通常コーディング。タスク外の変更を混ぜない。
+7. テスト: 単体・結合・E2E。失敗時は spec/test/impl/env のどこが原因かを分類。
+8. PR 作成: `node .specify/scripts/pr.js --title "feat: ..." --body "Fixes #..\\nImplements S-...\\nTests: ..." --test "npm test"`  
+   - spec-lint はデフォルト実行。`--test` で任意コマンドを実行し、失敗時はPR中断。
+   - PR本文に Issue/Spec ID/テスト結果を必ず記載。
 
 ---
 

@@ -31,6 +31,7 @@
 
 1. Issue を作成し、作業ブランチを `spec/<issue>-...` / `feature/<issue>-...` などで切る。
    - コマンド: `node .specify/scripts/branch.js --type feature --slug <slug> --issue <num>`（/speckit.branch）
+   - Issue 作成時は GitHub のテンプレ（feature/spec-change/bug）を使用。概要・何を変えたいかだけを人が書き、詳細な影響やテスト方針は spec/plan で AI が詰める。
 2. `/speckit.specify` で Overview/Feature を明示して spec を作成・更新  
    - 共有マスター/共有 API の追加・変更は Overview 側で実施。Feature 側は ID 参照のみ。
    - 初期ブートストラップは `/speckit.bootstrap`、追加 Feature 提案は `/speckit.propose-features`。

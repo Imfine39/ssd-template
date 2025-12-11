@@ -15,6 +15,7 @@ const path = require('path');
 
 const root = process.cwd();
 const specsRoot = path.join(root, '.specify', 'specs');
+const allowedStatus = new Set(['DRAFT', 'IN REVIEW', 'APPROVED']);
 
 const errors = [];
 const warnings = [];
@@ -63,12 +64,14 @@ function parseSpec(file) {
   const content = fs.readFileSync(file, 'utf8');
   const typeMatch = content.match(/Spec Type:\s*([^\n\r]+)/i);
   const idsMatch = content.match(/Spec ID\(s\):\s*([^\n\r]+)/i);
+  const statusMatch = content.match(/Status:\s*([^\n\r]+)/i);
 
   const specType = normalizeSpecType(typeMatch && typeMatch[1]);
   const specIds = extractList(idsMatch && idsMatch[1]);
   const ucIds = matchTokens(content, /\bUC-[A-Z0-9_-]+\b/gi);
   const masters = matchTokens(content, /\bM-[A-Z0-9_-]+\b/gi);
   const apis = matchTokens(content, /\bAPI-[A-Z0-9_-]+\b/gi);
+  const status = statusMatch ? statusMatch[1].trim().toUpperCase() : null;
 
   return {
     file,
@@ -78,6 +81,7 @@ function parseSpec(file) {
     ucIds,
     masters,
     apis,
+    status,
   };
 }
 
@@ -104,6 +108,9 @@ for (const spec of specs) {
   }
   if (!spec.specIds.length) {
     errors.push(`Missing Spec ID(s) in ${spec.relFile}`);
+  }
+  if (spec.status && !allowedStatus.has(spec.status)) {
+    warnings.push(`Unexpected Status "${spec.status}" in ${spec.relFile}. Allowed: ${Array.from(allowedStatus).join(', ')}`);
   }
 }
 
@@ -169,7 +176,7 @@ for (const a of overviewApis) {
 
 // Check Feature index table in Overview
 const featureIndexHeader = '| FEATURE ID | TITLE | PATH | STATUS |';
-const overviewFeatureRows = new Set();
+const overviewFeatureRows = new Map(); // ID -> {path,status}
 for (const spec of overviewSpecs) {
   const text = fileContentCache.get(spec.file).toUpperCase();
   if (!text.includes(featureIndexHeader)) {
@@ -188,7 +195,10 @@ for (const spec of overviewSpecs) {
       if (!trimmed.startsWith('|')) break;
       const cells = trimmed.split('|').map((c) => c.trim()).filter(Boolean);
       if (cells.length >= 4) {
-        overviewFeatureRows.add(cells[0]); // Feature ID
+        const id = cells[0];
+        const pathCell = cells[2];
+        const statusCell = cells[3];
+        overviewFeatureRows.set(id, { path: pathCell, status: statusCell });
       }
     }
   }
@@ -199,6 +209,25 @@ for (const spec of featureSpecs) {
   for (const id of spec.specIds) {
     if (!overviewFeatureRows.has(id.toUpperCase())) {
       errors.push(`Feature ID "${id}" is not listed in any Overview Feature index table.`);
+    }
+  }
+}
+
+// Check paths and status in Feature index table
+for (const [id, meta] of overviewFeatureRows.entries()) {
+  const specMatch = featureSpecs.find((s) => s.specIds.includes(id));
+  if (!specMatch) continue;
+  if (meta.path) {
+    const p = meta.path.replace(/\\/g, '/').replace(/^\.?\//, '');
+    const full = path.join(root, p);
+    if (!fs.existsSync(full)) {
+      errors.push(`Feature index entry for "${id}" points to missing path: ${meta.path}`);
+    }
+  }
+  if (meta.status) {
+    const st = meta.status.toUpperCase();
+    if (!allowedStatus.has(st)) {
+      warnings.push(`Feature index status "${meta.status}" for "${id}" is not in allowed set: ${Array.from(allowedStatus).join(', ')}`);
     }
   }
 }

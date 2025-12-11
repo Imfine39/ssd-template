@@ -1,0 +1,18 @@
+name: "Spec change"
+description: "既存の仕様を変更する"
+title: "Spec Change: "
+labels: ["spec-change"]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: 何を変えたいか
+      description: 変更したい仕様や理由を簡潔に（詳細な設計はAIが spec で詰めます）
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: 関連する Spec/UC/マスター/API
+      description: 分かれば記載（空でも可）
+      placeholder: S-XXX / UC-XXX / M-XXX / API-XXX

@@ -1,0 +1,26 @@
+name: "Feature request"
+description: "新しい機能を追加する"
+title: "Feature: "
+labels: ["feature"]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: 概要
+      description: 何を実現したいか（AIが詳細な仕様は spec で詰めます）
+      placeholder: 例) 受注一覧で基本的な検索・ソートを提供したい
+    validations:
+      required: true
+  - type: textarea
+    id: desired
+    attributes:
+      label: 変えたい/追加したいこと
+      description: 期待するゴールや主要なユースケースを簡潔に
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: 備考
+      description: 関連Spec/UC IDがあれば記載（空でも可）
+      placeholder: S-OVERVIEW-001 / UC-XXX / API-XXX など
