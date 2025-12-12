@@ -28,9 +28,10 @@ Claude Code を使用する場合、以下の MCP サーバーを推奨します
 
 | MCP | Purpose | 設定方法 |
 |-----|---------|----------|
-| **serena** | プロジェクト構造・ファイル操作 | `claude mcp add serena` |
-| **context7** | ライブラリ/フレームワークのドキュメント検索 | `claude mcp add context7` |
-| **playwright** | ブラウザ自動化・E2E テスト | `claude mcp add playwright` |
+| **serena** | プロジェクト構造・ファイル操作 | `claude mcp add serena -- uvx --from git+https://github.com/oraios/serena serena start-mcp-server --context claude-code --project "$(pwd)"` |
+| **context7** | ライブラリ/フレームワークのドキュメント検索 | `claude mcp add context7 -s project -- npx -y @upstash/context7-mcp` |
+| **playwright** | ブラウザ自動化・E2E テスト | `claude mcp add playwright -s project -- npx -y @playwright/mcp@latest
+` |
 
 ```bash
 # Claude Code での MCP サーバー追加
