@@ -4,7 +4,7 @@ description: "Task list template for feature implementation"
 
 # Tasks: [FEATURE NAME]
 
-Input: `spec.md` (Feature spec) and Overview spec (for shared masters/APIs).  
+Input: `spec.md` (Feature spec) and Domain spec (for shared masters/APIs).  
 Prerequisites: `plan.md` must be created and reviewed.
 
 Notes:
@@ -41,7 +41,7 @@ Where:
 
 - `[T-000] [P0] Confirm target spec(s) and plan are approved`
 - `[T-001] [P0] Confirm branch and Issue linkage (feature/<issue>-...)`
-- `[T-002] [P0] Read Overview spec and Feature spec; list dependencies: masters (M-...), APIs (API-...), cross-cutting rules`
+- `[T-002] [P0] Read Domain spec and Feature spec; list dependencies: masters (M-...), APIs (API-...), cross-cutting rules`
 - `[T-003] [P0] Use Serena to map relevant directories/files for this change`
 - `[T-004] [P0] Use context7 (or equivalent) to fetch needed library/framework docs`
 
@@ -115,7 +115,7 @@ Group tasks by user story so each slice is independently implementable/testable:
 - Tasks should minimize cross-file conflicts between developers and AI agents.
 - Each task should have a clear "definition of done" aligned with the spec.
 - Prefer more tasks with smaller scope over fewer tasks with vague scope.
-- When shared masters or APIs are impacted, ensure the Overview spec and
+- When shared masters or APIs are impacted, ensure the Domain spec and
   dependent Feature specs are updated and tasks reflect this.
 - Verify tests fail before implementing, commit after each logical group,
   and stop at checkpoints to validate each story independently.

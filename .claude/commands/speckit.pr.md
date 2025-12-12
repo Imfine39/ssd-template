@@ -93,7 +93,12 @@ Step 5 of the 6-step workflow. Before creating a PR, this command:
    - Run: `node .specify/scripts/pr.js --title "..." --body-file pr-body.md`
    - Display PR URL
 
-6) **Post-PR guidance**:
+6) **Update branch state**:
+   ```bash
+   node .specify/scripts/state.js branch --set-step pr
+   ```
+
+7) **Post-PR guidance**:
    ```
    PR created: [URL]
 

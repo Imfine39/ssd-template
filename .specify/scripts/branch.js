@@ -12,11 +12,16 @@
  *     if --issue: <type>/<issue>-<slug>
  *     else: <type>/<N>-<slug> where N is next number found across local branches and specs dirs
  * - Creates and checks out the branch if it does not already exist.
+ * - Updates branch-state.json with the new branch entry.
  */
 
 const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
+
+// State management paths
+const STATE_DIR = path.join(process.cwd(), '.specify', 'state');
+const BRANCH_STATE_PATH = path.join(STATE_DIR, 'branch-state.json');
 
 function run(cmd) {
   return execSync(cmd, { stdio: ['ignore', 'pipe', 'inherit'] }).toString().trim();
@@ -81,6 +86,39 @@ function branchExists(name) {
   }
 }
 
+function updateBranchState(branchName, type, issue) {
+  try {
+    // Ensure state directory exists
+    if (!fs.existsSync(STATE_DIR)) {
+      fs.mkdirSync(STATE_DIR, { recursive: true });
+    }
+
+    // Read or initialize branch state
+    let branchState = { version: '1.0.0', branches: {}, suspended: [] };
+    if (fs.existsSync(BRANCH_STATE_PATH)) {
+      branchState = JSON.parse(fs.readFileSync(BRANCH_STATE_PATH, 'utf-8'));
+    }
+
+    // Add or update branch entry
+    branchState.branches[branchName] = {
+      type: type,
+      issue: issue ? parseInt(issue, 10) : null,
+      specId: null,
+      specPath: null,
+      step: 'spec',
+      taskProgress: null,
+      createdAt: new Date().toISOString(),
+      lastActivity: new Date().toISOString()
+    };
+
+    // Write updated state
+    fs.writeFileSync(BRANCH_STATE_PATH, JSON.stringify(branchState, null, 2) + '\n', 'utf-8');
+    console.log(`Updated branch state for: ${branchName}`);
+  } catch (e) {
+    console.error(`Warning: Could not update branch state: ${e.message}`);
+  }
+}
+
 function main() {
   const { type, slug, issue } = parseArgs();
   let branch;
@@ -100,6 +138,9 @@ function main() {
 
   run(`git checkout -b ${branch}`);
   console.log(`Created and checked out ${branch}`);
+
+  // Update branch state
+  updateBranchState(branch, type, issue);
 }
 
 main();

@@ -11,7 +11,13 @@
       "mcp__serena__list_dir",
       "Bash(mkdir:*)",
       "Bash(git push:*)",
-      "Bash(node:*)"
+      "Bash(node:*)",
+      "Bash(ls -la \"C:\\Users\\萓谷篤嗣\\Desktop\\ssd-template\\.github\"\" 2>/dev/null || echo \"No .github directory \")",
+      "Bash(echo:*)",
+      "Bash(gh repo view:*)",
+      "Bash(gh repo edit:*)",
+      "Bash(git remote add:*)",
+      "Bash(git branch:*)"
     ]
   }
 }

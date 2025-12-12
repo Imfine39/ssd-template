@@ -17,15 +17,16 @@ You **MUST** consider the user input before proceeding (if not empty).
 
 ## Purpose
 
-Spec（Overview または Feature）の曖昧な点を特定し、人間に **1問ずつ** 質問して解消する。
+Spec（Vision、Domain、または Feature）の曖昧な点を特定し、人間に **1問ずつ** 質問して解消する。
 回答を受け取るたびに即座に Spec に反映し、曖昧点がなくなるまでループを継続する。
 
 **Important**: This clarification workflow is expected to run (and be completed) BEFORE invoking `/speckit.plan`. If the user explicitly states they are skipping clarification (e.g., exploratory spike), you may proceed, but must warn that downstream rework risk increases.
 
 ## When to Use
 
-- `/speckit.bootstrap` 後の Overview 精密化（**必須**）
-- `/speckit.add`, `/speckit.fix`, `/speckit.issue` での Spec 作成後
+- `/speckit.vision` 後の Vision Spec 精密化
+- `/speckit.design` 後の Domain Spec 精密化
+- `/speckit.add`, `/speckit.fix`, `/speckit.issue` での Feature Spec 作成後
 - Spec に `[NEEDS CLARIFICATION]` が残っている場合
 - 人間から「clarify して」と指示された場合
 
@@ -35,17 +36,19 @@ Spec（Overview または Feature）の曖昧な点を特定し、人間に **1�
 
 ### Step 1: Identify Target Spec
 
-1. `$ARGUMENTS` で Spec ID または種類（overview/feature）が指定されていればそれを使用
+1. `$ARGUMENTS` で Spec ID または種類（vision/domain/feature）が指定されていればそれを使用
 2. なければ現在のブランチ名から推測:
-   - `spec/*-overview` → Overview spec
+   - `spec/*-vision` → Vision spec
+   - `spec/*-domain` または `spec/*-overview` → Domain spec
    - `feature/*`, `fix/*` → 対応する Feature spec
 3. それでも特定できなければ、`.specify/specs/` を確認して質問
 
 4. Spec ファイルを読み込む。存在しなければ:
-   - Overview: `/speckit.bootstrap` を先に実行するよう指示
+   - Vision: `/speckit.vision` を先に実行するよう指示
+   - Domain: `/speckit.design` を先に実行するよう指示
    - Feature: `/speckit.issue` または `/speckit.add` を先に実行するよう指示
 
-5. Spec Type（Overview or Feature）を判定し、対応するタクソノミーを選択
+5. Spec Type（Vision, Domain, or Feature）を判定し、対応するタクソノミーを選択
 
 ---
 
@@ -56,7 +59,18 @@ Spec の内容を読み込み、以下のタクソノミーに基づいて各カ
 - **Partial**: 一部定義されているが不完全
 - **Missing**: 定義されていない
 
-#### Overview Spec タクソノミー
+#### Vision Spec タクソノミー
+
+| Category | Check Items |
+|----------|-------------|
+| **System Purpose** | 解決する課題、ビジネス価値、成功指標の定義 |
+| **Target Users** | プライマリ/セカンダリユーザー、ペルソナ、痛点 |
+| **User Journeys** | 主要ワークフロー、エントリー/イグジットポイント、ハッピーパス |
+| **Scope** | 必須 vs あると良い、明示的な除外事項、フェーズ境界 |
+| **Constraints** | タイムライン、予算、技術制約、コンプライアンス |
+| **Risks** | 主要な不確実性、外部依存、緩和策 |
+
+#### Domain Spec タクソノミー
 
 | Category | Check Items |
 |----------|-------------|
@@ -65,16 +79,16 @@ Spec の内容を読み込み、以下のタクソノミーに基づいて各カ
 | **API Contracts (API-*)** | CRUD操作、命名規則、リクエスト/レスポンス形式、エラー形式 |
 | **State & Lifecycle** | ステータス遷移、ライフサイクルルール |
 | **Actors & Permissions** | アクター定義、権限レベル、認証方式 |
-| **Business Rules** | 計算ロジック、バリデーション規則、制約条件 |
+| **Business Rules** | 計算ロジック(CR-*)、バリデーション(VR-*)、制約(BR-*) |
 | **Non-Functional** | パフォーマンス、セキュリティ、可用性、データ保持 |
-| **Integration** | 外部システム連携、データ形式、プロトコル |
+| **Technology Decisions** | 技術スタック、外部依存、統合パターン |
 
 #### Feature Spec タクソノミー
 
 | Category | Check Items |
 |----------|-------------|
 | **Functional Scope** | ユーザーゴール、成功基準、スコープ外の明示 |
-| **Overview Alignment** | M-*/API-* 参照の妥当性、Overview に追加すべき要素 |
+| **Domain Alignment** | M-*/API-*/BR-* 参照の妥当性、Domain に追加すべき要素 |
 | **Domain & Data** | エンティティ、属性、関係、データ量想定 |
 | **User Interaction** | ユーザージャーニー、画面遷移、空/エラー/ローディング状態 |
 | **Use Cases (UC-*)** | 前提条件、主要フロー、代替/例外フロー、受け入れ条件 |
@@ -181,17 +195,28 @@ Spec の内容を読み込み、以下のタクソノミーに基づいて各カ
 
 回答の内容に応じて、最も適切なセクションを更新:
 
+**Domain Spec の場合:**
+
 | 回答の種類 | 更新先セクション |
 |-----------|-----------------|
-| マスターデータ | Section 4 (Data Model) |
-| API定義 | Section 5 (API Contracts) |
-| ユーザーストーリー | Section 6 (User Stories / Use Cases) |
-| 機能要件 | Section 7 (Functional Requirements) |
-| エッジケース | Section 8 (Edge Cases) |
-| ビジネスルール | Section 11 (Business Rules) |
-| 非機能要件 | Section 12 (Non-Functional Requirements) |
-| アクター/権限 | Section 2 (Context and Actors) |
-| 用語定義 | Section 3 (Domain Model) |
+| アクター/権限 | Section 2 (Actors and Roles) |
+| マスターデータ (M-*) | Section 3 (Master Data Definitions) |
+| API定義 (API-*) | Section 4 (API Contracts) |
+| 状態/ライフサイクル | Section 5 (State & Lifecycle) |
+| ビジネスルール (BR-*/VR-*/CR-*) | Section 6 (Shared Business Rules) |
+| 非機能要件 | Section 7 (Non-Functional Requirements) |
+
+**Feature Spec の場合:**
+
+| 回答の種類 | 更新先セクション |
+|-----------|-----------------|
+| Domain依存 (M-*/API-*/BR-*) | Section 2 (Domain Dependencies) |
+| アクター | Section 3 (Actors) |
+| ユーザーストーリー (UC-*) | Section 4 (User Stories / Use Cases) |
+| 機能要件 (FR-*) | Section 5 (Functional Requirements) |
+| 成功条件 (SC-*) | Section 6 (Success Criteria) |
+| エッジケース | Section 7 (Edge Cases) |
+| 非機能要件 | Section 8 (Non-Functional Requirements) |
 
 #### 5.3 更新ルール
 
@@ -253,15 +278,15 @@ Spec の内容を読み込み、以下のタクソノミーに基づいて各カ
 
 ---
 
-## Example: Overview Clarify Session
+## Example: Domain Clarify Session
 
 ```
 人間: /speckit.clarify
 
-AI: Overview Spec S-OVERVIEW-001 を読み込みました。
+AI: Domain Spec S-DOMAIN-001 を読み込みました。
     曖昧性スキャンを実行中...
 
-    === Clarify: S-OVERVIEW-001 (Q1/5) ===
+    === Clarify: S-DOMAIN-001 (Q1/5) ===
 
     Master Data (M-*) について確認します。
 
@@ -284,10 +309,10 @@ AI: Overview Spec S-OVERVIEW-001 を読み込みました。
 AI: 回答を記録しました: 顧客(M-CLIENTS)、案件(M-PROJECTS)、売上(M-REVENUES)
 
     Spec を更新しました:
-    - Section 4 (Data Model): M-CLIENTS, M-PROJECTS, M-REVENUES を追加
+    - Section 3 (Master Data Definitions): M-CLIENTS, M-PROJECTS, M-REVENUES を追加
     - Clarifications: Q&A を記録
 
-    === Clarify: S-OVERVIEW-001 (Q2/5) ===
+    === Clarify: S-DOMAIN-001 (Q2/5) ===
 
     Actors & Permissions について確認します。
 
@@ -306,7 +331,7 @@ AI: 回答を記録しました: 営業、マネージャー、経理、管理�
     - Section 2 (Actors): 4種類のアクターを定義
     - Clarifications: Q&A を記録
 
-    === Clarify: S-OVERVIEW-001 (Q3/5) ===
+    === Clarify: S-DOMAIN-001 (Q3/5) ===
 
     State & Lifecycle について確認します。
 
@@ -322,11 +347,11 @@ AI: 回答を記録しました: 営業、マネージャー、経理、管理�
 AI: 回答を記録しました: リード → 商談 → 見積 → 受注 → 納品 → 検収
 
     Spec を更新しました:
-    - Section 11 (Business Rules): ステータス遷移を定義
-    - Section 4 (Data Model): M-PROJECTS に status フィールドを追加
+    - Section 5 (State & Lifecycle): ステータス遷移を定義
+    - Section 3 (Master Data Definitions): M-PROJECTS に status フィールドを追加
     - Clarifications: Q&A を記録
 
-    === Clarify: S-OVERVIEW-001 (Q4/5) ===
+    === Clarify: S-DOMAIN-001 (Q4/5) ===
 
     API Contracts (API-*) について確認します。
 
@@ -349,11 +374,11 @@ AI: 回答を記録しました: リード → 商談 → 見積 → 受注 → 
 AI: 回答を記録しました: JWT (JSON Web Token)
 
     Spec を更新しました:
-    - Section 5 (API Contracts): 認証方式を JWT と定義
-    - Section 12 (Non-Functional): セキュリティ要件に追記
+    - Section 4 (API Contracts): 認証方式を JWT と定義
+    - Section 7 (Non-Functional Requirements): セキュリティ要件に追記
     - Clarifications: Q&A を記録
 
-    === Clarify: S-OVERVIEW-001 (Q5/5) ===
+    === Clarify: S-DOMAIN-001 (Q5/5) ===
 
     Business Rules について確認します。
 
@@ -369,20 +394,21 @@ AI: 回答を記録しました: JWT (JSON Web Token)
 AI: 回答を記録しました: 契約金額を納品月に一括計上
 
     Spec を更新しました:
-    - Section 11 (Business Rules): 売上計上ルールを定義
+    - Section 6 (Shared Business Rules): 売上計上ルールを定義
     - Clarifications: Q&A を記録
 
-    === Clarify 完了: S-OVERVIEW-001 ===
+    === Clarify 完了: S-DOMAIN-001 ===
 
     質問/回答: 5 問
-    更新したSpec: .specify/specs/overview/spec.md
+    更新したSpec: .specify/specs/domain/spec.md
 
     更新したセクション:
-    - Section 2 (Actors): 4種類のアクター定義
-    - Section 4 (Data Model): 3つのマスター定義
-    - Section 5 (API Contracts): 認証方式
-    - Section 11 (Business Rules): ステータス遷移、売上計上ルール
-    - Section 12 (Non-Functional): セキュリティ要件
+    - Section 2 (Actors and Roles): 4種類のアクター定義
+    - Section 3 (Master Data Definitions): 3つのマスター定義 (M-*)
+    - Section 4 (API Contracts): 認証方式
+    - Section 5 (State & Lifecycle): ステータス遷移
+    - Section 6 (Shared Business Rules): 売上計上ルール
+    - Section 7 (Non-Functional Requirements): セキュリティ要件
     - Clarifications: Session 2025-12-11 追加
 
     カバレッジサマリー:
@@ -408,8 +434,9 @@ AI: 回答を記録しました: 契約金額を納品月に一括計上
 
 ## Notes
 
-- Overview clarify は bootstrap 直後に**必須**で実行
-- Feature clarify は Overview が十分に定義されていることが前提
+- Vision clarify は `/speckit.vision` 後に実行（目的とジャーニーの明確化）
+- Domain clarify は `/speckit.design` 後に実行（M-*/API-*/BR-* の明確化）
+- Feature clarify は Domain が十分に定義されていることが前提
 - 人間が「後で」「スキップ」と言った場合は `[NEEDS CLARIFICATION]` を残し、Deferred としてレポート
 - 各セッションは独立（前回のセッションを自動継続しない）
 - 10問を超えるセッションが必要な場合は、Spec の分割を検討

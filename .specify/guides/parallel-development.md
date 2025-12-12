@@ -9,7 +9,7 @@ simultaneously within the spec-driven development workflow.
 
 When multiple features are developed in parallel, several challenges arise:
 
-- **Overview conflicts**: Multiple features may need to modify shared masters/APIs.
+- **Domain conflicts**: Multiple features may need to modify shared masters/APIs.
 - **Feature dependencies**: One feature may depend on another being completed first.
 - **Merge order**: The order in which PRs are merged affects the final state.
 - **Spec drift**: Specs may become inconsistent as parallel changes are made.
@@ -28,7 +28,7 @@ in the "Domain Model and Dependencies" section:
 ```markdown
 ## 3. Domain Model and Dependencies
 
-### 3.1 Shared Domain Dependencies
+### 3.1 Domain Dependencies
 
 - Masters: `M-CLIENTS`, `M-ORDERS`
 - APIs: `API-ORDERS-LIST`, `API-ORDERS-CREATE`
@@ -49,7 +49,7 @@ in the "Domain Model and Dependencies" section:
 
 ### 2.2 Visualizing Dependencies
 
-Create a simple dependency graph in the Overview spec or a separate document:
+Create a simple dependency graph in the Domain spec or a separate document:
 
 ```
 S-AUTH-001 ──────────────────────────────┐
@@ -61,14 +61,14 @@ S-PRODUCTS-001 ────────┘
 
 ---
 
-## 3. Overview Modification Protocol
+## 3. Domain Modification Protocol
 
-When a feature needs to modify the Overview spec (add/change masters or APIs),
+When a feature needs to modify the Domain spec (add/change masters or APIs),
 follow this protocol to avoid conflicts:
 
 ### 3.1 Announce Intent
 
-Before starting work that will modify the Overview:
+Before starting work that will modify the Domain:
 
 1. **Check for conflicts**:
    - Review open Issues and PRs that mention the same masters/APIs.
@@ -76,9 +76,9 @@ Before starting work that will modify the Overview:
 
 2. **Announce in the Issue**:
    ```markdown
-   ## Overview Impact
+   ## Domain Impact
 
-   This feature will modify the Overview spec:
+   This feature will modify the Domain spec:
    - Add field `priority` to `M-ORDERS`
    - Add new API `API-ORDERS-PRIORITY-UPDATE`
 
@@ -87,37 +87,37 @@ Before starting work that will modify the Overview:
 
 3. **Wait for acknowledgment** (24 hours recommended) before proceeding.
 
-### 3.2 Overview-First Workflow
+### 3.2 Domain-First Workflow
 
-When Overview changes are needed:
+When Domain changes are needed:
 
-1. **Create Overview PR first**:
-   - Branch: `spec/<issue>-overview-<change>`
-   - Contains ONLY Overview spec changes.
+1. **Create Domain PR first**:
+   - Branch: `spec/<issue>-domain-<change>`
+   - Contains ONLY Domain spec changes.
    - No implementation code.
 
-2. **Get Overview PR approved and merged** before proceeding with Feature.
+2. **Get Domain PR approved and merged** before proceeding with Feature.
 
-3. **Rebase Feature branch** after Overview merge:
+3. **Rebase Feature branch** after Domain merge:
    ```bash
    git fetch origin main
    git rebase origin/main
    ```
 
-4. **Update Feature spec** to reference new Overview IDs.
+4. **Update Feature spec** to reference new Domain IDs.
 
 5. **Continue with Feature implementation**.
 
 ### 3.3 Conflict Resolution
 
-If two features need conflicting Overview changes:
+If two features need conflicting Domain changes:
 
 1. **Identify the conflict** early through announcements.
 
 2. **Schedule a sync meeting** with both feature owners.
 
 3. **Determine resolution strategy**:
-   - **Combine**: Merge both changes into a single Overview PR.
+   - **Combine**: Merge both changes into a single Domain PR.
    - **Sequence**: Agree on which change goes first.
    - **Redesign**: Find an approach that avoids the conflict.
 
@@ -129,7 +129,7 @@ If two features need conflicting Overview changes:
 
 ### 4.1 Independent Features
 
-For features that don't share Overview modifications:
+For features that don't share Domain modifications:
 
 - Develop freely in parallel.
 - Merge in any order.
@@ -159,7 +159,7 @@ For features with hard dependencies:
 1. **Implement in dependency order**.
 
 2. **Use interface contracts** to allow parallel work:
-   - Define API contracts in Overview.
+   - Define API contracts in Domain.
    - Dependent feature can mock the dependency.
    - Integration happens after dependency is merged.
 
@@ -177,7 +177,7 @@ For features with hard dependencies:
 
 ### 5.1 Recommended Merge Order
 
-1. **Overview changes** (if any)
+1. **Domain changes** (if any)
 2. **Infrastructure/shared code** (types, utilities)
 3. **Dependencies** (in dependency order)
 4. **Independent features** (any order)
@@ -224,7 +224,7 @@ When a PR has conflicts with main:
 
 Include in standups:
 - Which specs are being modified.
-- Any Overview changes planned.
+- Any Domain changes planned.
 - Any blockers related to dependencies.
 
 ### 6.2 Spec Sync Meetings
@@ -232,7 +232,7 @@ Include in standups:
 For complex parallel development:
 - Weekly or bi-weekly sync.
 - Review Feature index status.
-- Discuss upcoming Overview changes.
+- Discuss upcoming Domain changes.
 - Resolve conflicts proactively.
 
 ### 6.3 Async Communication
@@ -248,7 +248,7 @@ Use Issue comments and PR descriptions to communicate:
 
 ### 7.1 Feature Index as Coordination Tool
 
-Keep the Overview's Feature index up to date:
+Keep the Domain's Feature index up to date:
 
 ```markdown
 | Feature ID | Title | Path | Status | Owner | Depends On |
@@ -261,7 +261,7 @@ Keep the Overview's Feature index up to date:
 ### 7.2 Labels for Coordination
 
 Use GitHub labels to track coordination needs:
-- `overview-change`: PR modifies Overview spec.
+- `domain-change`: PR modifies Domain spec.
 - `has-dependency`: Feature depends on another.
 - `coordination-needed`: Requires sync with other work.
 
@@ -269,7 +269,7 @@ Use GitHub labels to track coordination needs:
 
 Use descriptive branch names:
 - `feature/123-orders-basic` - Independent feature
-- `spec/124-overview-add-priority` - Overview change
+- `spec/124-domain-add-priority` - Domain change
 - `feature/125-orders-priority-depends-124` - Dependent feature
 
 ---
@@ -285,9 +285,9 @@ Use descriptive branch names:
 - Merge to main frequently.
 - Rebase regularly.
 
-### 8.2 Silent Overview Changes
+### 8.2 Silent Domain Changes
 
-**Problem**: Modifying Overview without announcement.
+**Problem**: Modifying Domain without announcement.
 
 **Solution**:
 - Always announce in Issue.
@@ -299,7 +299,7 @@ Use descriptive branch names:
 
 **Solution**:
 - Identify shared requirements.
-- Extract to a third feature or Overview change.
+- Extract to a third feature or Domain change.
 - Break the cycle before implementation.
 
 ### 8.4 Ignoring Spec Lint
@@ -318,9 +318,9 @@ Use descriptive branch names:
 Before starting a new feature:
 
 - [ ] Check Feature index for related work in progress.
-- [ ] Identify if Overview changes are needed.
+- [ ] Identify if Domain changes are needed.
 - [ ] Declare dependencies in Feature spec.
-- [ ] Announce in Issue if Overview changes are planned.
+- [ ] Announce in Issue if Domain changes are planned.
 
 Before creating a PR:
 

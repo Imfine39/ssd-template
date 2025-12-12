@@ -1,30 +1,40 @@
 ---
-description: Bootstrap project or propose additional Features. Creates Overview and/or batch-creates Feature Issues.
-handoffs:
-  - label: Clarify Overview
-    agent: speckit.clarify
-    prompt: Clarify the Overview spec to define masters, APIs, and business rules
-    send: true
+description: "[DEPRECATED] Use /speckit.vision + /speckit.design instead."
 ---
 
-## User Input
+## DEPRECATED
 
-```text
-$ARGUMENTS
+**このコマンドは廃止されました。**
+
+新しいフローを使用してください：
+
+### 新規プロジェクトの場合
+
+```
+/speckit.vision   → Vision Spec 作成（目的、ジャーニー）
+/speckit.design   → Feature 提案 + Domain Spec 作成 + Foundation Issue
+/speckit.issue    → 基盤構築から開始
 ```
 
-## Purpose
+### 追加 Feature の場合
 
-This command handles two scenarios:
+```
+/speckit.featureproposal  → 追加 Feature 提案
+```
+
+---
+
+## Legacy Purpose (参考)
+
+This command previously handled:
 
 1. **New Project (No Overview)**: Full onboarding - creates Overview spec (scaffold), proposes Features, batch-creates Issues
 2. **Existing Project (Overview exists)**: Proposes additional Features based on user intent, batch-creates Issues
 
-**Important**: This command does NOT create Feature specs. It only creates:
-- Overview spec (scaffold)
-- Feature Issues (with `backlog` label)
-
-After bootstrap, the user should run `/speckit.clarify` to refine the Overview spec before starting Feature development.
+This has been replaced by:
+- `/speckit.vision` - Project purpose and journeys
+- `/speckit.design` - Feature proposal + Domain Spec (M-*/API-*)
+- `/speckit.featureproposal` - Additional feature proposals
 
 ## Steps
 

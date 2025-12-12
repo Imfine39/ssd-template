@@ -1,5 +1,5 @@
 ---
-description: Run spec lint to check Overview/Feature consistency.
+description: Run spec lint to check Vision/Domain/Feature consistency.
 ---
 
 Run from the repo root:
@@ -12,8 +12,8 @@ What this checks:
 
 - Spec Type and Spec ID are present in each spec.md
 - Spec IDs and UC IDs are unique across all specs
-- Feature specs only reference masters/APIs defined in Overview specs
-- Warns when Overview masters/APIs are not referenced by any Feature
+- Feature specs only reference masters/APIs defined in Domain specs
+- Warns when Domain masters/APIs are not referenced by any Feature
 
 Exit codes:
 

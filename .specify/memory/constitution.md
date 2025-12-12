@@ -9,10 +9,13 @@ code reviews, and architectural choices MUST align with them.
 
 ## Terminology and Scope
 
-- **Overview spec**: Single source of truth for shared master data (`M-*`),
-  shared API contracts (`API-*`), cross-cutting rules, and domain vocabulary.
+- **Vision spec**: Defines the project's purpose, target users, and high-level
+  user journeys. Created first for new projects.
+- **Domain spec** (formerly Overview): Single source of truth for shared master
+  data (`M-*`), shared API contracts (`API-*`), cross-cutting rules, and domain
+  vocabulary.
 - **Feature spec**: One per feature slice (screen, user flow, change set).
-  Feature specs do not redefine shared masters/APIs; they reference Overview IDs.
+  Feature specs do not redefine shared masters/APIs; they reference Domain IDs.
 - **Specification IDs**: Stable identifiers (for example `S-001`, `UC-001`,
   `M-CLIENTS`, `API-PROJECT_ORDERS-LIST`) used across specs, plans, tasks,
   PRs, and tests for traceability.
@@ -220,7 +223,7 @@ For medium changes: Full Spec → Plan → Tasks workflow required.
 
 **Large** (Extended Workflow):
 
-- Changes to Overview spec (shared masters, APIs, domain rules)
+- Changes to Domain spec (shared masters, APIs, domain rules)
 - Architectural changes affecting multiple features
 - Breaking changes to existing APIs or data models
 - Changes requiring coordination across teams
@@ -378,14 +381,15 @@ represent correct behavior.
 
 ## VIII. Specification Structure and Domain Model
 
-Specifications MAY be split across multiple files. Projects SHOULD distinguish:
+Specifications are organized in a three-tier structure:
 
-- A System Overview / Domain spec, and
-- One Feature spec per feature slice (screen, user flow, or change set).
+- Vision spec (project purpose and journeys)
+- Domain spec (shared masters, APIs, business rules)
+- Feature specs (one per feature slice)
 
 Non-negotiable rules:
 
-- System Overview / Domain spec:
+- Domain spec:
 
   - Defines shared master data (for example `M-CLIENTS`, `M-MEMBERS`,
     `M-PROJECT_ORDERS`).
@@ -397,21 +401,21 @@ Non-negotiable rules:
 
   - MUST NOT re-define shared master data or shared API contracts.
   - MUST declare which masters and APIs they depend on by referencing IDs
-    from the Overview spec (for example "Depends on `M-CLIENTS` and
+    from the Domain spec (for example "Depends on `M-CLIENTS` and
     `API-PROJECT_ORDERS-LIST`").
   - Focus on specific user stories, flows, UI behavior, and how they use
     the shared domain model.
-  - MUST be listed in an Overview Feature index table with columns
-    `| Feature ID | Title | Path | Status |`.
+  - MUST be listed in a Domain Feature index table with columns
+    `| Feature ID | Title | Path | Status | Related M-*/API-* |`.
 
 - When a shared master or API contract changes:
 
-  - The Overview spec MUST be updated first.
+  - The Domain spec MUST be updated first.
   - All Feature specs that reference the changed IDs MUST be reviewed and
     updated as needed.
   - Implementation and tests MUST then be updated accordingly.
 
-Rationale: Centralizing domain and contract definitions in a single Overview
+Rationale: Centralizing domain and contract definitions in a single Domain
 spec prevents divergence across feature specs and keeps the system coherent.
 
 ### Specification Lifecycle
@@ -535,4 +539,4 @@ Compliance:
 - Exceptions require documented justification and explicit team approval
   (for example via PR comments or architectural decision records).
 
-Version: 1.4.0 | Ratified: 2025-12-10 | Last Amended: 2025-12-11
+Version: 1.5.0 | Ratified: 2025-12-10 | Last Amended: 2025-12-12

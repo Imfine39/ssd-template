@@ -2,16 +2,16 @@
 'use strict';
 
 /**
- * Specification linter for Overview/Feature consistency.
+ * Specification linter for Vision/Domain/Feature consistency.
  * Checks:
  *  - Spec Type and Spec ID presence
  *  - Unique Spec IDs and UC IDs
- *  - Feature specs only reference masters/APIs defined in Overview specs
- *  - Warns on unused masters/APIs defined in Overview
+ *  - Feature specs only reference masters/APIs defined in Domain specs
+ *  - Warns on unused masters/APIs defined in Domain
  *  - Feature spec quality (UC presence, required sections)
  *  - Deprecated/Superseded specs have required metadata
  *  - Plan/Tasks alignment with spec IDs
- *  - Overview freshness vs Feature specs
+ *  - Domain freshness vs Feature specs
  */
 
 const fs = require('fs');
@@ -53,7 +53,8 @@ function walkForSpecs(dir) {
 function normalizeSpecType(raw) {
   if (!raw) return null;
   const cleaned = raw.replace(/[\[\]]/g, '').split('|')[0].trim().toUpperCase();
-  if (cleaned.startsWith('OVERVIEW')) return 'OVERVIEW';
+  if (cleaned.startsWith('VISION')) return 'VISION';
+  if (cleaned.startsWith('OVERVIEW') || cleaned.startsWith('DOMAIN')) return 'DOMAIN';
   if (cleaned.startsWith('FEATURE')) return 'FEATURE';
   return cleaned || null;
 }
@@ -144,20 +145,20 @@ for (const [uc, count] of ucIdCounts.entries()) {
   if (count > 1) errors.push(`Use Case ID "${uc}" is duplicated ${count} times`);
 }
 
-// Collect Overview definitions
-const overviewSpecs = specs.filter((s) => s.specType === 'OVERVIEW');
+// Collect Domain/Overview definitions (DOMAIN and OVERVIEW are equivalent)
+const domainSpecs = specs.filter((s) => s.specType === 'DOMAIN');
 const featureSpecs = specs.filter((s) => s.specType === 'FEATURE');
 
-// Presence checks for overview vs feature
-if (featureSpecs.length > 0 && overviewSpecs.length === 0) {
-  errors.push('Feature specs exist but no Overview spec found. Create an Overview spec first.');
+// Presence checks for domain vs feature
+if (featureSpecs.length > 0 && domainSpecs.length === 0) {
+  errors.push('Feature specs exist but no Domain spec found. Create a Domain spec first.');
 }
 
-const overviewMasters = new Set();
-const overviewApis = new Set();
-for (const spec of overviewSpecs) {
-  spec.masters.forEach((m) => overviewMasters.add(m));
-  spec.apis.forEach((a) => overviewApis.add(a));
+const domainMasters = new Set();
+const domainApis = new Set();
+for (const spec of domainSpecs) {
+  spec.masters.forEach((m) => domainMasters.add(m));
+  spec.apis.forEach((a) => domainApis.add(a));
 }
 
 // Validate Feature references
@@ -166,40 +167,44 @@ const usedApis = new Set();
 for (const spec of featureSpecs) {
   for (const m of spec.masters) {
     usedMasters.add(m);
-    if (!overviewMasters.has(m)) {
-      errors.push(`Unknown master "${m}" referenced in feature ${spec.relFile}; update Overview first.`);
+    if (!domainMasters.has(m)) {
+      errors.push(`Unknown master "${m}" referenced in feature ${spec.relFile}; update Domain spec first.`);
     }
   }
   for (const a of spec.apis) {
     usedApis.add(a);
-    if (!overviewApis.has(a)) {
-      errors.push(`Unknown API "${a}" referenced in feature ${spec.relFile}; update Overview first.`);
+    if (!domainApis.has(a)) {
+      errors.push(`Unknown API "${a}" referenced in feature ${spec.relFile}; update Domain spec first.`);
     }
   }
 }
 
-// Warnings for unused Overview entries
-for (const m of overviewMasters) {
-  if (!usedMasters.has(m)) warnings.push(`Master "${m}" defined in Overview is not referenced by any feature.`);
+// Warnings for unused Domain entries
+for (const m of domainMasters) {
+  if (!usedMasters.has(m)) warnings.push(`Master "${m}" defined in Domain is not referenced by any feature.`);
 }
-for (const a of overviewApis) {
-  if (!usedApis.has(a)) warnings.push(`API "${a}" defined in Overview is not referenced by any feature.`);
+for (const a of domainApis) {
+  if (!usedApis.has(a)) warnings.push(`API "${a}" defined in Domain is not referenced by any feature.`);
 }
 
-// Check Feature index table in Overview
-const featureIndexHeader = '| FEATURE ID | TITLE | PATH | STATUS |';
-const overviewFeatureRows = new Map(); // ID -> {path,status}
-for (const spec of overviewSpecs) {
+// Check Feature index table in Domain spec
+// Support both 4-column (legacy) and 5-column (new) formats
+const featureIndexHeader4 = '| FEATURE ID | TITLE | PATH | STATUS |';
+const featureIndexHeader5 = '| FEATURE ID | TITLE | PATH | STATUS | RELATED M-*/API-* |';
+const domainFeatureRows = new Map(); // ID -> {path,status}
+for (const spec of domainSpecs) {
   const text = fileContentCache.get(spec.file).toUpperCase();
-  if (!text.includes(featureIndexHeader)) {
-    warnings.push(`Overview ${spec.relFile} is missing Feature index table header "${featureIndexHeader}".`);
+  const has4Col = text.includes(featureIndexHeader4);
+  const has5Col = text.includes(featureIndexHeader5);
+  if (!has4Col && !has5Col) {
+    warnings.push(`Domain ${spec.relFile} is missing Feature index table header.`);
     continue;
   }
   const lines = text.split(/\r?\n/);
   let inTable = false;
   for (const line of lines) {
     const trimmed = line.trim();
-    if (trimmed === featureIndexHeader) {
+    if (trimmed === featureIndexHeader4 || trimmed === featureIndexHeader5) {
       inTable = true;
       continue;
     }
@@ -210,23 +215,23 @@ for (const spec of overviewSpecs) {
         const id = cells[0];
         const pathCell = cells[2];
         const statusCell = cells[3];
-        overviewFeatureRows.set(id, { path: pathCell, status: statusCell });
+        domainFeatureRows.set(id, { path: pathCell, status: statusCell });
       }
     }
   }
 }
 
-// Enforce Feature IDs appear in Overview table
+// Enforce Feature IDs appear in Domain table
 for (const spec of featureSpecs) {
   for (const id of spec.specIds) {
-    if (!overviewFeatureRows.has(id.toUpperCase())) {
-      errors.push(`Feature ID "${id}" is not listed in any Overview Feature index table.`);
+    if (!domainFeatureRows.has(id.toUpperCase())) {
+      errors.push(`Feature ID "${id}" is not listed in any Domain Feature index table.`);
     }
   }
 }
 
 // Check paths and status in Feature index table
-for (const [id, meta] of overviewFeatureRows.entries()) {
+for (const [id, meta] of domainFeatureRows.entries()) {
   const specMatch = featureSpecs.find((s) => s.specIds.includes(id));
   if (!specMatch) continue;
   if (meta.path) {
@@ -255,9 +260,13 @@ for (const spec of featureSpecs) {
   // Skip deprecated/superseded specs
   if (spec.status === 'DEPRECATED' || spec.status === 'SUPERSEDED') continue;
 
-  // Check for User Stories section
-  if (!content.includes('## 6. User Stories') && !content.includes('## 6. User Stories / Use Cases')) {
-    warnings.push(`Feature ${spec.relFile} is missing "User Stories" section (## 6.)`);
+  // Check for User Stories section (## 4. in new template, ## 6. in old template)
+  const hasUserStoriesSection =
+    content.includes('## 4. User Stories') ||
+    content.includes('## 6. User Stories') ||
+    content.includes('User Stories / Use Cases');
+  if (!hasUserStoriesSection) {
+    warnings.push(`Feature ${spec.relFile} is missing "User Stories" section`);
   }
 
   // Check for at least one UC ID in non-draft specs
@@ -265,10 +274,13 @@ for (const spec of featureSpecs) {
     warnings.push(`Feature ${spec.relFile} has no UC IDs defined (status: ${spec.status})`);
   }
 
-  // Check for Functional Requirements section in approved+ specs
+  // Check for Functional Requirements section in approved+ specs (## 5. in new, ## 7. in old)
   if (['APPROVED', 'IMPLEMENTING', 'COMPLETED'].includes(spec.status)) {
-    if (!content.includes('## 7. Functional Requirements')) {
-      warnings.push(`Feature ${spec.relFile} is missing "Functional Requirements" section (## 7.) for status ${spec.status}`);
+    const hasFRSection =
+      content.includes('## 5. Functional Requirements') ||
+      content.includes('## 7. Functional Requirements');
+    if (!hasFRSection) {
+      warnings.push(`Feature ${spec.relFile} is missing "Functional Requirements" section for status ${spec.status}`);
     }
   }
 }
@@ -325,21 +337,21 @@ for (const spec of specs) {
   }
 }
 
-// Check Overview freshness vs Feature specs
-if (overviewSpecs.length > 0) {
-  const overviewMtimes = overviewSpecs.map((s) => fs.statSync(s.file).mtime.getTime());
-  const latestOverviewMtime = Math.max(...overviewMtimes);
+// Check Domain freshness vs Feature specs
+if (domainSpecs.length > 0) {
+  const domainMtimes = domainSpecs.map((s) => fs.statSync(s.file).mtime.getTime());
+  const latestDomainMtime = Math.max(...domainMtimes);
 
   for (const spec of featureSpecs) {
     // Skip deprecated/superseded/completed specs
     if (['DEPRECATED', 'SUPERSEDED', 'COMPLETED'].includes(spec.status)) continue;
 
     const featureMtime = fs.statSync(spec.file).mtime.getTime();
-    if (featureMtime < latestOverviewMtime) {
-      const daysDiff = Math.floor((latestOverviewMtime - featureMtime) / (1000 * 60 * 60 * 24));
+    if (featureMtime < latestDomainMtime) {
+      const daysDiff = Math.floor((latestDomainMtime - featureMtime) / (1000 * 60 * 60 * 24));
       if (daysDiff > 7) {
         warnings.push(
-          `Feature ${spec.relFile} was last modified ${daysDiff} days before the latest Overview update; consider reviewing for consistency`
+          `Feature ${spec.relFile} was last modified ${daysDiff} days before the latest Domain update; consider reviewing for consistency`
         );
       }
     }

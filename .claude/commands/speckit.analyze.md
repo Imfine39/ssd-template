@@ -1,10 +1,10 @@
 ---
-description: Analyze implementation against Spec/Overview. Run before PR for peace of mind.
+description: Analyze implementation against Spec/Domain. Run before PR for peace of mind.
 ---
 
 ## Purpose
 
-PR作成前の「安心確認」として、実装が Spec/Overview の要件を満たしているか総合的に分析します。
+PR作成前の「安心確認」として、実装が Spec/Domain の要件を満たしているか総合的に分析します。
 
 **ユーティリティコマンド** - いつでも単独実行可能。
 
@@ -16,10 +16,10 @@ PR作成前の「安心確認」として、実装が Spec/Overview の要件を
 - 各 SC (Success Criteria) がテストでカバーされているか
 - Edge Cases が考慮されているか
 
-### 2. Overview との整合性
-- 使用している M-* (マスタ) が Overview に定義されているか
-- 使用している API-* が Overview に定義されているか
-- Overview の NFR (Non-Functional Requirements) に違反していないか
+### 2. Domain との整合性
+- 使用している M-* (マスタ) が Domain に定義されているか
+- 使用している API-* が Domain に定義されているか
+- Domain の NFR (Non-Functional Requirements) に違反していないか
 - 他の Feature との依存関係に問題がないか
 
 ### 3. コードベース分析
@@ -36,7 +36,7 @@ PR作成前の「安心確認」として、実装が Spec/Overview の要件を
 ## Steps
 
 1) **Load context**:
-   - Feature Spec + Overview Spec
+   - Feature Spec + Domain Spec
    - Plan + Tasks
    - 実装済みコード
    - テストコード
@@ -48,7 +48,7 @@ PR作成前の「安心確認」として、実装が Spec/Overview の要件を
 
 3) **Cross-reference analysis**:
    - Spec の各 UC/FR/SC と実装を照合
-   - Overview のマスタ/API定義と実際の使用を照合
+   - Domain のマスタ/API定義と実際の使用を照合
    - Plan の設計方針と実装を照合
 
 4) **Generate report**:
@@ -65,7 +65,7 @@ PR作成前の「安心確認」として、実装が Spec/Overview の要件を
      - Edge Case: 同時ログイン制限 → テストが不足
 
    ❌ 問題:
-     - API-AUTH-LOGOUT を使用していますが Overview に未定義です
+     - API-AUTH-LOGOUT を使用していますが Domain に未定義です
 
    📊 カバレッジ:
      - UC: 3/3 (100%)
@@ -100,7 +100,7 @@ AI: Feature S-AUTH-001 の分析を開始します...
 
     コードベースを探索中...
     Specとの照合中...
-    Overviewとの整合性確認中...
+    Domainとの整合性確認中...
 
     === 分析結果 ===
 
@@ -114,7 +114,7 @@ AI: Feature S-AUTH-001 の分析を開始します...
       - FR-006: パスワードリセット → 実装はありますがテストが不足
       - Edge Case: 無効トークン → 異常系テストを追加推奨
 
-    ✅ Overview整合性:
+    ✅ Domain整合性:
       - M-USER, M-SESSION: 正しく参照
       - API-AUTH-LOGIN, API-AUTH-LOGOUT: 正しく参照
 

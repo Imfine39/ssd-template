@@ -40,6 +40,11 @@ Step 3 of the 6-step workflow. Breaks down the plan into concrete, reviewable ta
 6) **Save tasks**:
    - Write to `tasks.md` in the feature directory
 
+7) **Update branch state**:
+   ```bash
+   node .specify/scripts/state.js branch --set-step implement
+   ```
+
 ## Output
 
 - Tasks file path

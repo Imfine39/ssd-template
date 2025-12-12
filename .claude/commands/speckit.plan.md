@@ -23,7 +23,7 @@ This is a **base command** that can be:
 ## Steps
 
 1) **Load context**:
-   - Feature Spec + Overview Spec
+   - Feature Spec + Domain Spec
    - Constitution (`.specify/memory/constitution.md`)
    - Plan template (`.specify/templates/plan-template.md`)
 
@@ -55,6 +55,15 @@ This is a **base command** that can be:
    - Show plan summary
    - List any open questions or risks
    - **Wait for human approval before proceeding to tasks**
+
+7) **Update branch state** (on approval):
+   ```bash
+   node .specify/scripts/state.js branch --set-step plan_review
+   ```
+   After human approval:
+   ```bash
+   node .specify/scripts/state.js branch --set-step tasks
+   ```
 
 ## Output
 

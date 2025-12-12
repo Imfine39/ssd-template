@@ -1,5 +1,5 @@
 ---
-description: Create or update a Spec (Overview or Feature). Loops clarify until no ambiguity remains.
+description: Create or update a Spec (Vision, Domain, or Feature). Loops clarify until no ambiguity remains.
 handoffs:
   - label: Continue to Plan
     agent: speckit.plan
@@ -27,14 +27,19 @@ Create or update a Spec. This is a **base command** that can be:
 
 Use scaffold script for initial creation:
 
-**Overview:**
+**Vision:**
 ```bash
-node .specify/scripts/scaffold-spec.js --kind overview --id S-OVERVIEW-001 --title "System Overview"
+node .specify/scripts/scaffold-spec.js --kind vision --id S-VISION-001 --title "Project Vision"
+```
+
+**Domain:**
+```bash
+node .specify/scripts/scaffold-spec.js --kind domain --id S-DOMAIN-001 --title "System Domain" --vision S-VISION-001
 ```
 
 **Feature:**
 ```bash
-node .specify/scripts/scaffold-spec.js --kind feature --id S-FEATURE-001 --title "Feature Title" --overview S-OVERVIEW-001
+node .specify/scripts/scaffold-spec.js --kind feature --id S-FEATURE-001 --title "Feature Title" --domain S-DOMAIN-001
 ```
 
 ### Mode 2: Full Spec Generation
@@ -57,17 +62,17 @@ Generate detailed spec content from description.
 3) **Fill spec sections**:
    - Purpose and Scope
    - Actors and Context
-   - Domain Model (reference Overview IDs: M-*, API-*)
+   - Domain Model (reference Domain IDs: M-*, API-*)
    - User Stories (UC-XXX)
    - Functional Requirements (FR-XXX)
    - Success Criteria (SC-XXX)
    - Edge Cases
    - Non-Functional Requirements
-   - Traceability (link to Overview)
+   - Traceability (link to Domain)
 
 4) **Save spec**:
    - Write to `.specify/specs/<id>/spec.md`
-   - For Feature: auto-update Overview's Feature index table
+   - For Feature: auto-update Domain's Feature index table
 
 5) **Run lint**:
    - Execute: `node .specify/scripts/spec-lint.js`

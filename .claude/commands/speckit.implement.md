@@ -31,6 +31,11 @@ Step 4 of the 6-step workflow. Implements tasks from the plan while:
 
 3) **For each task**:
 
+   **Update task progress**:
+   ```bash
+   node .specify/scripts/state.js branch --set-task-progress <completed>/<total>
+   ```
+
    a) **Read task requirements**:
       - Identify related UC/FR/SC IDs
       - Understand acceptance criteria

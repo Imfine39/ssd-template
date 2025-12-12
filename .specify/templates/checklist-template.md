@@ -1,82 +1,153 @@
-# [CHECKLIST TYPE] Checklist: [FEATURE NAME]
+# Requirements Quality Checklist: [SPEC_ID]
 
-Purpose: [Brief description of what this checklist covers]  
-Created: [DATE]  
-Feature Spec: [Link to feature spec.md]  
-Overview Spec: [Link to overview spec.md, if relevant]  
-Issue(s): [#123, #124]  
-
-Note: This checklist format can be generated based on feature context
-(spec, plan, tasks) and the Engineering Constitution. Use `/speckit.analyze`
-for comprehensive pre-PR analysis.
+Spec Type: [Vision | Domain | Feature]
+Spec Title: [SPEC_TITLE]
+Focus: [General | UX | API | Security | Performance | Data]
+Generated: [DATE]
+Spec Path: [PATH_TO_SPEC]
 
 ---
 
-## 1. Specification Consistency
+## Checklist Purpose: "Unit Tests for English"
 
-- `[ ] CHK-S-001: Feature spec references the correct Overview spec for shared masters/APIs`
-- `[ ] CHK-S-002: Feature spec does not redefine shared masters or APIs; it only references IDs`
-- `[ ] CHK-S-003: All relevant user stories (UC-...) are clearly defined and independently testable`
-- `[ ] CHK-S-004: Business rules and validation rules are documented and unambiguous`
-- `[ ] CHK-S-005: Non-functional requirements are captured where applicable`
-- `[ ] CHK-S-006: Functional requirements (FR-xxx), success criteria (SC-xxx), and edge cases are documented`
-- `[ ] CHK-S-007: An Overview spec exists before Feature specs; shared masters/APIs are defined there`
+This checklist validates the **quality of requirements writing**, not implementation correctness.
+
+- ✅ "Are visual hierarchy requirements defined for all card types?" [Completeness]
+- ✅ "Is 'fast loading' quantified with specific timing thresholds?" [Clarity]
+- ❌ NOT "Verify the button clicks correctly" (that's an implementation test)
 
 ---
 
-## 2. Plan Quality
+## Quality Summary
 
-- `[ ] CHK-P-001: Plan clearly maps spec user stories to technical components`
-- `[ ] CHK-P-002: Data and schema changes are documented, including migration strategy`
-- `[ ] CHK-P-003: API changes (new or modified) are listed and map to spec contracts`
-- `[ ] CHK-P-004: Test strategy covers unit, integration, and E2E where appropriate`
-- `[ ] CHK-P-005: Plan includes a rollback and deployment strategy`
+| Dimension | Items | Issues | Notes |
+|-----------|-------|--------|-------|
+| Completeness | [X] | [Y] | |
+| Clarity | [X] | [Y] | |
+| Consistency | [X] | [Y] | |
+| Measurability | [X] | [Y] | |
+| Coverage | [X] | [Y] | |
 
----
-
-## 3. Tasks Coverage
-
-- `[ ] CHK-T-001: All user stories (UC-...) have corresponding tasks`
-- `[ ] CHK-T-002: Tasks are small, concrete, and independently reviewable`
-- `[ ] CHK-T-003: There are explicit tasks for tests (not just implementation)`
-- `[ ] CHK-T-004: There are tasks for updating documentation and agent files when needed`
-- `[ ] CHK-T-005: Tasks exist for updating the Overview spec and dependent Feature specs if shared masters/APIs change`
-- `[ ] CHK-T-006: Tasks reference relevant Spec/UC IDs and primary file paths to reduce ambiguity`
+**Total Items:** [COUNT]
+**Issues Found:** [COUNT]
 
 ---
 
-## 4. Git and PR Workflow
+## 1. Completeness
 
-- `[ ] CHK-G-001: Work is on an Issue-linked branch (feature/<issue>-... or spec/<issue>-...)`
-- `[ ] CHK-G-002: PR will reference Issue(s) and Spec ID(s) in its description`
-- `[ ] CHK-G-003: Direct pushes to main are not used for this change`
-- `[ ] CHK-G-004: Branch will be deleted after PR merge (or there is a documented reason not to)`
-- `[ ] CHK-G-005: GitHub CLI (gh) is available and used where automation is expected`
+Are all necessary requirements present?
 
----
-
-## 5. Test Integrity
-
-- `[ ] CHK-TEST-001: Tests are derived from the spec's user stories and acceptance criteria`
-- `[ ] CHK-TEST-002: Team confirms that tests will fail if the feature is missing or broken`
-- `[ ] CHK-TEST-003: There is no intention to weaken or remove tests solely to pass CI`
-- `[ ] CHK-TEST-004: There is an explicit plan to diagnose failures (spec vs tests vs implementation vs environment)`
-- `[ ] CHK-TEST-005: Any changes to tests are documented with reasoning`
+- [ ] CHK-001: [Question about missing requirements] [Gap]
+- [ ] CHK-002: [Question about missing requirements] [Spec §X.Y]
 
 ---
 
-## 6. AI Agent Conduct
+## 2. Clarity
 
-- `[ ] CHK-AI-001: AI agents are given clear context (Overview spec, Feature spec, plan, tasks)`
-- `[ ] CHK-AI-002: AI agents are not asked to bypass spec, tests, or Git rules`
-- `[ ] CHK-AI-003: AI-generated changes are kept small and reviewable`
-- `[ ] CHK-AI-004: Ambiguities or conflicts are escalated via Issues, not silently guessed`
-- `[ ] CHK-AI-005: Agents used Serena for repo context and context7 (or equivalent) for docs when needed`
+Are requirements unambiguous and specific?
+
+- [ ] CHK-010: [Question about vague terms] [Ambiguity, Spec §X.Y]
+- [ ] CHK-011: [Question about undefined terms] [Clarity]
 
 ---
 
-## 7. Notes
+## 3. Consistency
 
-- Use `[x]` to mark completed items.
-- Add comments inline when an item is partially satisfied or intentionally skipped.
-- Use this checklist as a review tool at key milestones (before coding, before PR, before deploy).
+Do requirements align with each other?
+
+- [ ] CHK-020: [Question about conflicting requirements] [Conflict, Spec §X vs §Y]
+- [ ] CHK-021: [Question about alignment with Domain] [Consistency]
+
+---
+
+## 4. Measurability
+
+Can requirements be objectively verified?
+
+- [ ] CHK-030: [Question about unmeasurable criteria] [Measurability, Spec §X.Y]
+- [ ] CHK-031: [Question about subjective terms] [Ambiguity]
+
+---
+
+## 5. Coverage
+
+Are all scenarios and edge cases addressed?
+
+- [ ] CHK-040: [Question about missing scenarios] [Gap, Edge Case]
+- [ ] CHK-041: [Question about exception flows] [Coverage]
+
+---
+
+## 6. Domain-Specific: [DOMAIN]
+
+[Only included if domain-specific focus selected]
+
+### UX Focus
+- [ ] CHK-UX-001: Are visual hierarchy requirements defined with measurable criteria?
+- [ ] CHK-UX-002: Are interaction states (hover, focus, active, disabled) consistently defined?
+- [ ] CHK-UX-003: Are responsive/adaptive breakpoint requirements specified?
+- [ ] CHK-UX-004: Are accessibility requirements (WCAG level) defined?
+- [ ] CHK-UX-005: Are error, empty, and loading state requirements specified?
+
+### API Focus
+- [ ] CHK-API-001: Are request/response shapes completely defined?
+- [ ] CHK-API-002: Are all error codes and messages documented?
+- [ ] CHK-API-003: Are authentication/authorization requirements clear?
+- [ ] CHK-API-004: Are rate limiting thresholds specified?
+- [ ] CHK-API-005: Is pagination/filtering behavior defined?
+
+### Security Focus
+- [ ] CHK-SEC-001: Is the authentication mechanism fully specified?
+- [ ] CHK-SEC-002: Is the authorization model (roles, permissions) defined?
+- [ ] CHK-SEC-003: Are data protection requirements (encryption, masking) specified?
+- [ ] CHK-SEC-004: Are input validation requirements comprehensive?
+- [ ] CHK-SEC-005: Are audit logging requirements defined?
+
+### Performance Focus
+- [ ] CHK-PERF-001: Are latency targets quantified (p50, p95, p99)?
+- [ ] CHK-PERF-002: Are throughput requirements specified?
+- [ ] CHK-PERF-003: Are resource limits defined?
+- [ ] CHK-PERF-004: Is degradation behavior under load specified?
+- [ ] CHK-PERF-005: Is caching strategy documented?
+
+### Data Focus
+- [ ] CHK-DATA-001: Are data integrity constraints defined?
+- [ ] CHK-DATA-002: Are validation rules comprehensive?
+- [ ] CHK-DATA-003: Is data migration strategy documented?
+- [ ] CHK-DATA-004: Are retention/archival requirements specified?
+- [ ] CHK-DATA-005: Is cross-entity consistency addressed?
+
+---
+
+## Action Items
+
+Issues that should be addressed before proceeding:
+
+| Priority | Item ID | Issue | Recommended Action |
+|----------|---------|-------|--------------------|
+| High | CHK-XXX | [Issue description] | [Recommended fix] |
+| Medium | CHK-XXX | [Issue description] | [Recommended fix] |
+| Low | CHK-XXX | [Issue description] | [Recommended fix or accept as-is] |
+
+---
+
+## Resolution Log
+
+Record how issues were addressed:
+
+| Item ID | Resolution | Date | Notes |
+|---------|------------|------|-------|
+| CHK-XXX | Addressed via clarify | [DATE] | [Brief note] |
+| CHK-XXX | Accepted as-is | [DATE] | [Justification] |
+| CHK-XXX | Deferred to implementation | [DATE] | [Reason] |
+
+---
+
+## Notes
+
+- Use `[x]` to mark items as verified/addressed
+- Items marked `[Gap]` indicate missing requirements
+- Items marked `[Ambiguity]` indicate unclear requirements
+- Items marked `[Conflict]` indicate inconsistent requirements
+- Reference `[Spec §X.Y]` to link to specific spec sections
+- High priority issues should be addressed before `/speckit.plan`

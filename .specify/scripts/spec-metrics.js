@@ -50,7 +50,8 @@ function walkForSpecs(dir) {
 function normalizeSpecType(raw) {
   if (!raw) return null;
   const cleaned = raw.replace(/[\[\]]/g, '').split('|')[0].trim().toUpperCase();
-  if (cleaned.startsWith('OVERVIEW')) return 'OVERVIEW';
+  if (cleaned.startsWith('VISION')) return 'VISION';
+  if (cleaned.startsWith('OVERVIEW') || cleaned.startsWith('DOMAIN')) return 'DOMAIN';
   if (cleaned.startsWith('FEATURE')) return 'FEATURE';
   return cleaned || null;
 }
@@ -133,18 +134,25 @@ if (specFiles.length === 0) {
 }
 
 const specs = specFiles.map(parseSpec);
-const overviewSpecs = specs.filter((s) => s.specType === 'OVERVIEW');
+const visionSpecs = specs.filter((s) => s.specType === 'VISION');
+const domainSpecs = specs.filter((s) => s.specType === 'DOMAIN');
 const featureSpecs = specs.filter((s) => s.specType === 'FEATURE');
 
 // Calculate metrics
 const metrics = {
   timestamp: new Date().toISOString(),
-  overview: {
-    count: overviewSpecs.length,
-    masters: [...new Set(overviewSpecs.flatMap((s) => s.masters))],
-    apis: [...new Set(overviewSpecs.flatMap((s) => s.apis))],
-    lastModified: overviewSpecs.length > 0
-      ? new Date(Math.max(...overviewSpecs.map((s) => s.lastModified.getTime()))).toISOString()
+  vision: {
+    count: visionSpecs.length,
+    lastModified: visionSpecs.length > 0
+      ? new Date(Math.max(...visionSpecs.map((s) => s.lastModified.getTime()))).toISOString()
+      : null,
+  },
+  domain: {
+    count: domainSpecs.length,
+    masters: [...new Set(domainSpecs.flatMap((s) => s.masters))],
+    apis: [...new Set(domainSpecs.flatMap((s) => s.apis))],
+    lastModified: domainSpecs.length > 0
+      ? new Date(Math.max(...domainSpecs.map((s) => s.lastModified.getTime()))).toISOString()
       : null,
   },
   features: {
@@ -190,15 +198,15 @@ for (const spec of featureSpecs) {
 metrics.features.byStatus = statusCounts;
 
 // Staleness checks
-const overviewMtime = overviewSpecs.length > 0
-  ? Math.max(...overviewSpecs.map((s) => s.lastModified.getTime()))
+const domainMtime = domainSpecs.length > 0
+  ? Math.max(...domainSpecs.map((s) => s.lastModified.getTime()))
   : 0;
 const thirtyDaysAgo = Date.now() - 30 * 24 * 60 * 60 * 1000;
 
 for (const spec of featureSpecs) {
-  // Check if feature is older than overview
-  if (overviewMtime > 0 && spec.lastModified.getTime() < overviewMtime) {
-    const daysDiff = Math.floor((overviewMtime - spec.lastModified.getTime()) / (1000 * 60 * 60 * 24));
+  // Check if feature is older than domain
+  if (domainMtime > 0 && spec.lastModified.getTime() < domainMtime) {
+    const daysDiff = Math.floor((domainMtime - spec.lastModified.getTime()) / (1000 * 60 * 60 * 24));
     if (daysDiff > 7 && !['DEPRECATED', 'SUPERSEDED', 'COMPLETED'].includes(spec.status)) {
       metrics.staleness.featuresOlderThanOverview.push({
         id: spec.specIds[0] || spec.relFile,
@@ -226,10 +234,10 @@ for (const spec of featureSpecs) {
 let healthDeductions = 0;
 const healthIssues = [];
 
-// Deduct for missing overview
-if (overviewSpecs.length === 0 && featureSpecs.length > 0) {
+// Deduct for missing domain
+if (domainSpecs.length === 0 && featureSpecs.length > 0) {
   healthDeductions += 20;
-  healthIssues.push('No Overview spec found');
+  healthIssues.push('No Domain spec found');
 }
 
 // Deduct for stale features
@@ -272,13 +280,21 @@ if (jsonOutput) {
   console.log(`Generated: ${metrics.timestamp}`);
   console.log();
 
-  console.log('OVERVIEW');
+  console.log('VISION');
   console.log('-'.repeat(40));
-  console.log(`  Count: ${metrics.overview.count}`);
-  console.log(`  Masters defined: ${metrics.overview.masters.length}`);
-  console.log(`  APIs defined: ${metrics.overview.apis.length}`);
-  if (metrics.overview.lastModified) {
-    console.log(`  Last modified: ${metrics.overview.lastModified.split('T')[0]}`);
+  console.log(`  Count: ${metrics.vision.count}`);
+  if (metrics.vision.lastModified) {
+    console.log(`  Last modified: ${metrics.vision.lastModified.split('T')[0]}`);
+  }
+  console.log();
+
+  console.log('DOMAIN');
+  console.log('-'.repeat(40));
+  console.log(`  Count: ${metrics.domain.count}`);
+  console.log(`  Masters defined: ${metrics.domain.masters.length}`);
+  console.log(`  APIs defined: ${metrics.domain.apis.length}`);
+  if (metrics.domain.lastModified) {
+    console.log(`  Last modified: ${metrics.domain.lastModified.split('T')[0]}`);
   }
   console.log();
 
@@ -324,7 +340,7 @@ if (jsonOutput) {
     console.log('STALENESS DETAILS');
     console.log('-'.repeat(40));
     if (metrics.staleness.featuresOlderThanOverview.length > 0) {
-      console.log('  Features older than Overview:');
+      console.log('  Features older than Domain:');
       for (const item of metrics.staleness.featuresOlderThanOverview) {
         console.log(`    ${item.id}: ${item.daysBehind} days behind`);
       }

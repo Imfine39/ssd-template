@@ -56,12 +56,23 @@ Creates Issue → Branch → Spec update, then loops clarify until all ambiguiti
    - If fix requires FR changes, note in Implementation Notes
    - Mark unclear items as `[NEEDS CLARIFICATION]`
 
-7) **Run lint**:
+7) **Check if Domain changes needed**:
+   - If bug fix reveals incorrect M-*/API-*/BR-* definition:
+     ```
+     このバグ修正には Domain Spec の変更が必要です:
+     - M-USER.password: バリデーションルールの変更が必要
+
+     `/speckit.change` を実行しますか？ [yes/no]
+     ```
+   - If yes: Trigger `/speckit.change`, then resume fix after merge
+   - If no: Continue with current spec (document limitation)
+
+8) **Run lint**:
    ```bash
    node .specify/scripts/spec-lint.js
    ```
 
-8) **Clarify loop** (uses `/speckit.clarify` logic):
+9) **Clarify loop** (uses `/speckit.clarify` logic):
    - While `[NEEDS CLARIFICATION]` items exist:
      - Show **1 question at a time** with recommended option
      - Wait for answer
@@ -69,11 +80,11 @@ Creates Issue → Branch → Spec update, then loops clarify until all ambiguiti
      - Re-run lint
    - Continue until all resolved
 
-9) **Request human review**:
-   - Show Issue URL, branch, affected spec
-   - Show impact scope (UC/FR affected)
-   - For trivial fixes: Offer to skip to `/speckit.implement`
-   - For larger fixes: Suggest `/speckit.plan`
+10) **Request human review**:
+    - Show Issue URL, branch, affected spec
+    - Show impact scope (UC/FR affected)
+    - For trivial fixes: Offer to skip to `/speckit.implement`
+    - For larger fixes: Suggest `/speckit.plan`
 
 ## Output
 
@@ -86,8 +97,9 @@ Creates Issue → Branch → Spec update, then loops clarify until all ambiguiti
 ## Human Checkpoints
 
 1. Confirm affected spec
-2. Answer clarification questions (in loop)
-3. Choose plan vs direct implement
+2. Approve Domain change redirect to `/speckit.change` (if needed)
+3. Answer clarification questions (in loop)
+4. Choose plan vs direct implement
 
 ## Example
 

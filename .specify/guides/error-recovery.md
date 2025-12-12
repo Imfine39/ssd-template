@@ -53,12 +53,12 @@ proceed confidently.
 
 1. **Identify the conflict** - Document both spec IDs and the conflicting statements.
 2. **Determine precedence**:
-   - Overview spec takes precedence over Feature specs.
+   - Domain spec takes precedence over Feature specs.
    - Later-approved specs generally take precedence.
    - Business-critical specs take precedence over convenience features.
 3. **Create an Issue** - Title: `Spec conflict: S-XXX vs S-YYY`
 4. **Resolve in the correct spec**:
-   - If Overview is wrong, fix Overview first, then update Features.
+   - If Domain is wrong, fix Domain first, then update Features.
    - If Feature is wrong, update the Feature spec.
 5. **Update Feature index** if status changes.
 
@@ -219,9 +219,9 @@ constraints discovered during implementation.
 2. **Fix reported errors**:
    - Missing Spec Type or ID → Add to spec header.
    - Duplicate IDs → Rename one of the duplicates.
-   - Missing Overview → Create Overview spec first.
-   - Unknown master/API → Add to Overview or fix typo.
-   - Missing Feature index entry → Add to Overview table.
+   - Missing Domain → Create Domain spec first.
+   - Unknown master/API → Add to Domain or fix typo.
+   - Missing Feature index entry → Add to Domain table.
 3. **Commit fixes** and push.
 
 ---
