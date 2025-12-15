@@ -8,6 +8,7 @@ Author: [OWNER]
 Related Issue(s): [#123]
 Related Vision: S-VISION-001
 Related Domain: S-DOMAIN-001
+Related Screen: S-SCREEN-001
 
 ---
 
@@ -138,24 +139,48 @@ Mark unclear requirements with `[NEEDS CLARIFICATION]`.
 
 ---
 
-## 8. UI / UX Behavior
+## 8. Screen Dependencies
 
-### 8.1 Screens
+This feature uses the following screens from the Screen Spec.
+**DO NOT redefine screens here. Reference by SCR-* ID only.**
 
-| Screen | Purpose | Entry Point |
-|--------|---------|-------------|
-| [Screen 1] | [What user does here] | [How to get here] |
+### 8.1 Related Screens
 
-### 8.2 States
+| Screen ID | Name | Usage in this Feature |
+|-----------|------|----------------------|
+| SCR-[XXX] | [Screen Name] | [How this feature uses/modifies this screen] |
 
-- Default state:
+### 8.2 Feature-Specific UI States
+
+States specific to this feature (general states are in Screen Spec):
+
 - Loading state:
 - Empty state:
 - Error state:
 
-### 8.3 Wireframes
+### 8.3 Screen Modifications (Spec-First)
 
-- [Link to wireframe or describe layout]
+If this feature modifies existing screens, the changes are already recorded in Screen Spec.
+**Screen Spec is updated BEFORE Feature Spec creation (Spec-First approach).**
+
+| Screen ID | Modification | Screen Spec Ref |
+|-----------|-------------|-----------------|
+| SCR-[XXX] | [What changes] | Section 2.1 Modification Log |
+
+**Spec-First Policy:**
+- Screen Spec is the **source of truth** for all screen designs
+- Before creating this Feature Spec, modifications were added to Screen Spec Section 2.1 (Modification Log)
+- Screen Spec wireframes show the **planned state** (Status: Planned)
+- After PR merge, Screen Spec Status is updated to `Implemented`
+
+**Workflow:**
+1. Identify screen modifications needed for this feature
+2. Update Screen Spec (add to Modification Log, update wireframe if needed)
+3. Create Feature Spec referencing the updated Screen Spec
+4. Implement the feature
+5. After PR merge, update Screen Spec Status to `Implemented`
+
+**Note:** Both new screens AND modifications require updating Screen Spec first.
 
 ---
 
@@ -205,6 +230,8 @@ Rules that apply only to this feature (not shared across domain).
 
 - Vision Spec: S-VISION-001
 - Domain Spec: S-DOMAIN-001
+- Screen Spec: S-SCREEN-001
+- Related Screens: SCR-[XXX], SCR-[YYY]
 - Related Issues: #[XXX]
 - Related Plan: [plan path]
 - Related Tasks: [tasks path]

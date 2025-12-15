@@ -108,6 +108,12 @@ Option B: チャットで情報を提供
    - If Domain is scaffold or missing M-*/API-*:
      "Domain Spec がまだ精密化されていません。先に `/speckit.design` を完了してください"
 
+2. **Check Screen Spec exists (optional but recommended)**:
+   - Look for Screen spec in `.specify/specs/screen/`
+   - If not found: Warning only (続行可能)
+     "WARNING: Screen Spec が見つかりません。`/speckit.screen` で画面設計を先に行うことを推奨します。"
+   - If found: Extract Screen Index for Step 6.5
+
 ---
 
 ### Step 3: Create GitHub Issue
@@ -140,6 +146,73 @@ node .specify/scripts/branch.js --type feature --slug <slug> --issue <num>
 - Fill sections: Purpose, Actors, Domain Model (M-*, API-*), UC, FR, SC, Edge Cases, NFR
 - Reference analyzed code patterns and constraints
 - Mark unclear items as `[NEEDS CLARIFICATION]`
+
+---
+
+### Step 6.5: Update Screen Spec First (Spec-First)
+
+**Screen Spec が存在する場合、Feature Spec 作成前に Screen Spec を更新する。**
+
+1. **Show Screen Index**:
+   ```
+   === Screen Index ===
+
+   この機能に関連する画面を選択してください:
+
+   | # | Screen ID | Name | Status |
+   |---|-----------|------|--------|
+   | 1 | SCR-001 | ログイン | Implemented |
+   | 2 | SCR-002 | ダッシュボード | Implemented |
+   | 3 | SCR-003 | 在庫一覧 | Planned |
+   | ...
+
+   関連する画面の番号を入力（複数可、例: 1,3）:
+   ```
+
+2. **Check screen requirements**:
+   - 既存画面のみ使用 → Step 3 へ
+   - 既存画面の変更が必要 → Step 4 へ
+   - 新規画面が必要 → Step 5 へ
+
+3. **Reference existing screens**:
+   - Feature Spec Section 8.1 に SCR-* 参照を追加
+   - 変更なしの場合はそのまま Feature Spec 作成へ
+
+4. **Update Screen Spec for modifications** (Spec-First):
+   ```
+   === Screen Spec 更新（Spec-First） ===
+
+   この機能で既存画面に変更が必要です:
+   - SCR-002: 「エクスポート」ボタン追加
+
+   Screen Spec を先に更新します:
+   1. Section 2.1 Modification Log に変更を追加
+   2. 必要に応じてワイヤーフレームを更新
+   3. Status: Planned として記録
+
+   更新しますか？ [yes/no]
+   ```
+   - Screen Spec 更新後、Feature Spec 作成を続行
+
+5. **Add new screens to Screen Spec** (Spec-First):
+   ```
+   === 新規画面追加（Spec-First） ===
+
+   この機能には新しい画面が必要です:
+   - [新規画面の説明]
+
+   Screen Spec を先に更新します:
+   1. Screen Index に新規 SCR-* を追加（Status: Planned）
+   2. Section 4 に画面詳細を追加
+   3. 遷移図を更新
+
+   更新しますか？ [yes/no]
+   ```
+   - Screen Spec 更新後、Feature Spec 作成を続行
+
+6. **Update Feature Spec Section 8**:
+   - Section 8.1: 関連する SCR-* を参照
+   - Section 8.3: Screen Spec への参照を記録（変更内容は Screen Spec に記載済み）
 
 ---
 
@@ -222,6 +295,7 @@ Spec: .specify/specs/s-xxx-001/spec.md
 - FR (Functional Requirements): [N] 個
 - SC (Success Criteria): [N] 個
 - Domain Dependencies: [M-*, API-*, BR-* のリスト]
+- Screen Dependencies: [SCR-* のリスト]
 ```
 
 #### 11.2 曖昧点レポート

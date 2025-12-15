@@ -2,13 +2,16 @@
 'use strict';
 
 /**
- * Scaffold Vision, Domain, or Feature specs from templates.
+ * Scaffold Vision, Domain, Screen, or Feature specs from templates.
  *
  * Examples:
  *   node .specify/scripts/scaffold-spec.js --kind vision --id S-VISION-001 --title "Project Vision"
  *
  *   node .specify/scripts/scaffold-spec.js --kind domain --id S-DOMAIN-001 --title "System Domain"
  *     --vision S-VISION-001 --masters M-CLIENTS,M-ORDERS --apis API-ORDERS-LIST
+ *
+ *   node .specify/scripts/scaffold-spec.js --kind screen --id S-SCREEN-001 --title "System Screens"
+ *     --vision S-VISION-001 --domain S-DOMAIN-001
  *
  *   node .specify/scripts/scaffold-spec.js --kind feature --id S-SALES-001 --title "Basic Sales Recording"
  *     --domain S-DOMAIN-001 --uc UC-001:Record sale,UC-002:Adjust sale --masters M-CLIENTS --apis API-ORDERS-LIST
@@ -21,7 +24,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const VALID_KINDS = ['vision', 'domain', 'feature', 'overview'];
+const VALID_KINDS = ['vision', 'domain', 'screen', 'feature', 'overview'];
 
 function parseArgs() {
   const args = process.argv.slice(2);
@@ -46,15 +49,18 @@ function parseArgs() {
 
   if (!out.kind || !out.id || !out.title) {
     console.error('ERROR: --kind, --id, --title are required');
-    console.error('  --kind: vision | domain | feature');
+    console.error('  --kind: vision | domain | screen | feature');
     process.exit(1);
   }
   if (!VALID_KINDS.includes(out.kind)) {
-    console.error(`ERROR: Invalid kind "${out.kind}". Must be: vision, domain, or feature`);
+    console.error(`ERROR: Invalid kind "${out.kind}". Must be: vision, domain, screen, or feature`);
     process.exit(1);
   }
   if (out.kind === 'domain' && !out.vision) {
     console.log('WARNING: Domain spec should reference a Vision spec (--vision)');
+  }
+  if (out.kind === 'screen' && !out.domain) {
+    console.log('WARNING: Screen spec should reference a Domain spec (--domain)');
   }
   if (out.kind === 'feature' && !out.domain) {
     console.error('ERROR: Feature requires --domain (Domain Spec ID)');
@@ -67,6 +73,7 @@ function getTemplatePath(kind) {
   const templateMap = {
     vision: 'vision-spec-template.md',
     domain: 'domain-spec-template.md',
+    screen: 'screen-spec-template.md',
     feature: 'feature-spec-template.md'
   };
   const templateFile = templateMap[kind];
@@ -113,6 +120,14 @@ function buildSpecContent(template, args, relDir) {
     content = content.replace('Spec ID: S-DOMAIN-001', `Spec ID: ${args.id}`);
     if (args.vision) {
       content = content.replace('Related Vision: S-VISION-001', `Related Vision: ${args.vision}`);
+    }
+  } else if (args.kind === 'screen') {
+    content = content.replace('Spec ID: S-SCREEN-001', `Spec ID: ${args.id}`);
+    if (args.vision) {
+      content = content.replace('Related Vision: S-VISION-001', `Related Vision: ${args.vision}`);
+    }
+    if (args.domain) {
+      content = content.replace('Related Domain: S-DOMAIN-001', `Related Domain: ${args.domain}`);
     }
   } else if (args.kind === 'feature') {
     content = content.replace('Spec ID: S-[XXX]-001', `Spec ID: ${args.id}`);
@@ -185,6 +200,16 @@ function main() {
     const content = buildSpecContent(template, args, 'domain');
     fs.writeFileSync(outPath, content, 'utf8');
     console.log(`Created Domain spec at ${path.relative(process.cwd(), outPath)}`);
+    return;
+  }
+
+  if (args.kind === 'screen') {
+    const dir = path.join(process.cwd(), '.specify', 'specs', 'screen');
+    ensureDir(dir);
+    const outPath = path.join(dir, 'spec.md');
+    const content = buildSpecContent(template, args, 'screen');
+    fs.writeFileSync(outPath, content, 'utf8');
+    console.log(`Created Screen spec at ${path.relative(process.cwd(), outPath)}`);
     return;
   }
 

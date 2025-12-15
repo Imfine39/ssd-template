@@ -4,9 +4,9 @@ SSD-Template の主要概念を解説します。
 
 ---
 
-## 1. Three-Layer Spec Structure
+## 1. Four-Layer Spec Structure
 
-SSD-Template では仕様を3層構造で管理します。
+SSD-Template では仕様を4層構造で管理します。
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -32,13 +32,24 @@ SSD-Template では仕様を3層構造で管理します。
 └─────────────────────────────────────────────────────────────┘
                            ↓
 ┌─────────────────────────────────────────────────────────────┐
+│                     SCREEN SPEC                              │
+│  .specify/specs/screen/spec.md                              │
+│                                                              │
+│  - 画面一覧 (Screen Index)                                   │
+│  - 画面遷移図 (Mermaid)                                      │
+│  - Screen ↔ Feature ↔ API ↔ Master 対応表                   │
+│  - 各画面のワイヤーフレーム                                  │
+│  - 共通コンポーネント、デザイントークン                      │
+└─────────────────────────────────────────────────────────────┘
+                           ↓
+┌─────────────────────────────────────────────────────────────┐
 │                    FEATURE SPECS                             │
 │  .specify/specs/<feature-id>/spec.md                        │
 │                                                              │
 │  - 個別機能の詳細仕様                                        │
 │  - ユースケース (UC-*)                                       │
 │  - 機能要件 (FR-*)                                           │
-│  - Domain への参照（M-*, API-* を再定義しない）              │
+│  - Domain/Screen への参照                                    │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -47,14 +58,16 @@ SSD-Template では仕様を3層構造で管理します。
 | Layer | Responsibility | Contains | Example |
 |-------|---------------|----------|---------|
 | **Vision** | WHY | 目的、ユーザー、スコープ | "中小企業の在庫管理を効率化" |
-| **Domain** | WHAT (Shared) | マスタ、API、ルール | M-PRODUCT, API-INVENTORY-LIST |
-| **Feature** | HOW (Individual) | UC、FR、UI仕様 | UC-001: 在庫検索 |
+| **Domain** | WHAT (技術) | マスタ、API、ルール | M-PRODUCT, API-INVENTORY-LIST |
+| **Screen** | WHAT (UX) | 画面、遷移、ワイヤーフレーム | SCR-001: ダッシュボード |
+| **Feature** | HOW | UC、FR、実装詳細 | UC-001: 在庫検索 |
 
 ### 重要なルール
 
-1. **Feature は Domain を参照のみ** - M-*/API-* を再定義しない
-2. **Domain は Single Source of Truth** - 共有定義は Domain に集約
-3. **Feature Index で一覧管理** - Domain Spec 内で全 Feature を管理
+1. **Feature は Domain/Screen を参照のみ** - M-*/API-*/SCR-* を再定義しない
+2. **Domain は技術の Single Source of Truth** - 共有定義は Domain に集約
+3. **Screen は UX の Single Source of Truth** - 画面構成は Screen に集約
+4. **Screen Index で対応管理** - 画面 ↔ Feature ↔ API ↔ Master の対応を一元管理
 
 ---
 

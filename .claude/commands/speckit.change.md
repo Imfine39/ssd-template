@@ -1,5 +1,5 @@
 ---
-description: Change Vision or Domain Spec (existing M-*/API-*/BR-*/VR-*). Analyzes impact on Features.
+description: Change Vision, Domain, or Screen Spec (existing M-*/API-*/BR-*/VR-*/SCR-*). Analyzes impact on Features.
 handoffs:
   - label: Clarify Changes
     agent: speckit.clarify
@@ -19,19 +19,21 @@ $ARGUMENTS
 
 ## Purpose
 
-Change existing definitions in Vision Spec or Domain Spec.
+Change existing definitions in Vision Spec, Domain Spec, or Screen Spec.
 This command handles **modifications to existing items**, not additions.
 
 **Use this when:**
 - Modifying existing M-* (field changes, constraint changes)
 - Modifying existing API-* (request/response shape changes)
 - Modifying existing BR-*/VR-* (business rule changes)
+- Modifying existing SCR-* (screen layout, navigation, component changes)
 - Modifying Vision Spec (purpose, journey, scope changes)
 
-**NOT needed for (Case 2 - handle in Feature Spec creation):**
+**NOT needed for (Case 2 - handle in Feature Spec creation or `/speckit.screen`):**
 - Adding new M-*
 - Adding new API-*
 - Adding new BR-*/VR-*
+- Adding new SCR-* (use `/speckit.screen` instead)
 
 ## Triggers
 
@@ -51,9 +53,11 @@ This command handles **modifications to existing items**, not additions.
 2) **Determine target Spec**:
    - Vision Spec (`.specify/specs/vision/spec.md`)
    - Domain Spec (`.specify/specs/domain/spec.md`)
+   - Screen Spec (`.specify/specs/screen/spec.md`)
 
 3) **Identify specific item**:
    - For Domain: M-*, API-*, BR-*, VR-*
+   - For Screen: SCR-* (layout, navigation, components)
    - For Vision: Purpose, Journey, Scope section
 
 4) **Describe the change**:
@@ -69,8 +73,11 @@ This command handles **modifications to existing items**, not additions.
 
 5) **Search for references**:
    ```bash
-   # Find Features referencing the changed item
+   # Find Features referencing the changed item (Domain)
    grep -r "M-USER" .specify/specs/*/spec.md --include="spec.md"
+
+   # For Screen changes, also find Feature SCR-* references
+   grep -r "SCR-001" .specify/specs/*/spec.md --include="spec.md"
    ```
 
 6) **Analyze each Feature**:
@@ -384,7 +391,28 @@ AI: PR #30 を作成しました。
 
 ## Notes
 
-- Vision Spec の変更は Domain → Feature と波及するため、影響範囲が大きくなりやすい
+- Vision Spec の変更は Domain/Screen → Feature と波及するため、影響範囲が大きくなりやすい
+- Screen Spec の変更は Feature の UI/UX 部分に影響するため、実装済み画面の修正が必要になる可能性あり
 - 変更の規模に関わらず、影響 Feature があれば必ず Issue を作成
 - Spec 更新は一括 PR、実装修正は Feature ごとの PR
 - Sub-issue 構造で全体の進捗を追跡可能
+
+### Screen Spec 変更の影響分析例
+
+```
+=== 影響分析: SCR-003 在庫一覧画面 変更 ===
+
+変更内容: フィルターパネルを左サイドバーからトップバーに移動
+
+影響する Feature:
+
+1. S-INVENTORY-001 (在庫一覧・検索) - Status: Completed
+   参照箇所: UC-001 在庫検索, FR-002 フィルター操作
+   影響度: 【実装修正必要】
+   理由: フィルターコンポーネントの配置変更が必要
+
+2. S-STOCKTAKE-001 (棚卸し) - Status: Approved
+   参照箇所: UC-003 在庫表示参照
+   影響度: 【影響なし】
+   理由: フィルターは使用しない
+```

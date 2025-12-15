@@ -176,12 +176,22 @@ node .specify/scripts/branch.js --type fix --slug <slug> --issue <num>
 
 ---
 
-### Step 7: Check if Domain Changes Needed
+### Step 7: Check if Domain/Screen Changes Needed
 
-If bug fix reveals incorrect M-*/API-*/BR-* definition:
+If bug fix reveals incorrect M-*/API-*/BR-*/SCR-* definition:
+
+**Domain 変更が必要な場合:**
 ```
 このバグ修正には Domain Spec の変更が必要です:
 - M-USER.password: バリデーションルールの変更が必要
+
+`/speckit.change` を実行しますか？ [yes/no]
+```
+
+**Screen 変更が必要な場合:**
+```
+このバグ修正には Screen Spec の変更が必要です:
+- SCR-003: フィルターパネルのレイアウト変更が必要
 
 `/speckit.change` を実行しますか？ [yes/no]
 ```

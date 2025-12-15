@@ -8,9 +8,10 @@
 
 ## 1. 役割と優先順位
 
-- Engineering Constitution が最優先。その次に Vision/Domain/Feature の各 spec、plan、tasks。
+- Engineering Constitution が最優先。その次に Vision/Domain/Screen/Feature の各 spec、plan、tasks。
 - すべての非トリビアルな変更はワークフローを守る。ショートカット禁止。
 - 仕様に矛盾・不足があれば、推測せず `/speckit.clarify` や Issue でエスカレーション。
+- **Spec-First**: 画面変更は Feature Spec 作成前に Screen Spec を更新する。実装後に Status を更新。
 
 ---
 
@@ -46,6 +47,13 @@ Phase 2: /speckit.design
   → Foundation Issue (S-FOUNDATION-001) 自動作成
   → 人間: Domain Spec をレビュー・承認
 
+Phase 2.5: /speckit.screen (任意だが推奨)
+  → .specify/input/screen.md に入力（Quick Input）
+  → 参考画像の分析（スクショがあれば）
+  → Screen Spec 作成（画面一覧、遷移図、ワイヤーフレーム）
+  → /speckit.clarify で曖昧点解消
+  → 人間: Screen Spec をレビュー・承認
+
 Phase 3: /speckit.issue (Foundation Issue を選択)
   → S-FOUNDATION-001 を選択
   → Foundation Feature Spec 作成
@@ -66,35 +74,41 @@ Phase 5以降: Feature 開発（繰り返し）
 /speckit.add
   → .specify/input/add.md に入力（Quick Input）
   → Issue 作成 → Branch 作成
-  → Feature Spec 作成
+  → [Spec-First] 画面変更が必要な場合、Screen Spec を先に更新（Status: Planned）
+  → Feature Spec 作成（Screen Spec を参照）
   → /speckit.clarify で曖昧点解消
   → 人間: Spec をレビュー・承認
   → plan → tasks → implement → pr
+  → [PR マージ後] Screen Spec の Status を Implemented に更新
 
 /speckit.fix (バグ修正)
   → .specify/input/fix.md に入力（または --quick でスキップ）
-  → Issue 作成 → Branch 作成 → 既存 Spec 更新
+  → Issue 作成 → Branch 作成
+  → [Spec-First] 画面変更が必要な場合、Screen Spec を先に更新（Status: Planned）
+  → 既存 Spec 更新
   → /speckit.clarify で曖昧点解消
   → 人間: Spec をレビュー・承認
   → plan → tasks → implement → pr
+  → [PR マージ後] Screen Spec の Status を Implemented に更新
 ```
 
 ### コマンド一覧
 
-**プロジェクト初期化 (2個)**
+**プロジェクト初期化 (3個)**
 | コマンド | 用途 |
 |---------|------|
 | `/speckit.vision` | Vision Spec 作成（目的 + ジャーニー） |
 | `/speckit.design` | Feature 提案 + Domain Spec 作成（M-*/API-*） + Foundation Issue |
+| `/speckit.screen` | Screen Spec 作成（画面一覧 + 遷移図 + ワイヤーフレーム） |
 
 **開発エントリーポイント (5個)**
 | コマンド | 用途 |
 |---------|------|
-| `/speckit.issue` | 既存 Issue 選択 → Feature Spec 作成 → 開発開始 |
-| `/speckit.add` | 新機能追加（Issue 自動作成） |
-| `/speckit.fix` | バグ修正（Issue 自動作成） |
+| `/speckit.issue` | 既存 Issue 選択 → Screen Spec 更新（Spec-First）→ Feature Spec 作成 → 開発開始 |
+| `/speckit.add` | 新機能追加（Issue 自動作成）→ Screen Spec 更新（Spec-First）→ Feature Spec 作成 |
+| `/speckit.fix` | バグ修正（Issue 自動作成）→ Screen 影響検出 |
 | `/speckit.featureproposal` | 追加 Feature を AI に提案させる |
-| `/speckit.change` | Vision/Domain Spec 変更 |
+| `/speckit.change` | Vision/Domain/Screen Spec 変更 |
 
 **開発フローコマンド (5個)**
 | コマンド | 用途 |
@@ -118,10 +132,41 @@ Phase 5以降: Feature 開発（繰り返し）
 
 ## 4. Spec ドキュメント構成
 
-### 3層構造
+### 4層構造
 - **Vision Spec** (`.specify/specs/vision/`): プロジェクトの目的、ユーザージャーニー、スコープ
 - **Domain Spec** (`.specify/specs/domain/`): 共有マスタ (`M-*`)、共有 API (`API-*`)、ビジネスルール、Feature Index
-- **Feature Spec** (`.specify/specs/<feature-id>/`): 個別機能の詳細仕様。Domain を参照するのみ、マスタ/API を再定義しない。
+- **Screen Spec** (`.specify/specs/screen/`): 画面一覧、画面遷移図、ワイヤーフレーム、Screen ↔ Feature ↔ API ↔ Master 対応
+- **Feature Spec** (`.specify/specs/<feature-id>/`): 個別機能の詳細仕様。Domain/Screen を参照するのみ、マスタ/API/画面を再定義しない。
+
+```
+Vision (WHY) → Domain (WHAT technically) → Screen (WHAT users see) → Feature (HOW)
+```
+
+### Screen Spec と Spec-First アプローチ
+
+**Screen Spec は画面設計の唯一の真実（Single Source of Truth）。**
+
+**Status 管理:**
+| Status | 意味 |
+|--------|------|
+| `Planned` | 仕様定義済み、未実装（ワイヤーフレームは計画状態） |
+| `Implemented` | 実装完了、本番稼働中 |
+
+**Spec-First ワークフロー:**
+1. 画面変更が必要な Feature を特定
+2. **Feature Spec 作成前に** Screen Spec を更新（新規画面追加 or Modification Log に記録）
+3. Screen Spec の Status を `Planned` に設定
+4. Feature Spec を作成し、SCR-* を参照
+5. 実装 → PR 作成 → マージ
+6. **マージ後** Screen Spec の Status を `Implemented` に更新
+
+**Modification Log (Section 2.1):**
+既存画面への変更予定を記録。Feature 実装前に Screen Spec を更新し、PR マージ後に Status を更新。
+```markdown
+| Screen ID | Modification | Feature ID | Status | Issue |
+|-----------|-------------|------------|--------|-------|
+| SCR-001 | フィルター機能追加 | S-XXX-001 | Planned | #45 |
+```
 
 ### Feature Index
 Domain Spec で全 Feature を表形式で管理:
@@ -135,6 +180,7 @@ Domain Spec で全 Feature を表形式で管理:
 ```bash
 node .specify/scripts/scaffold-spec.js --kind vision --id S-VISION-001 --title "..."
 node .specify/scripts/scaffold-spec.js --kind domain --id S-DOMAIN-001 --title "..." --vision S-VISION-001
+node .specify/scripts/scaffold-spec.js --kind screen --id S-SCREEN-001 --title "..." --vision S-VISION-001 --domain S-DOMAIN-001
 node .specify/scripts/scaffold-spec.js --kind feature --id S-XXX-001 --title "..." --domain S-DOMAIN-001
 ```
 
@@ -148,12 +194,14 @@ node .specify/scripts/scaffold-spec.js --kind feature --id S-XXX-001 --title "..
 ├── templates/           # ベーステンプレート（読み取り専用）
 │   ├── quickinput-vision.md
 │   ├── quickinput-add.md
-│   └── quickinput-fix.md
+│   ├── quickinput-fix.md
+│   └── quickinput-screen.md
 │
 ├── input/               # ユーザー入力用（編集対象）
 │   ├── vision.md
 │   ├── add.md
-│   └── fix.md
+│   ├── fix.md
+│   └── screen.md
 │
 └── scripts/
     └── reset-input.js   # 入力ファイルリセット
@@ -161,7 +209,7 @@ node .specify/scripts/scaffold-spec.js --kind feature --id S-XXX-001 --title "..
 
 **使い方:**
 1. `.specify/input/<type>.md` を編集して情報を入力
-2. 対応するコマンド（`/speckit.vision`, `/speckit.add`, `/speckit.fix`）を実行
+2. 対応するコマンド（`/speckit.vision`, `/speckit.add`, `/speckit.fix`, `/speckit.screen`）を実行
 3. 完了後、入力内容は Spec の「Original Input」セクションに記録され、入力ファイルは自動リセット
 
 **fix の緊急対応:**
@@ -173,6 +221,7 @@ node .specify/scripts/scaffold-spec.js --kind feature --id S-XXX-001 --title "..
 **リセットスクリプト:**
 ```bash
 node .specify/scripts/reset-input.js vision   # vision のみリセット
+node .specify/scripts/reset-input.js screen   # screen のみリセット
 node .specify/scripts/reset-input.js all      # 全てリセット
 ```
 
@@ -187,7 +236,22 @@ node .specify/scripts/reset-input.js all      # 全てリセット
   - 関連 Issue (`Fixes #123`)
   - 関連 Spec ID (`Implements S-001, UC-003` など)
   - 実行したテストと結果
+  - **Screen Status 更新が必要な SCR-* ID**（Spec-First）
 - PR 作成は `/speckit.pr` を使用（`spec-lint` 自動実行）。
+
+### PR マージ後の Screen Spec 更新
+
+**Spec-First アプローチでは、PR マージ後に Screen Spec の Status を更新する。**
+
+```bash
+# main ブランチに切り替え後
+# 1. Screen Spec Section 2 (Screen Index) の Status を更新
+# 2. Screen Spec Section 2.1 (Modification Log) の Status を更新
+# 3. Changelog に記録
+git add .specify/specs/screen/spec.md
+git commit -m "chore: Update Screen Spec Status to Implemented"
+git push
+```
 
 ---
 

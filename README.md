@@ -58,6 +58,7 @@ node .specify/scripts/state.js init
 |---------|---------|
 | `/speckit.vision` | Vision Spec 作成（目的 + ジャーニー） |
 | `/speckit.design` | Feature 提案 + Domain Spec 作成 |
+| `/speckit.screen` | Screen Spec 作成（画面一覧 + 遷移図 + ワイヤーフレーム） |
 
 ### Development Entry Points
 | Command | Purpose |
@@ -90,7 +91,7 @@ node .specify/scripts/state.js init
 
 ```
 New Project:
-  /speckit.vision → /speckit.design → /speckit.issue → plan → tasks → implement → pr
+  /speckit.vision → /speckit.design → /speckit.screen → /speckit.issue → plan → tasks → implement → pr
 
 Add Feature:
   /speckit.add → plan → tasks → implement → pr

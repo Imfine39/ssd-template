@@ -2,12 +2,15 @@
 'use strict';
 
 /**
- * Specification linter for Vision/Domain/Feature consistency.
+ * Specification linter for Vision/Domain/Screen/Feature consistency.
  * Checks:
  *  - Spec Type and Spec ID presence
  *  - Unique Spec IDs and UC IDs
  *  - Feature specs only reference masters/APIs defined in Domain specs
+ *  - Feature specs only reference screens (SCR-*) defined in Screen specs
  *  - Warns on unused masters/APIs defined in Domain
+ *  - Warns on unused screens defined in Screen spec
+ *  - Screen Index table validation
  *  - Feature spec quality (UC presence, required sections)
  *  - Deprecated/Superseded specs have required metadata
  *  - Plan/Tasks alignment with spec IDs
@@ -55,6 +58,7 @@ function normalizeSpecType(raw) {
   const cleaned = raw.replace(/[\[\]]/g, '').split('|')[0].trim().toUpperCase();
   if (cleaned.startsWith('VISION')) return 'VISION';
   if (cleaned.startsWith('OVERVIEW') || cleaned.startsWith('DOMAIN')) return 'DOMAIN';
+  if (cleaned.startsWith('SCREEN')) return 'SCREEN';
   if (cleaned.startsWith('FEATURE')) return 'FEATURE';
   return cleaned || null;
 }
@@ -84,6 +88,7 @@ function parseSpec(file) {
   const ucIds = matchTokens(content, /\bUC-[A-Z0-9_-]+\b/gi);
   const masters = matchTokens(content, /\bM-[A-Z0-9_-]+\b/gi);
   const apis = matchTokens(content, /\bAPI-[A-Z0-9_-]+\b/gi);
+  const screens = matchTokens(content, /\bSCR-[A-Z0-9_-]+\b/gi);
   const status = statusMatch ? statusMatch[1].trim().toUpperCase() : null;
 
   return {
@@ -94,6 +99,7 @@ function parseSpec(file) {
     ucIds,
     masters,
     apis,
+    screens,
     status,
   };
 }
@@ -145,8 +151,9 @@ for (const [uc, count] of ucIdCounts.entries()) {
   if (count > 1) errors.push(`Use Case ID "${uc}" is duplicated ${count} times`);
 }
 
-// Collect Domain/Overview definitions (DOMAIN and OVERVIEW are equivalent)
+// Collect specs by type
 const domainSpecs = specs.filter((s) => s.specType === 'DOMAIN');
+const screenSpecs = specs.filter((s) => s.specType === 'SCREEN');
 const featureSpecs = specs.filter((s) => s.specType === 'FEATURE');
 
 // Presence checks for domain vs feature
@@ -185,6 +192,62 @@ for (const m of domainMasters) {
 }
 for (const a of domainApis) {
   if (!usedApis.has(a)) warnings.push(`API "${a}" defined in Domain is not referenced by any feature.`);
+}
+
+// ============================================================================
+// Screen Spec Validation
+// ============================================================================
+
+// Collect SCR-* definitions from Screen specs
+const screenDefinitions = new Set();
+for (const spec of screenSpecs) {
+  spec.screens.forEach((s) => screenDefinitions.add(s));
+}
+
+// Validate Feature screen references
+const usedScreens = new Set();
+for (const spec of featureSpecs) {
+  for (const s of spec.screens) {
+    usedScreens.add(s);
+    if (screenSpecs.length > 0 && !screenDefinitions.has(s)) {
+      errors.push(`Unknown screen "${s}" referenced in feature ${spec.relFile}; update Screen spec first.`);
+    }
+  }
+}
+
+// Warnings for unused screens (only if Screen spec exists)
+if (screenSpecs.length > 0) {
+  for (const s of screenDefinitions) {
+    if (!usedScreens.has(s)) warnings.push(`Screen "${s}" defined in Screen spec is not referenced by any feature.`);
+  }
+}
+
+// Check Screen Index table in Screen spec
+const screenIndexHeader = '| SCREEN ID | NAME |';
+const screenRows = new Map(); // ID -> name
+for (const spec of screenSpecs) {
+  const text = fileContentCache.get(spec.file).toUpperCase();
+  if (!text.includes(screenIndexHeader.toUpperCase())) {
+    warnings.push(`Screen ${spec.relFile} is missing Screen Index table header.`);
+    continue;
+  }
+  const lines = text.split(/\r?\n/);
+  let inTable = false;
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (trimmed.includes('| SCREEN ID') && trimmed.includes('| NAME')) {
+      inTable = true;
+      continue;
+    }
+    if (inTable) {
+      if (!trimmed.startsWith('|')) break;
+      if (trimmed.includes('---')) continue; // Skip separator row
+      const cells = trimmed.split('|').map((c) => c.trim()).filter(Boolean);
+      if (cells.length >= 2 && cells[0].startsWith('SCR-')) {
+        screenRows.set(cells[0], cells[1]);
+      }
+    }
+  }
 }
 
 // Check Feature index table in Domain spec

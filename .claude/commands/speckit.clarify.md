@@ -40,6 +40,7 @@ Spec（Vision、Domain、または Feature）の曖昧な点を特定し、人�
 
 - `/speckit.vision` 後の Vision Spec 精密化
 - `/speckit.design` 後の Domain Spec 精密化
+- `/speckit.screen` 後の Screen Spec 精密化
 - `/speckit.add`, `/speckit.fix`, `/speckit.issue` での Feature Spec 作成後
 - Spec に `[NEEDS CLARIFICATION]` が残っている場合
 - 人間から「clarify して」と指示された場合
@@ -50,19 +51,21 @@ Spec（Vision、Domain、または Feature）の曖昧な点を特定し、人�
 
 ### Step 1: Identify Target Spec
 
-1. `$ARGUMENTS` で Spec ID または種類（vision/domain/feature）が指定されていればそれを使用
+1. `$ARGUMENTS` で Spec ID または種類（vision/domain/screen/feature）が指定されていればそれを使用
 2. なければ現在のブランチ名から推測:
    - `spec/*-vision` → Vision spec
    - `spec/*-domain` または `spec/*-overview` → Domain spec
+   - `spec/*-screen` → Screen spec
    - `feature/*`, `fix/*` → 対応する Feature spec
 3. それでも特定できなければ、`.specify/specs/` を確認して質問
 
 4. Spec ファイルを読み込む。存在しなければ:
    - Vision: `/speckit.vision` を先に実行するよう指示
    - Domain: `/speckit.design` を先に実行するよう指示
+   - Screen: `/speckit.screen` を先に実行するよう指示
    - Feature: `/speckit.issue` または `/speckit.add` を先に実行するよう指示
 
-5. Spec Type（Vision, Domain, or Feature）を判定し、対応するタクソノミーを選択
+5. Spec Type（Vision, Domain, Screen, or Feature）を判定し、対応するタクソノミーを選択
 
 ---
 
@@ -96,6 +99,19 @@ Spec の内容を読み込み、以下のタクソノミーに基づいて各カ
 | **Business Rules** | 計算ロジック(CR-*)、バリデーション(VR-*)、制約(BR-*) |
 | **Non-Functional** | パフォーマンス、セキュリティ、可用性、データ保持 |
 | **Technology Decisions** | 技術スタック、外部依存、統合パターン |
+
+#### Screen Spec タクソノミー
+
+| Category | Check Items |
+|----------|-------------|
+| **Screen Index (SCR-*)** | 全画面の網羅性、ID命名規則、Purpose明確性 |
+| **Screen Transitions** | 遷移図の完全性、Entry/Exit Points、エラー遷移 |
+| **Layout & Structure** | ワイヤーフレームの詳細度、コンポーネント配置、レスポンシブ対応 |
+| **UI States** | Default/Loading/Empty/Error各状態の定義 |
+| **Navigation** | メニュー構造、パンくず、戻る/進むの挙動 |
+| **Design Tokens** | カラースキーム、タイポグラフィ、スペーシング、アイコン |
+| **Responsive Design** | ブレークポイント、モバイル対応、タブレット対応 |
+| **Accessibility** | WCAG準拠レベル、キーボード操作、スクリーンリーダー対応 |
 
 #### Feature Spec タクソノミー
 
@@ -238,6 +254,18 @@ Q4: [カテゴリ名] について
 | ビジネスルール (BR-*/VR-*/CR-*) | Section 6 (Shared Business Rules) |
 | 非機能要件 | Section 7 (Non-Functional Requirements) |
 
+**Screen Spec の場合:**
+
+| 回答の種類 | 更新先セクション |
+|-----------|-----------------|
+| 画面定義 (SCR-*) | Section 2 (Screen Index) |
+| 画面遷移 | Section 3 (Screen Transitions) |
+| レイアウト/ワイヤーフレーム | Section 4 (Screen Details) |
+| 共通コンポーネント | Section 5 (Shared Components) |
+| デザイントークン | Section 6 (Design Tokens) |
+| レスポンシブ対応 | Section 7 (Responsive Breakpoints) |
+| アクセシビリティ | Section 8 (Accessibility) |
+
 **Feature Spec の場合:**
 
 | 回答の種類 | 更新先セクション |
@@ -324,11 +352,22 @@ Vision が明確になりました。次は Domain Spec で技術的な詳細を
 **Domain Spec の場合:**
 ```
 次のステップ:
-1. [推奨] `/speckit.issue` - Foundation (S-FOUNDATION-001) から実装開始
-2. `/speckit.featureproposal` - 追加の Feature を提案
+1. [推奨] `/speckit.screen` - 画面設計（Screen Spec 作成）
+2. `/speckit.issue` - Foundation (S-FOUNDATION-001) から実装開始
+3. `/speckit.featureproposal` - 追加の Feature を提案
+4. `/speckit.clarify` を再実行 - さらに詳細化したい場合
+
+Domain が明確になりました。次は Screen Spec で画面設計を行いましょう。
+```
+
+**Screen Spec の場合:**
+```
+次のステップ:
+1. [推奨] `/speckit.issue` - Feature 実装を開始
+2. `/speckit.add` - 新しい Feature を追加
 3. `/speckit.clarify` を再実行 - さらに詳細化したい場合
 
-Domain が明確になりました。Foundation から実装を始めましょう。
+Screen が明確になりました。Feature の実装を始めましょう。
 ```
 
 **Feature Spec の場合:**
@@ -483,7 +522,8 @@ AI: 回答を記録しました:
 
 - Vision clarify は `/speckit.vision` 後に実行（目的とジャーニーの明確化）
 - Domain clarify は `/speckit.design` 後に実行（M-*/API-*/BR-* の明確化）
-- Feature clarify は Domain が十分に定義されていることが前提
+- Screen clarify は `/speckit.screen` 後に実行（SCR-*/レイアウト/遷移の明確化）
+- Feature clarify は Domain/Screen が十分に定義されていることが前提
 - 人間が「後で」「スキップ」と言った場合は `[NEEDS CLARIFICATION]` を残し、Deferred としてレポート
 - 各セッションは独立（前回のセッションを自動継続しない）
 - 12問を超えるセッションが必要な場合は、Spec の分割を検討

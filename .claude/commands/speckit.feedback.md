@@ -32,12 +32,14 @@ specification. This command provides a structured way to record:
    - `clarification` - Ambiguity that was resolved during implementation
    - `decision` - Design decision that should be documented
    - `deviation` - Intentional deviation from spec (with justification)
+   - `screen` - UI/UX feedback that affects Screen Spec (layout, navigation, usability)
 
 2) **Locate the relevant spec**:
 
    - Find the spec being implemented (from branch name or context)
    - Read the current spec content
    - Identify the affected sections (UC, FR, SC, etc.)
+   - For `screen` type: Also check Screen Spec (`.specify/specs/screen/spec.md`)
 
 3) **Record the feedback**:
 
@@ -114,3 +116,22 @@ Output:
 - Implementation Notes: "Design decision: optimistic locking for concurrency"
 - Changelog: `| 2025-01-15 | Clarified | Documented concurrency strategy | - |`
 - No Issue needed (spec was silent, implementation made reasonable choice)
+
+### Example 4: Screen/UI Feedback
+
+Input: `screen: SCR-003 のフィルターパネルはモバイルでは使いづらい、アコーディオン形式に変更推奨`
+
+Output:
+- Feature Spec Implementation Notes: "UI feedback: filter panel needs mobile-friendly design"
+- Screen Spec Changelog: `| 2025-01-15 | Feedback | SCR-003 filter panel mobile improvement needed | #48 |`
+- If layout change required: Issue created for Screen Spec update via `/speckit.change`
+- Affected SCR-*: SCR-003
+
+### Example 5: Screen Discovery
+
+Input: `screen: 実装中に確認ダイアログが必要と判明、Screen Spec に未定義`
+
+Output:
+- Feature Spec Section 8.3: New modal component needed
+- Issue created: "Screen addition: SCR-CONFIRM-MODAL - Delete confirmation dialog"
+- Screen Spec updated via `/speckit.screen` or `/speckit.change`
