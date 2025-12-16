@@ -1,46 +1,45 @@
 {
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:www.anthropic.com)",
+      "mcp__serena__list_dir",
+      "Bash(npm run lint:*)",
+      "Bash(npm run typecheck:*)",
+      "Bash(npm run deps:*)",
+      "Bash(npm run unused:*)",
+      "Bash(npm run quality:*)",
+      "Bash(npm run format:*)",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__get-library-docs",
+      "Bash(claude update)"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "serena"
+  ],
   "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "npm run lint --silent -- --max-warnings 0 2>/dev/null || echo '[Lint] Warnings detected'"
+          }
+        ]
+      }
+    ],
     "SessionStart": [
       {
         "hooks": [
           {
             "type": "command",
-            "command": "node .specify/scripts/state.js query --all 2>/dev/null || echo \"[SSD State] Not initialized. Run: node .specify/scripts/state.js init\""
+            "command": "node .specify/scripts/state.js query --all 2>/dev/null || echo \"[SSD State] Not initialized\""
           }
         ]
       }
     ]
-  },
-  "permissions": {
-    "defaultMode": "acceptEdits",
-    "allow": [
-      "Edit",
-      "MultiEdit",
-      "Bash(npm run lint)",
-      "Bash(npm run test:*)",
-      "Bash(git add:*)",
-      "Bash(git commit:*)",
-      "Bash(git rev-parse:*)",
-      "Bash(tree:*)",
-      "Bash(claude mcp add:*)",
-      "mcp__serena__activate_project",
-      "mcp__serena__check_onboarding_performed",
-      "mcp__serena__list_dir",
-      "Bash(mkdir:*)",
-      "Bash(git push:*)",
-      "Bash(node:*)",
-      "Bash(ls -la \"C:\\Users\\萓谷篤嗣\\Desktop\\ssd-template\\.github\"\" 2>/dev/null || echo \"No .github directory \")",
-      "Bash(echo:*)",
-      "Bash(gh repo view:*)",
-      "Bash(gh repo edit:*)",
-      "Bash(git remote add:*)",
-      "Bash(git branch:*)",
-      "Bash(git commit -m \"$(cat <<''EOF''\ndocs: Add Screen Spec to 4-tier structure and fix workflow consistency\n\nMajor changes:\n- Update constitution.md to 4-tier structure (v1.5.0 -> v1.6.0)\n- Add Screen Spec rules and Spec-First approach\n- Add ID naming guide (.specify/guides/id-naming.md)\n- Add Foundation guide (.specify/guides/foundation.md)\n- Add workflow review document (.specify/guides/workflow-review.md)\n\nTemplates:\n- Add Feature Dependencies section to feature-spec-template.md\n- Add Spec-First tasks to tasks-template.md\n- Add Screen Spec reference to plan-template.md\n\nScripts:\n- Add Screen Spec state tracking to state.js (v1.1.0)\n- Fix case-insensitive Screen Index detection in spec-lint.js\n- Update repo-state.json schema with screen spec\n\nDocs:\n- Add /speckit.screen to Commands-Reference.md\n- Update all docs to reflect 4-tier structure\n- Add Spec-First workflow to Workflow-Add-Feature.md\n- Add Phase 2.5 (Screen) to Workflow-New-Project.md\n\nError Recovery:\n- Add Screen Spec error recovery section\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n)\")"
-    ]
-  },
-  "enabledMcpjsonServers": [
-    "serena"
-  ],
-  "enableAllProjectMcpServers": true,
-  "outputStyle": "default"
+  }
 }

@@ -1,0 +1,47 @@
+{
+  "name": "ssd-template",
+  "version": "1.0.0",
+  "description": "Spec-Driven Development Template with Code Quality Tools",
+  "type": "module",
+  "scripts": {
+    "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
+    "lint:fix": "eslint . --ext .ts,.tsx,.js,.jsx --fix",
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "deps:circular": "madge --circular --extensions ts,tsx,js,jsx src/",
+    "deps:check": "depcruise src --config",
+    "deps:graph": "madge --image dependency-graph.svg --extensions ts,tsx,js,jsx src/",
+    "unused": "knip",
+    "unused:fix": "knip --fix",
+    "quality": "npm run lint && npm run typecheck && npm run deps:circular && npm run unused",
+    "quality:ci": "npm run lint -- --quiet && npm run typecheck && npm run deps:circular && npm run deps:check && npm run unused",
+    "spec:lint": "node .specify/scripts/spec-lint.js",
+    "prepare": "husky || true"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "dependency-cruiser": "^16.0.0",
+    "eslint": "^9.0.0",
+    "eslint-config-prettier": "^9.0.0",
+    "husky": "^9.0.0",
+    "knip": "^5.0.0",
+    "lint-staged": "^15.0.0",
+    "madge": "^8.0.0",
+    "prettier": "^3.0.0",
+    "typescript": "^5.0.0"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

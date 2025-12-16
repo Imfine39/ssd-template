@@ -26,6 +26,51 @@
 - serena が使えない場合は onboard か activate を実施してください。
 - Python を使う作業では仮想環境を必ず有効化してから変更提案する（例: `.\venv\Scripts\activate`）。
 
+### コード品質ツール
+
+このテンプレートには以下のコード品質ツールが組み込まれています:
+
+| ツール | 用途 | コマンド |
+|--------|------|----------|
+| ESLint | コードチェック | `npm run lint` |
+| Prettier | フォーマット | `npm run format` |
+| TypeScript | 型チェック | `npm run typecheck` |
+| madge | 循環依存検出 | `npm run deps:circular` |
+| dependency-cruiser | 依存関係ルール | `npm run deps:check` |
+| knip | 未使用コード検出 | `npm run unused` |
+
+**初回セットアップ:** `npm install` を実行してください。
+
+**全チェック一括実行:** `npm run quality`
+
+### Claude Hooks（自動チェック）
+
+`.claude/settings.local.json` により、ファイル編集時に自動で Lint が実行されます:
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [{
+      "matcher": "Edit|Write",
+      "hooks": [{
+        "type": "command",
+        "command": "npm run lint --silent -- --max-warnings 0"
+      }]
+    }]
+  }
+}
+```
+
+**注意:** Lint エラーが出た場合は必ず修正してから次の作業に進むこと。
+
+### 依存関係ルール
+
+`.dependency-cruiser.cjs` で以下を強制:
+
+- **no-circular**: 循環依存禁止
+- **no-ui-to-data-layer**: UI → DB/API 直接アクセス禁止
+- **no-dev-deps-in-src**: 本番コードで devDependencies 使用禁止
+
 ---
 
 ## 3. ワークフロー

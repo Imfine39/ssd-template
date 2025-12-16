@@ -1,0 +1,98 @@
+name: Code Quality
+
+on:
+  push:
+    branches: ["**"]
+    paths:
+      - "src/**"
+      - "package.json"
+      - "tsconfig.json"
+      - "eslint.config.js"
+      - ".dependency-cruiser.cjs"
+      - "knip.json"
+  pull_request:
+    branches: ["**"]
+    paths:
+      - "src/**"
+      - "package.json"
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: Lint & Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: npm run lint -- --max-warnings 0
+
+      - name: Run TypeScript type check
+        run: npm run typecheck
+
+      - name: Run Prettier check
+        run: npm run format:check
+
+  dependencies:
+    name: Dependency Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check circular dependencies
+        run: npm run deps:circular
+
+      - name: Run dependency-cruiser
+        run: npm run deps:check
+
+      - name: Check unused code & dependencies
+        run: npm run unused
+
+  # オプション: 依存関係のグラフを生成してアーティファクトとして保存
+  # dependency-graph:
+  #   name: Generate Dependency Graph
+  #   runs-on: ubuntu-latest
+  #   if: github.event_name == 'pull_request'
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #
+  #     - name: Setup Node.js
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: 20
+  #         cache: "npm"
+  #
+  #     - name: Install dependencies
+  #       run: npm ci
+  #
+  #     - name: Install Graphviz
+  #       run: sudo apt-get install -y graphviz
+  #
+  #     - name: Generate dependency graph
+  #       run: npm run deps:graph
+  #
+  #     - name: Upload graph
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: dependency-graph
+  #         path: dependency-graph.svg

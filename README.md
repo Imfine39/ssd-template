@@ -102,10 +102,78 @@ Fix Bug:
 
 ---
 
+## Code Quality Tools
+
+このテンプレートには、コード品質を自動で維持するためのツール群が組み込まれています。
+
+### セットアップ
+
+```bash
+npm install
+```
+
+### npm scripts
+
+| コマンド | 説明 |
+|----------|------|
+| `npm run lint` | ESLint によるコードチェック |
+| `npm run lint:fix` | ESLint 自動修正 |
+| `npm run typecheck` | TypeScript 型チェック |
+| `npm run format` | Prettier によるフォーマット |
+| `npm run deps:circular` | 循環依存の検出（madge） |
+| `npm run deps:check` | 依存関係ルールチェック（dependency-cruiser） |
+| `npm run unused` | 未使用コード・依存の検出（knip） |
+| `npm run quality` | 全チェック一括実行 |
+
+### Claude Hooks による自動チェック
+
+`.claude/settings.local.json` に設定されたフックにより、Claude Code がファイルを編集するたびに自動で Lint が実行されます。
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [{
+      "matcher": "Edit|Write",
+      "hooks": [{
+        "type": "command",
+        "command": "npm run lint --silent -- --max-warnings 0"
+      }]
+    }]
+  }
+}
+```
+
+### 依存関係ルール（dependency-cruiser）
+
+`.dependency-cruiser.cjs` で以下のルールを強制:
+
+- **no-circular**: 循環依存の禁止
+- **no-orphans**: 孤立ファイル（未参照）の警告
+- **no-deprecated-npm**: 非推奨パッケージの禁止
+- **no-dev-deps-in-src**: 本番コードでの devDependencies 使用禁止
+- **no-ui-to-data-layer**: UI 層から DB/API 層への直接アクセス禁止
+
+### 未使用コード検出（knip）
+
+`knip.json` で設定。以下を検出:
+
+- 未使用のファイル
+- 未使用の依存関係（npm パッケージ）
+- 未使用のエクスポート
+
+### CI ワークフロー
+
+`.github/workflows/code-quality.yml` で PR 時に自動チェック:
+
+1. **lint**: ESLint + TypeScript + Prettier
+2. **dependencies**: 循環依存 + dependency-cruiser + knip
+
+---
+
 ## Prerequisites
 
 - Git
-- Node.js (LTS)
+- Node.js 20+ (LTS)
 - GitHub CLI (`gh`)
 - AI Assistant (Claude Code, Cursor, etc.)
 
@@ -125,7 +193,11 @@ Fix Bug:
 .
 ├── .claude/
 │   ├── commands/           # speckit.* コマンド (17+)
-│   └── settings.local.json # Hooks 設定
+│   └── settings.local.json # Hooks 設定（Lint 自動実行）
+├── .github/
+│   └── workflows/
+│       ├── spec-lint.yml   # Spec 整合性チェック CI
+│       └── code-quality.yml # コード品質チェック CI
 ├── .specify/
 │   ├── memory/constitution.md   # Engineering Constitution
 │   ├── input/              # Quick Input ファイル（ユーザー入力用）
@@ -133,7 +205,13 @@ Fix Bug:
 │   ├── scripts/            # Node.js スクリプト (7)
 │   ├── specs/              # 仕様書（自動生成）
 │   └── state/              # 状態ファイル
+├── src/                    # ソースコード
 ├── docs/                   # ドキュメント
+├── .dependency-cruiser.cjs # 依存関係ルール設定
+├── eslint.config.js        # ESLint 設定（Flat Config）
+├── knip.json               # 未使用コード検出設定
+├── tsconfig.json           # TypeScript 設定
+├── package.json            # npm scripts & 依存関係
 └── CLAUDE.md               # AI エージェント用ガイド
 ```
 
@@ -145,8 +223,12 @@ Fix Bug:
 |------|---------|
 | `CLAUDE.md` | AI エージェントの行動指針 |
 | `.specify/memory/constitution.md` | Engineering Constitution（最上位ルール） |
-| `.claude/settings.local.json` | Hooks 設定（SessionStart で状態自動読込） |
+| `.claude/settings.local.json` | Hooks 設定（SessionStart + Lint 自動実行） |
 | `.specify/input/*.md` | Quick Input ファイル（コマンド実行前にユーザーが記入） |
+| `.dependency-cruiser.cjs` | 依存関係ルール（循環依存禁止など） |
+| `eslint.config.js` | ESLint Flat Config（TypeScript 対応） |
+| `knip.json` | 未使用コード・依存検出設定 |
+| `tsconfig.json` | TypeScript strict 設定 |
 
 ---
 

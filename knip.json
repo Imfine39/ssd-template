@@ -1,0 +1,39 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "entry": [
+    "src/index.{ts,tsx,js,jsx}",
+    "src/main.{ts,tsx,js,jsx}",
+    "src/App.{ts,tsx,js,jsx}"
+  ],
+  "project": [
+    "src/**/*.{ts,tsx,js,jsx}"
+  ],
+  "ignore": [
+    "**/*.d.ts",
+    "**/*.config.{ts,js,cjs,mjs}",
+    ".specify/**/*"
+  ],
+  "ignoreDependencies": [
+    "@types/*",
+    "husky"
+  ],
+  "ignoreBinaries": [
+    "node"
+  ],
+  "rules": {
+    "files": "error",
+    "dependencies": "error",
+    "devDependencies": "warn",
+    "optionalPeerDependencies": "off",
+    "unlisted": "error",
+    "binaries": "warn",
+    "unresolved": "error",
+    "exports": "warn",
+    "types": "warn",
+    "nsExports": "off",
+    "nsTypes": "off",
+    "duplicates": "warn",
+    "enumMembers": "off",
+    "classMembers": "off"
+  }
+}
