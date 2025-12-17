@@ -2,7 +2,7 @@
 
 **Spec-Driven Development Framework for AI-Assisted Projects**
 
-ニックの最強SDDフレームワーク
+つよつよAIエンジニアニックの最強SDDフレームワーク
 AI コーディングアシスタント（Claude Code など）と人間の協業による仕様駆動開発フレームワークです。
 
 ---
