@@ -33,7 +33,7 @@ $ARGUMENTS
 **Next steps:** `/speckit.clarify` で曖昧点を解消 → `/speckit.design` で Screen + Domain 同時作成
 
 **Unified Quick Input:**
-入力ファイル `.specify/input/vision.md` は統合版で、以下の3パートを含む:
+入力ファイル `.specify/input/vision-input.md` は統合版で、以下の3パートを含む:
 
 - **Part A**: ビジョン（必須）- 基本情報、課題、ユーザー、やりたいこと
 - **Part B**: 画面イメージ（任意だが推奨）- 画面リスト、遷移、主な要素
@@ -52,12 +52,12 @@ $ARGUMENTS
 1. **DO NOT use Example content** - The Example section below is for reference ONLY. NEVER output example data (「社内在庫管理システム」「倉庫担当者」「経理担当者」etc.) as actual results.
 
 2. **MUST use tools** - You MUST actually:
-   - Use the **Read tool** to read `.specify/input/vision.md`
+   - Use the **Read tool** to read `.specify/input/vision-input.md`
    - Use the **Bash tool** to run scaffold scripts
    - Use the **Write/Edit tool** to create/modify spec files
 
 3. **Real data only** - All output must come from:
-   - User's input file (`.specify/input/vision.md`)
+   - User's input file (`.specify/input/vision-input.md`)
    - User's $ARGUMENTS
    - User's chat responses
 
@@ -71,10 +71,10 @@ $ARGUMENTS
 
 #### 1.1 入力ファイルの読み込み
 
-**【必須】Read ツールで `.specify/input/vision.md` を読み込むこと。**
+**【必須】Read ツールで `.specify/input/vision-input.md` を読み込むこと。**
 
 ```
-Use the Read tool to read: .specify/input/vision.md
+Use the Read tool to read: .specify/input/vision-input.md
 ```
 
 **DO NOT skip this step. DO NOT assume the file content.**
@@ -84,7 +84,7 @@ Use the Read tool to read: .specify/input/vision.md
 以下の優先順位で入力を判定:
 
 1. **入力ファイルにユーザー記入がある場合**
-   - `.specify/input/vision.md` の各項目（プロジェクト名、課題など）に記入がある
+   - `.specify/input/vision-input.md` の各項目（プロジェクト名、課題など）に記入がある
    - → その内容を使用して Step 1.4 へ
 
 2. **$ARGUMENTS に十分な情報がある場合**
@@ -108,7 +108,7 @@ Use the Read tool to read: .specify/input/vision.md
 以下のいずれかの方法で情報を提供してください:
 
 Option A: 入力ファイルを編集（推奨）
-  1. `.specify/input/vision.md` をエディタで開く
+  1. `.specify/input/vision-input.md` をエディタで開く
   2. テンプレートを埋める
   3. `/speckit.vision` を再実行
 
@@ -279,7 +279,7 @@ Note: Screen Hints が入力されていない場合、/speckit.design で画面
 
 ### Step 4: Record Original Input
 
-入力ファイル（`.specify/input/vision.md`）から入力があった場合:
+入力ファイル（`.specify/input/vision-input.md`）から入力があった場合:
 
 1. **Spec の末尾に「Original Input」セクションを追加**:
 
@@ -288,7 +288,7 @@ Note: Screen Hints が入力されていない場合、/speckit.design で画面
 
    ## Original Input
 
-   > 以下は `/speckit.vision` 実行時に `.specify/input/vision.md` から取得した元の入力です。
+   > 以下は `/speckit.vision` 実行時に `.specify/input/vision-input.md` から取得した元の入力です。
 
    [入力ファイルの内容をそのまま引用]
    ```
@@ -337,14 +337,14 @@ node .specify/scripts/state.cjs repo --set-vision-status draft --set-phase visio
 >
 > The following examples are for understanding the workflow ONLY.
 > **DO NOT copy or output these example values** (社内在庫管理システム, 倉庫担当者, 経理担当者, etc.).
-> Always use ACTUAL user input from `.specify/input/vision.md` or $ARGUMENTS.
+> Always use ACTUAL user input from `.specify/input/vision-input.md` or $ARGUMENTS.
 
 ### Example A: 入力ファイルから読み込み
 
 ```
 Human: /speckit.vision
 
-AI: `.specify/input/vision.md` を読み込みます...
+AI: `.specify/input/vision-input.md` を読み込みます...
 
     入力ファイルから情報を取得しました:
     - プロジェクト名: 社内在庫管理システム
@@ -365,7 +365,7 @@ AI: `.specify/input/vision.md` を読み込みます...
 ```
 Human: /speckit.vision 社内の在庫管理システム。現在はExcelで管理していて非効率。
 
-AI: `.specify/input/vision.md` を読み込みます...
+AI: `.specify/input/vision-input.md` を読み込みます...
     入力ファイルは空のため、$ARGUMENTS を確認します。
 
     情報を解析中...

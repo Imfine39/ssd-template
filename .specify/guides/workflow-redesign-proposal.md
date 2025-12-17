@@ -115,7 +115,7 @@ Phase 5: /speckit.plan → /speckit.tasks → /speckit.implement → /speckit.pr
 ## 完了した変更
 
 ### テンプレート
-- [x] `.specify/templates/quickinput-vision.md` - 統合 Quick Input（Part A/B/C）
+- [x] `.specify/templates/vision-input.md` - 統合 Quick Input（Part A/B/C）
 - [x] `.specify/templates/vision-spec-template.md` - Screen Hints セクション追加
 - [x] `.specify/templates/screen-spec-template.md` - 対応表を必須化
 - [x] `.specify/templates/domain-spec-template.md` - Screen 参照を追加

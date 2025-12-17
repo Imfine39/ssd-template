@@ -38,7 +38,7 @@
 - `.specify/specs/vision/spec.md`（Screen Hints セクション含む）
 
 **Input:**
-統合 Quick Input（`.specify/input/vision.md`）:
+統合 Quick Input（`.specify/input/vision-input.md`）:
 
 - Part A: ビジョン（必須）
 - Part B: 画面イメージ（推奨）→ Screen Hints に保存

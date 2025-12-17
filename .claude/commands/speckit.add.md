@@ -35,12 +35,12 @@ Creates Issue → Branch → Spec. Clarify は別コマンドで実行。
 1. **DO NOT use Example content** - The Example section below is for reference ONLY. NEVER output example data (「PDFエクスポート」「一覧画面からPDF出力」etc.) as actual results.
 
 2. **MUST use tools** - You MUST actually:
-   - Use the **Read tool** to read `.specify/input/add.md`
+   - Use the **Read tool** to read `.specify/input/add-input.md`
    - Use the **Bash tool** to run gh commands and scaffold scripts
    - Use the **Write/Edit tool** to create/modify spec files
 
 3. **Real data only** - All output must come from:
-   - User's input file (`.specify/input/add.md`)
+   - User's input file (`.specify/input/add-input.md`)
    - User's $ARGUMENTS
    - User's chat responses
 
@@ -54,10 +54,10 @@ Creates Issue → Branch → Spec. Clarify は別コマンドで実行。
 
 #### 1.1 入力ファイルの読み込み
 
-**【必須】Read ツールで `.specify/input/add.md` を読み込むこと。**
+**【必須】Read ツールで `.specify/input/add-input.md` を読み込むこと。**
 
 ```
-Use the Read tool to read: .specify/input/add.md
+Use the Read tool to read: .specify/input/add-input.md
 ```
 
 **DO NOT skip this step. DO NOT assume the file content.**
@@ -67,7 +67,7 @@ Use the Read tool to read: .specify/input/add.md
 以下の優先順位で入力を判定:
 
 1. **入力ファイルにユーザー記入がある場合**
-   - `.specify/input/add.md` の各項目（機能名、課題など）に記入がある
+   - `.specify/input/add-input.md` の各項目（機能名、課題など）に記入がある
    - → その内容を使用して Step 1.4 へ
 
 2. **$ARGUMENTS に十分な情報がある場合**
@@ -91,7 +91,7 @@ Use the Read tool to read: .specify/input/add.md
 以下のいずれかの方法で情報を提供してください:
 
 Option A: 入力ファイルを編集（推奨）
-  1. `.specify/input/add.md` をエディタで開く
+  1. `.specify/input/add-input.md` をエディタで開く
   2. テンプレートを埋める
   3. `/speckit.add` を再実行
 
@@ -288,7 +288,7 @@ node .specify/scripts/spec-lint.cjs
 
 ### Step 10: Record Original Input & Reset
 
-入力ファイル（`.specify/input/add.md`）から入力があった場合:
+入力ファイル（`.specify/input/add-input.md`）から入力があった場合:
 
 1. **Spec の末尾に「Original Input」セクションを追加**:
 
@@ -297,7 +297,7 @@ node .specify/scripts/spec-lint.cjs
 
    ## Original Input
 
-   > 以下は `/speckit.add` 実行時に `.specify/input/add.md` から取得した元の入力です。
+   > 以下は `/speckit.add` 実行時に `.specify/input/add-input.md` から取得した元の入力です。
 
    [入力ファイルの内容をそのまま引用]
    ```
@@ -375,14 +375,14 @@ Clarify をスキップすると、実装中の手戻りリスクが高まりま
 >
 > The following examples are for understanding the workflow ONLY.
 > **DO NOT copy or output these example values** (PDFエクスポート, 一覧画面からPDF出力, etc.).
-> Always use ACTUAL user input from `.specify/input/add.md` or $ARGUMENTS.
+> Always use ACTUAL user input from `.specify/input/add-input.md` or $ARGUMENTS.
 
 ### Example A: 入力ファイルから読み込み
 
 ```
 Human: /speckit.add
 
-AI: `.specify/input/add.md` を読み込みます...
+AI: `.specify/input/add-input.md` を読み込みます...
 
     入力ファイルから情報を取得しました:
     - 機能名: PDFエクスポート
@@ -423,7 +423,7 @@ AI: `.specify/input/add.md` を読み込みます...
 ```
 Human: /speckit.add ユーザーがPDFエクスポートできる機能
 
-AI: `.specify/input/add.md` を読み込みます...
+AI: `.specify/input/add-input.md` を読み込みます...
     入力ファイルは空のため、$ARGUMENTS を確認します。
 
     追加で確認させてください:

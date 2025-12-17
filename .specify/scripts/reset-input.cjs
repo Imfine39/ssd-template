@@ -21,18 +21,18 @@ const INPUT_DIR = path.join(REPO_ROOT, '.specify/input');
 
 const INPUT_TYPES = {
   vision: {
-    template: 'quickinput-vision.md',
-    input: 'vision.md',
+    template: 'vision-input.md',
+    input: 'vision-input.md',
     description: 'Vision Spec の入力（統合版: ビジョン + 画面イメージ + デザイン希望）'
   },
   add: {
-    template: 'quickinput-add.md',
-    input: 'add.md',
+    template: 'add-input.md',
+    input: 'add-input.md',
     description: 'Feature 追加の入力'
   },
   fix: {
-    template: 'quickinput-fix.md',
-    input: 'fix.md',
+    template: 'fix-input.md',
+    input: 'fix-input.md',
     description: 'Bug Fix の入力'
   }
 };

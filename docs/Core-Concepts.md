@@ -363,9 +363,9 @@ Draft → In Review → Approved → Implementing → Completed
 ```
 .specify/
 ├── templates/           # ベーステンプレート（読み取り専用）
-│   ├── quickinput-vision.md
-│   ├── quickinput-add.md
-│   └── quickinput-fix.md
+│   ├── vision-input.md
+│   ├── add-input.md
+│   └── fix-input.md
 │
 ├── input/               # ユーザー入力用（編集対象）
 │   ├── vision.md

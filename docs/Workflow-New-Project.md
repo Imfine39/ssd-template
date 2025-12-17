@@ -32,7 +32,7 @@ Phase 4: Features   /speckit.issue      各Feature実装（繰り返し）
 
 ### AI の動作
 
-1. **入力読み込み**: `.specify/input/vision.md` から読み込み（統合 Quick Input）
+1. **入力読み込み**: `.specify/input/vision-input.md` から読み込み（統合 Quick Input）
    - Part A: ビジョン（必須）
    - Part B: 画面イメージ（推奨）
    - Part C: デザイン希望（任意）

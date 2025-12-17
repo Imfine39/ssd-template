@@ -124,9 +124,9 @@
 
 | コマンド | Quick Input |
 |---------|-------------|
-| /speckit.vision | quickinput-vision.md（統合: Part A/B/C） |
-| /speckit.add | quickinput-add.md |
-| /speckit.fix | quickinput-fix.md |
+| /speckit.vision | vision-input.md（統合: Part A/B/C） |
+| /speckit.add | add-input.md |
+| /speckit.fix | fix-input.md |
 | /speckit.design | なし（Vision Spec の Screen Hints から取得） |
 
 **結論**: **Quick Input 不要**。`/speckit.design` は Vision Spec の Screen Hints セクションから画面情報を取得し、Screen + Domain Spec を同時に作成する。追加の入力は不要。

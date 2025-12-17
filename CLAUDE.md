@@ -83,7 +83,7 @@
 
 ```
 Phase 1: /speckit.vision (統合 Quick Input)
-  → .specify/input/vision.md に入力（Part A: ビジョン、Part B: 画面、Part C: デザイン）
+  → .specify/input/vision-input.md に入力（Part A: ビジョン、Part B: 画面、Part C: デザイン）
   → Vision Spec 作成（目的、ジャーニー、スコープ、Screen Hints）
   → /speckit.clarify で曖昧点解消（4問ずつバッチ質問）
   → 人間: Vision をレビュー・承認
@@ -117,7 +117,7 @@ Phase 5以降: Feature 開発（繰り返し）
 
 ```
 /speckit.add
-  → .specify/input/add.md に入力（Quick Input）
+  → .specify/input/add-input.md に入力（Quick Input）
   → Issue 作成 → Branch 作成
   → [Spec-First] 画面変更が必要な場合、Screen Spec を先に更新（Status: Planned）
   → Feature Spec 作成（Screen Spec を参照）
@@ -127,7 +127,7 @@ Phase 5以降: Feature 開発（繰り返し）
   → [PR マージ後] Screen Spec の Status を Implemented に更新
 
 /speckit.fix (バグ修正)
-  → .specify/input/fix.md に入力（または --quick でスキップ）
+  → .specify/input/fix-input.md に入力（または --quick でスキップ）
   → Issue 作成 → Branch 作成
   → [Spec-First] 画面変更が必要な場合、Screen Spec を先に更新（Status: Planned）
   → 既存 Spec 更新
@@ -256,9 +256,9 @@ node .specify/scripts/scaffold-spec.cjs --kind feature --id S-XXX-001 --title ".
 ```
 .specify/
 ├── templates/           # ベーステンプレート（読み取り専用）
-│   ├── quickinput-vision.md  # 統合版（Vision + Screen + Design）
-│   ├── quickinput-add.md
-│   └── quickinput-fix.md
+│   ├── vision-input.md  # 統合版（Vision + Screen + Design）
+│   ├── add-input.md
+│   └── fix-input.md
 │
 ├── input/               # ユーザー入力用（編集対象）
 │   ├── vision.md        # 統合 Quick Input（Part A + B + C）
@@ -286,7 +286,7 @@ Part C: デザイン希望（任意）
 
 **使い方:**
 
-1. `.specify/input/vision.md` を編集して情報を入力（Part A 必須、Part B/C 推奨）
+1. `.specify/input/vision-input.md` を編集して情報を入力（Part A 必須、Part B/C 推奨）
 2. `/speckit.vision` を実行 → Vision Spec 作成（Screen Hints 含む）
 3. `/speckit.design` を実行 → Screen + Domain Spec 同時作成
 4. 完了後、入力内容は Spec の「Original Input」セクションに記録され、入力ファイルは自動リセット

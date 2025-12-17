@@ -119,7 +119,7 @@ your-project/
 
 ```
 # Option A: Quick Input を使用（推奨）
-# 1. .specify/input/vision.md を編集
+# 1. .specify/input/vision-input.md を編集
 # 2. 以下を実行
 /speckit.vision
 
@@ -136,7 +136,7 @@ AI が Vision Spec を作成し、プロジェクトの目的を明確化しま�
 
 ```
 # Option A: Quick Input を使用（推奨）
-# 1. .specify/input/add.md を編集
+# 1. .specify/input/add-input.md を編集
 # 2. 以下を実行
 /speckit.add
 

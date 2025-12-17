@@ -118,7 +118,7 @@ Screen 情報がありません。
 3. 各画面の主な要素（わかっている範囲）
    例: ダッシュボード（KPIグラフ、最近のアクション、通知）
 
-または `.specify/input/vision.md` の Part B を編集して
+または `.specify/input/vision-input.md` の Part B を編集して
 `/speckit.design` を再実行してください。
 ```
 
