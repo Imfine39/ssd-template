@@ -1,0 +1,119 @@
+{
+  "$schema": "../../../templates/cross-reference-schema.json",
+  "version": "1.0",
+  "projectName": "Sales Quest",
+  "updated": "2025-12-17",
+
+  "_comment_screens": "Screen-level cross-references. Which M-*/API-* each screen uses.",
+  "screens": {
+    "SCR-001": {
+      "name": "ログイン画面",
+      "masters": ["M-USER"],
+      "apis": ["API-AUTH-LOGIN"]
+    },
+    "SCR-002": {
+      "name": "ダッシュボード",
+      "masters": ["M-SECTOR", "M-LEAD", "M-PROJECT", "M-SECTOR-TARGET"],
+      "apis": ["API-DASHBOARD-GET"]
+    },
+    "SCR-003": {
+      "name": "リード案件一覧画面",
+      "masters": ["M-LEAD"],
+      "apis": ["API-LEAD-LIST", "API-LEAD-CREATE", "API-EXPORT-CSV"]
+    },
+    "SCR-004": {
+      "name": "リード案件詳細画面",
+      "masters": ["M-LEAD", "M-ACTIVITY"],
+      "apis": ["API-LEAD-GET", "API-LEAD-CREATE", "API-LEAD-UPDATE", "API-LEAD-CONVERT"]
+    },
+    "SCR-005": {
+      "name": "受注案件一覧画面",
+      "masters": ["M-PROJECT"],
+      "apis": ["API-PROJECT-LIST", "API-EXPORT-CSV"]
+    },
+    "SCR-006": {
+      "name": "受注案件詳細画面",
+      "masters": ["M-PROJECT", "M-MEMBER-ASSIGNMENT", "M-REVENUE-PLAN", "M-REVENUE-ACTUAL"],
+      "apis": ["API-PROJECT-GET", "API-PROJECT-UPDATE", "API-ASSIGNMENT-CREATE", "API-REVENUE-REGISTER"]
+    },
+    "SCR-007": {
+      "name": "売上実績一覧画面",
+      "masters": ["M-SECTOR", "M-REVENUE-PLAN", "M-REVENUE-ACTUAL"],
+      "apis": ["API-REVENUE-SUMMARY", "API-EXPORT-CSV"]
+    },
+    "SCR-008": {
+      "name": "メンバー管理画面",
+      "masters": ["M-USER", "M-MEMBER-ASSIGNMENT"],
+      "apis": ["API-UTILIZATION-GET"]
+    },
+    "SCR-009": {
+      "name": "セクター別売上目標画面",
+      "masters": ["M-SECTOR", "M-SECTOR-TARGET"],
+      "apis": ["API-TARGET-SET"]
+    },
+    "SCR-010": {
+      "name": "設定画面",
+      "masters": ["M-USER", "M-SECTOR"],
+      "apis": []
+    }
+  },
+
+  "_comment_features": "Feature-level cross-references. Which SCR-*/M-*/API-*/BR-* each feature uses.",
+  "features": {
+    "S-FOUNDATION-001": {
+      "title": "基盤構築",
+      "screens": ["SCR-001", "SCR-010"],
+      "masters": ["M-USER", "M-SECTOR"],
+      "apis": ["API-AUTH-LOGIN"],
+      "rules": []
+    },
+    "S-LEAD-001": {
+      "title": "リード案件管理",
+      "screens": ["SCR-003", "SCR-004"],
+      "masters": ["M-LEAD", "M-ACTIVITY"],
+      "apis": ["API-LEAD-LIST", "API-LEAD-GET", "API-LEAD-CREATE", "API-LEAD-UPDATE", "API-LEAD-CONVERT"],
+      "rules": ["BR-001"]
+    },
+    "S-PROJECT-001": {
+      "title": "受注案件管理",
+      "screens": ["SCR-005", "SCR-006"],
+      "masters": ["M-PROJECT", "M-MEMBER-ASSIGNMENT"],
+      "apis": ["API-PROJECT-LIST", "API-PROJECT-GET", "API-PROJECT-UPDATE", "API-ASSIGNMENT-CREATE"],
+      "rules": ["BR-002", "BR-003"]
+    },
+    "S-REVENUE-001": {
+      "title": "売上管理",
+      "screens": ["SCR-006", "SCR-007", "SCR-009"],
+      "masters": ["M-REVENUE-PLAN", "M-REVENUE-ACTUAL", "M-SECTOR-TARGET"],
+      "apis": ["API-REVENUE-REGISTER", "API-REVENUE-SUMMARY", "API-TARGET-SET"],
+      "rules": ["BR-004"]
+    },
+    "S-DASHBOARD-001": {
+      "title": "ダッシュボード",
+      "screens": ["SCR-002"],
+      "masters": ["M-LEAD", "M-PROJECT", "M-SECTOR-TARGET"],
+      "apis": ["API-DASHBOARD-GET"],
+      "rules": []
+    }
+  },
+
+  "_comment_permissions": "Role-based API permissions.",
+  "permissions": {
+    "API-AUTH-LOGIN": ["*"],
+    "API-DASHBOARD-GET": ["associate", "consultant", "senior_consultant", "associate_manager", "manager", "senior_manager"],
+    "API-LEAD-LIST": ["consultant", "senior_consultant", "associate_manager", "manager", "senior_manager"],
+    "API-LEAD-GET": ["consultant", "senior_consultant", "associate_manager", "manager", "senior_manager"],
+    "API-LEAD-CREATE": ["senior_consultant", "associate_manager", "manager", "senior_manager"],
+    "API-LEAD-UPDATE": ["senior_consultant", "associate_manager", "manager", "senior_manager"],
+    "API-LEAD-CONVERT": ["senior_consultant", "associate_manager", "manager", "senior_manager"],
+    "API-PROJECT-LIST": ["consultant", "senior_consultant", "associate_manager", "manager", "senior_manager"],
+    "API-PROJECT-GET": ["consultant", "senior_consultant", "associate_manager", "manager", "senior_manager"],
+    "API-PROJECT-UPDATE": ["senior_consultant", "associate_manager", "manager", "senior_manager"],
+    "API-ASSIGNMENT-CREATE": ["manager", "senior_manager"],
+    "API-REVENUE-REGISTER": ["associate_manager", "manager", "senior_manager"],
+    "API-REVENUE-SUMMARY": ["consultant", "senior_consultant", "associate_manager", "manager", "senior_manager"],
+    "API-UTILIZATION-GET": ["manager", "senior_manager"],
+    "API-TARGET-SET": ["senior_manager"],
+    "API-EXPORT-CSV": ["consultant", "senior_consultant", "associate_manager", "manager", "senior_manager"]
+  }
+}
