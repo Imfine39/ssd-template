@@ -21,7 +21,7 @@ const INPUT_DIR = path.join(REPO_ROOT, '.specify/input');
 
 const INPUT_TYPES = {
   vision: {
-    template: 'quickinput-vision-unified.md',
+    template: 'quickinput-vision.md',
     input: 'vision.md',
     description: 'Vision Spec の入力（統合版: ビジョン + 画面イメージ + デザイン希望）'
   },

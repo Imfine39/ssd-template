@@ -124,7 +124,7 @@
 
 | コマンド | Quick Input |
 |---------|-------------|
-| /speckit.vision | quickinput-vision-unified.md（統合: Part A/B/C） |
+| /speckit.vision | quickinput-vision.md（統合: Part A/B/C） |
 | /speckit.add | quickinput-add.md |
 | /speckit.fix | quickinput-fix.md |
 | /speckit.design | なし（Vision Spec の Screen Hints から取得） |

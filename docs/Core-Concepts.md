@@ -363,7 +363,7 @@ Draft → In Review → Approved → Implementing → Completed
 ```
 .specify/
 ├── templates/           # ベーステンプレート（読み取り専用）
-│   ├── quickinput-vision-unified.md
+│   ├── quickinput-vision.md
 │   ├── quickinput-add.md
 │   └── quickinput-fix.md
 │

@@ -256,7 +256,7 @@ node .specify/scripts/scaffold-spec.cjs --kind feature --id S-XXX-001 --title ".
 ```
 .specify/
 ├── templates/           # ベーステンプレート（読み取り専用）
-│   ├── quickinput-vision-unified.md  # 統合版（Vision + Screen + Design）
+│   ├── quickinput-vision.md  # 統合版（Vision + Screen + Design）
 │   ├── quickinput-add.md
 │   └── quickinput-fix.md
 │
