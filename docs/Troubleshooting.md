@@ -20,7 +20,7 @@ gh: error: authentication required
 gh auth login
 ```
 
-### state.js がエラーを出す
+### state.cjs がエラーを出す
 
 **症状:**
 
@@ -54,7 +54,7 @@ node .specify/scripts/state.cjs init
 **原因:**
 
 - `.specify/specs/vision/` ディレクトリが存在しない
-- scaffold-spec.js のパスが間違っている
+- scaffold-spec.cjs のパスが間違っている
 
 **解決:**
 
@@ -62,7 +62,7 @@ node .specify/scripts/state.cjs init
 # 手動でディレクトリ作成
 mkdir -p .specify/specs/vision
 
-# scaffold-spec.js を直接実行
+# scaffold-spec.cjs を直接実行
 node .specify/scripts/scaffold-spec.cjs --kind vision --id S-VISION-001 --title "Project Name"
 ```
 
@@ -120,7 +120,7 @@ gh issue edit <num> --add-label feature --add-label backlog
 
 **症状:**
 
-- `state.js query --branch` が古い情報を返す
+- `state.cjs query --branch` が古い情報を返す
 
 **解決:**
 
@@ -132,7 +132,7 @@ git branch --show-current
 node .specify/scripts/state.cjs branch --set-step implement
 
 # 状態ファイルを確認
-cat .specify/state/branch-state.json
+cat .specify/state/branch-state.cjson
 ```
 
 ---
@@ -141,7 +141,7 @@ cat .specify/state/branch-state.json
 
 **症状:**
 
-- `state.js query --suspended` が空
+- `state.cjs query --suspended` が空
 
 **解決:**
 
@@ -149,15 +149,15 @@ cat .specify/state/branch-state.json
 # 全状態を確認
 node .specify/scripts/state.cjs query --all
 
-# branch-state.json を直接確認
-cat .specify/state/branch-state.json | jq '.branches | to_entries[] | select(.value.suspended)'
+# branch-state.cjson を直接確認
+cat .specify/state/branch-state.cjson | jq '.branches | to_entries[] | select(.value.suspended)'
 ```
 
 ---
 
 ## Spec Lint Issues
 
-### spec-lint.js が Feature を検出しない
+### spec-lint.cjs が Feature を検出しない
 
 **症状:**
 
@@ -289,7 +289,7 @@ grep -rn "NEEDS CLARIFICATION" .specify/specs/
 
 ## Performance Issues
 
-### spec-metrics.js が遅い
+### spec-metrics.cjs が遅い
 
 **症状:**
 
@@ -323,7 +323,7 @@ node .specify/scripts/state.cjs init
 
 ```bash
 # バックアップがある場合
-cp .specify/state/repo-state.json.bak .specify/state/repo-state.json
+cp .specify/state/repo-state.cjson.bak .specify/state/repo-state.cjson
 
 # バックアップがない場合、初期化して再構築
 node .specify/scripts/state.cjs init
@@ -347,8 +347,8 @@ node .specify/scripts/state.cjs repo --set-domain-status approved
 git log --oneline -10
 
 # 状態ファイル
-cat .specify/state/repo-state.json
-cat .specify/state/branch-state.json
+cat .specify/state/repo-state.cjson
+cat .specify/state/branch-state.cjson
 ```
 
 ### 追加リソース

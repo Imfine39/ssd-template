@@ -36,7 +36,7 @@ Phase 4: Features   /speckit.issue      各Feature実装（繰り返し）
    - Part A: ビジョン（必須）
    - Part B: 画面イメージ（推奨）
    - Part C: デザイン希望（任意）
-2. **Vision Spec 作成**: scaffold-spec.js で作成
+2. **Vision Spec 作成**: scaffold-spec.cjs で作成
 3. **セクション記入**: Purpose, Users, Journeys, Scope, **Screen Hints**, Constraints, Risks
 4. **サマリー表示 & 曖昧点レポート**
 5. **→ `/speckit.clarify` で曖昧点を 4 問ずつバッチ解消（別コマンド）**
@@ -149,7 +149,7 @@ Human: PR レビュー・マージ → 次の Feature へ
 
 ## State Transitions
 
-各フェーズで repo-state.json が更新されます。
+各フェーズで repo-state.cjson が更新されます。
 
 | Phase            | phase value    | Vision status | Domain status |
 | ---------------- | -------------- | ------------- | ------------- |

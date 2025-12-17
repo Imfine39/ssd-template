@@ -11,7 +11,7 @@
  * - Staleness warnings
  *
  * Usage:
- *   node .specify/scripts/spec-metrics.js [--json] [--verbose]
+ *   node .specify/scripts/spec-metrics.cjs [--json] [--verbose]
  *
  * Flags:
  *   --json     Output as JSON (for tooling integration)

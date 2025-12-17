@@ -141,7 +141,7 @@ Lists Issues → User selects → Creates Branch → Creates Feature Spec. Clari
 8. **Create branch**:
    - Feature: `node .specify/scripts/branch.cjs --type feature --slug <slug> --issue <num>`
    - Bug fix: `node .specify/scripts/branch.cjs --type fix --slug <slug> --issue <num>`
-   - Note: branch.js automatically updates branch-state.json
+   - Note: branch.cjs automatically updates branch-state.cjson
 
 ### Step 5: Analyze Codebase
 

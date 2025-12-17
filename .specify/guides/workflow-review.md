@@ -17,7 +17,7 @@
 |-------------|-----------|----------|
 | constitution.md | `S-001` | `UC-001` |
 | feature-spec-template.md | `S-[XXX]-001` | `UC-[XXX]-001` |
-| scaffold-spec.js 使用例 | `S-SALES-001` | - |
+| scaffold-spec.cjs 使用例 | `S-SALES-001` | - |
 | CLAUDE.md | `S-XXX-001` | - |
 
 **推奨**: ID ガイドを1箇所で定義し、すべてのドキュメントから参照する
@@ -32,10 +32,10 @@
 |-------------|-----------|
 | constitution.md | Draft, In Review, Approved, Implementing, Completed, Deprecated, Superseded |
 | screen-spec-template.md | Planned, Implemented |
-| repo-state.json | none, scaffold, draft, clarified, approved |
+| repo-state.cjson | none, scaffold, draft, clarified, approved |
 
 **影響**:
-- spec-lint.js は constitution.md の Status をチェック
+- spec-lint.cjs は constitution.md の Status をチェック
 - Screen Spec の2状態は独自定義
 - 状態管理スクリプトは別の値セットを使用
 
@@ -79,10 +79,10 @@
 
 ---
 
-### 1.5 spec-lint.js と Screen Index テーブルの大文字小文字
+### 1.5 spec-lint.cjs と Screen Index テーブルの大文字小文字
 
 **問題**:
-- spec-lint.js は `| SCREEN ID | NAME |` を検索（大文字）
+- spec-lint.cjs は `| SCREEN ID | NAME |` を検索（大文字）
 - screen-spec-template.md は `| Screen ID | Name |` を定義（混合ケース）
 
 **影響**: lint が Screen Index を検出できない可能性
@@ -91,7 +91,7 @@
 
 ---
 
-### 1.6 repo-state.json に Screen Spec が含まれていない
+### 1.6 repo-state.cjson に Screen Spec が含まれていない
 
 **問題**: Vision と Domain の状態は追跡されるが、Screen Spec の状態は追跡されていない
 
@@ -124,7 +124,7 @@
 
 | コマンド | Quick Input |
 |---------|-------------|
-| /speckit.vision | quickinput-vision.md（統合: Part A/B/C） |
+| /speckit.vision | quickinput-vision-unified.md（統合: Part A/B/C） |
 | /speckit.add | quickinput-add.md |
 | /speckit.fix | quickinput-fix.md |
 | /speckit.design | なし（Vision Spec の Screen Hints から取得） |
@@ -284,9 +284,9 @@ Section 2 に追加:
 
 ---
 
-### 2.6 [中] repo-state.json の Screen Spec 追加
+### 2.6 [中] repo-state.cjson の Screen Spec 追加
 
-state.js を更新して Screen Spec 状態を追跡:
+state.cjs を更新して Screen Spec 状態を追跡:
 
 ```json
 "specs": {
@@ -318,7 +318,7 @@ Branch: [feature/<issue>-<short-description>]
 
 ---
 
-### 2.8 [低] spec-lint.js の改善
+### 2.8 [低] spec-lint.cjs の改善
 
 1. Screen Index テーブルの検出を case-insensitive に
 2. Screen Spec の Modification Log 検証を追加
@@ -369,9 +369,9 @@ Foundation は、他のすべての Feature が依存する基盤機能です。
 | 高 | 2.3 | Tasks Template 更新 | tasks-template.md | **完了** |
 | 中 | 2.4 | Feature Spec Template 更新 | feature-spec-template.md | **完了** |
 | 中 | 2.5 | Error Recovery Guide 更新 | error-recovery.md | **完了** |
-| 中 | 2.6 | state.js / repo-state.json 更新 | スクリプト | **完了** |
+| 中 | 2.6 | state.cjs / repo-state.cjson 更新 | スクリプト | **完了** |
 | 低 | 2.7 | Plan Template 更新 | plan-template.md | **完了** |
-| 低 | 2.8 | spec-lint.js 改善 | スクリプト | **完了** |
+| 低 | 2.8 | spec-lint.cjs 改善 | スクリプト | **完了** |
 | 低 | 2.9 | Foundation Guide 作成 | 新規ファイル | **完了** |
 | 低 | 1.5 | Screen Index 大文字統一 | スクリプト修正で対応 | **完了** |
 | 低 | 1.7 | Feature Index Owner カラム | domain-spec-template.md | 任意 |

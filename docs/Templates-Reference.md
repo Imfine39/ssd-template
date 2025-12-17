@@ -317,4 +317,4 @@ Requirements を「英語のユニットテスト」として表現し、検証�
 
 - [[Core-Concepts]] - 3層構造の詳細
 - [[Commands-Reference]] - テンプレートを使用するコマンド
-- [[Scripts-Reference]] - scaffold-spec.js
+- [[Scripts-Reference]] - scaffold-spec.cjs

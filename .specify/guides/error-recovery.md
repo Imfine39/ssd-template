@@ -322,7 +322,7 @@ missing navigation paths.
 
 ### 7.2 Spec System Itself Is Broken
 
-**Symptoms**: spec-lint.js crashes, templates are corrupted, etc.
+**Symptoms**: spec-lint.cjs crashes, templates are corrupted, etc.
 
 **Recovery steps**:
 

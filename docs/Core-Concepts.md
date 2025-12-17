@@ -193,8 +193,8 @@ ID は以下で参照され、追跡可能性を確保します：
 
 ```
 .specify/state/
-├── repo-state.json      # プロジェクト全体の状態
-└── branch-state.json    # ブランチごとの状態
+├── repo-state.cjson      # プロジェクト全体の状態
+└── branch-state.cjson    # ブランチごとの状態
 ```
 
 ### Repo State
@@ -363,7 +363,7 @@ Draft → In Review → Approved → Implementing → Completed
 ```
 .specify/
 ├── templates/           # ベーステンプレート（読み取り専用）
-│   ├── quickinput-vision.md
+│   ├── quickinput-vision-unified.md
 │   ├── quickinput-add.md
 │   └── quickinput-fix.md
 │
@@ -373,7 +373,7 @@ Draft → In Review → Approved → Implementing → Completed
 │   └── fix.md
 │
 └── scripts/
-    └── reset-input.js   # 入力ファイルリセット
+    └── reset-input.cjs   # 入力ファイルリセット
 ```
 
 ### 使い方

@@ -5,11 +5,11 @@
  * Reset Quick Input files to their default template state.
  *
  * Usage:
- *   node .specify/scripts/reset-input.js vision    # Reset vision input only
- *   node .specify/scripts/reset-input.js add       # Reset add input only
- *   node .specify/scripts/reset-input.js fix       # Reset fix input only
- *   node .specify/scripts/reset-input.js all       # Reset all input files
- *   node .specify/scripts/reset-input.js --list    # List available input types
+ *   node .specify/scripts/reset-input.cjs vision    # Reset vision input only
+ *   node .specify/scripts/reset-input.cjs add       # Reset add input only
+ *   node .specify/scripts/reset-input.cjs fix       # Reset fix input only
+ *   node .specify/scripts/reset-input.cjs all       # Reset all input files
+ *   node .specify/scripts/reset-input.cjs --list    # List available input types
  */
 
 const fs = require('fs');

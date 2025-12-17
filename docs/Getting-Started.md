@@ -95,10 +95,10 @@ your-project/
 │   ├── memory/
 │   │   └── constitution.md # Engineering Constitution
 │   ├── scripts/            # Node.js スクリプト
-│   │   ├── state.js
-│   │   ├── scaffold-spec.js
-│   │   ├── spec-lint.js
-│   │   ├── reset-input.js  # Quick Input リセット
+│   │   ├── state.cjs
+│   │   ├── scaffold-spec.cjs
+│   │   ├── spec-lint.cjs
+│   │   ├── reset-input.cjs  # Quick Input リセット
 │   │   └── ...
 │   ├── specs/              # 仕様書（自動生成）
 │   │   ├── vision/

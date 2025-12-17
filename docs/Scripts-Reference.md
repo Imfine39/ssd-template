@@ -6,21 +6,21 @@ Node.js スクリプトのリファレンスです。
 
 ## Overview
 
-| Script             | Purpose                      |
-| ------------------ | ---------------------------- |
-| `state.js`         | 状態管理（Repo/Branch）      |
-| `scaffold-spec.js` | Spec テンプレート作成        |
-| `spec-lint.js`     | Spec 整合性チェック          |
-| `branch.js`        | ブランチ作成                 |
-| `pr.js`            | PR 作成                      |
-| `spec-metrics.js`  | メトリクス収集               |
-| `reset-input.cjs`  | Quick Input ファイルリセット |
+| Script              | Purpose                      |
+| ------------------- | ---------------------------- |
+| `state.cjs`         | 状態管理（Repo/Branch）      |
+| `scaffold-spec.cjs` | Spec テンプレート作成        |
+| `spec-lint.cjs`     | Spec 整合性チェック          |
+| `branch.cjs`        | ブランチ作成                 |
+| `pr.cjs`            | PR 作成                      |
+| `spec-metrics.cjs`  | メトリクス収集               |
+| `reset-input.cjs`   | Quick Input ファイルリセット |
 
 **Location:** `.specify/scripts/`
 
 ---
 
-## state.js
+## state.cjs
 
 **Purpose:** プロジェクトとブランチの状態管理
 
@@ -124,7 +124,7 @@ node .specify/scripts/state.cjs query --suspended
 
 ---
 
-## scaffold-spec.js
+## scaffold-spec.cjs
 
 **Purpose:** Spec テンプレートからファイル作成
 
@@ -176,7 +176,7 @@ node .specify/scripts/scaffold-spec.cjs --kind feature --id S-INVENTORY-001 --ti
 
 ---
 
-## spec-lint.js
+## spec-lint.cjs
 
 **Purpose:** Spec 整合性チェック
 
@@ -235,7 +235,7 @@ Summary: 1 warning, 0 errors
 
 ---
 
-## branch.js
+## branch.cjs
 
 **Purpose:** Issue 連動ブランチ作成
 
@@ -277,7 +277,7 @@ node .specify/scripts/branch.cjs --type spec-change --slug product-field --issue
 
 ---
 
-## pr.js
+## pr.cjs
 
 **Purpose:** PR 作成
 
@@ -302,7 +302,7 @@ node .specify/scripts/pr.cjs [options]
 
 ---
 
-## spec-metrics.js
+## spec-metrics.cjs
 
 **Purpose:** プロジェクト健全性メトリクス収集
 

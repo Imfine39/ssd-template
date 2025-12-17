@@ -5,8 +5,8 @@
  * PR helper: runs spec lint (and optional tests), then opens a PR via gh.
  *
  * Usage:
- *   node .specify/scripts/pr.js --title "feat: add sales" --body "Fixes #123\nImplements S-SALES-001"
- *   node .specify/scripts/pr.js --title "feat: add sales" --body-file pr-body.md
+ *   node .specify/scripts/pr.cjs --title "feat: add sales" --body "Fixes #123\nImplements S-SALES-001"
+ *   node .specify/scripts/pr.cjs --title "feat: add sales" --body-file pr-body.md
  *
  * Flags:
  *   --title     PR title (required)
@@ -60,7 +60,7 @@ function main() {
 
   if (lint) {
     console.log('Running spec lint...');
-    run('node .specify/scripts/spec-lint.js');
+    run('node .specify/scripts/spec-lint.cjs');
   }
   if (test) {
     console.log(`Running tests: ${test}`);

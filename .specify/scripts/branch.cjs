@@ -5,14 +5,14 @@
  * Branch creation helper.
  *
  * Usage:
- *   node .specify/scripts/branch.js --type feature --slug user-auth --issue 123
+ *   node .specify/scripts/branch.cjs --type feature --slug user-auth --issue 123
  *
  * Behavior:
  * - Computes branch name:
  *     if --issue: <type>/<issue>-<slug>
  *     else: <type>/<N>-<slug> where N is next number found across local branches and specs dirs
  * - Creates and checks out the branch if it does not already exist.
- * - Updates branch-state.json with the new branch entry.
+ * - Updates branch-state.cjson with the new branch entry.
  */
 
 const { execSync } = require('child_process');
@@ -21,7 +21,7 @@ const path = require('path');
 
 // State management paths
 const STATE_DIR = path.join(process.cwd(), '.specify', 'state');
-const BRANCH_STATE_PATH = path.join(STATE_DIR, 'branch-state.json');
+const BRANCH_STATE_PATH = path.join(STATE_DIR, 'branch-state.cjson');
 
 function run(cmd) {
   return execSync(cmd, { stdio: ['ignore', 'pipe', 'inherit'] }).toString().trim();

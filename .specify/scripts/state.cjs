@@ -5,19 +5,19 @@
  * State management script for SSD-Template.
  *
  * Manages two state files:
- * - repo-state.json: Project-level state (Vision/Domain status, phase, features)
- * - branch-state.json: Per-branch work state (step, progress, suspensions)
+ * - repo-state.cjson: Project-level state (Vision/Domain status, phase, features)
+ * - branch-state.cjson: Per-branch work state (step, progress, suspensions)
  *
  * Usage:
- *   node .specify/scripts/state.js init
- *   node .specify/scripts/state.js repo --set-vision-status approved
- *   node .specify/scripts/state.js repo --set-phase development
- *   node .specify/scripts/state.js branch --name feature/5-inventory --set-step implement
- *   node .specify/scripts/state.js suspend --branch feature/5-inventory --reason spec-change --related 20
- *   node .specify/scripts/state.js resume --branch feature/5-inventory
- *   node .specify/scripts/state.js query --repo
- *   node .specify/scripts/state.js query --branch feature/5-inventory
- *   node .specify/scripts/state.js query --suspended
+ *   node .specify/scripts/state.cjs init
+ *   node .specify/scripts/state.cjs repo --set-vision-status approved
+ *   node .specify/scripts/state.cjs repo --set-phase development
+ *   node .specify/scripts/state.cjs branch --name feature/5-inventory --set-step implement
+ *   node .specify/scripts/state.cjs suspend --branch feature/5-inventory --reason spec-change --related 20
+ *   node .specify/scripts/state.cjs resume --branch feature/5-inventory
+ *   node .specify/scripts/state.cjs query --repo
+ *   node .specify/scripts/state.cjs query --branch feature/5-inventory
+ *   node .specify/scripts/state.cjs query --suspended
  */
 
 const fs = require('fs');
@@ -26,8 +26,8 @@ const { execSync } = require('child_process');
 
 // Paths
 const STATE_DIR = path.join(process.cwd(), '.specify', 'state');
-const REPO_STATE_PATH = path.join(STATE_DIR, 'repo-state.json');
-const BRANCH_STATE_PATH = path.join(STATE_DIR, 'branch-state.json');
+const REPO_STATE_PATH = path.join(STATE_DIR, 'repo-state.cjson');
+const BRANCH_STATE_PATH = path.join(STATE_DIR, 'branch-state.cjson');
 
 // Default schemas
 const DEFAULT_REPO_STATE = {
@@ -131,7 +131,7 @@ function getProjectName() {
 function cmdInit() {
   ensureDir(STATE_DIR);
 
-  // Initialize repo-state.json if not exists
+  // Initialize repo-state.cjson if not exists
   if (!fs.existsSync(REPO_STATE_PATH)) {
     const repoState = { ...DEFAULT_REPO_STATE };
     repoState.project.name = getProjectName();
@@ -166,7 +166,7 @@ function cmdInit() {
     console.log(`${REPO_STATE_PATH} already exists`);
   }
 
-  // Initialize branch-state.json if not exists
+  // Initialize branch-state.cjson if not exists
   if (!fs.existsSync(BRANCH_STATE_PATH)) {
     writeJson(BRANCH_STATE_PATH, DEFAULT_BRANCH_STATE);
     console.log(`Created ${BRANCH_STATE_PATH}`);
@@ -548,7 +548,7 @@ function cmdQuery(args) {
       console.log(`  In Progress: ${repoState.features.byStatus.inProgress}`);
       console.log(`  Completed: ${repoState.features.byStatus.completed}`);
     } else {
-      console.log('Repo state not initialized. Run: node .specify/scripts/state.js init');
+      console.log('Repo state not initialized. Run: node .specify/scripts/state.cjs init');
     }
   }
 
@@ -586,7 +586,7 @@ function cmdQuery(args) {
         }
       }
     } else {
-      console.log('Branch state not initialized. Run: node .specify/scripts/state.js init');
+      console.log('Branch state not initialized. Run: node .specify/scripts/state.cjs init');
     }
   }
 
@@ -639,7 +639,7 @@ function main() {
 SSD-Template State Management
 
 Usage:
-  node .specify/scripts/state.js <command> [options]
+  node .specify/scripts/state.cjs <command> [options]
 
 Commands:
   init                          Initialize state files

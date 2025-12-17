@@ -266,7 +266,7 @@ node .specify/scripts/scaffold-spec.cjs --kind feature --id S-XXX-001 --title ".
 │   └── fix.md
 │
 └── scripts/
-    └── reset-input.js   # 入力ファイルリセット
+    └── reset-input.cjs   # 入力ファイルリセット
 ```
 
 **統合 Quick Input（vision.md）の構造:**
@@ -367,13 +367,13 @@ git push
 
 プロジェクトとブランチの状態を追跡するための 2 層構造:
 
-### Repo State (`.specify/state/repo-state.json`)
+### Repo State (`.specify/state/repo-state.cjson`)
 
 - Vision/Domain Spec の完成度（none/scaffold/draft/clarified/approved）
 - プロジェクトフェーズ（initialization/vision/design/foundation/development）
 - Feature 進捗カウント
 
-### Branch State (`.specify/state/branch-state.json`)
+### Branch State (`.specify/state/branch-state.cjson`)
 
 - ブランチごとの作業ステップ（spec/plan/tasks/implement/pr）
 - タスク進捗（completed/total）

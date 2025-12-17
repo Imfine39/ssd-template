@@ -5,15 +5,15 @@
  * Scaffold Vision, Domain, Screen, or Feature specs from templates.
  *
  * Examples:
- *   node .specify/scripts/scaffold-spec.js --kind vision --id S-VISION-001 --title "Project Vision"
+ *   node .specify/scripts/scaffold-spec.cjs --kind vision --id S-VISION-001 --title "Project Vision"
  *
- *   node .specify/scripts/scaffold-spec.js --kind domain --id S-DOMAIN-001 --title "System Domain"
+ *   node .specify/scripts/scaffold-spec.cjs --kind domain --id S-DOMAIN-001 --title "System Domain"
  *     --vision S-VISION-001 --masters M-CLIENTS,M-ORDERS --apis API-ORDERS-LIST
  *
- *   node .specify/scripts/scaffold-spec.js --kind screen --id S-SCREEN-001 --title "System Screens"
+ *   node .specify/scripts/scaffold-spec.cjs --kind screen --id S-SCREEN-001 --title "System Screens"
  *     --vision S-VISION-001 --domain S-DOMAIN-001
  *
- *   node .specify/scripts/scaffold-spec.js --kind feature --id S-SALES-001 --title "Basic Sales Recording"
+ *   node .specify/scripts/scaffold-spec.cjs --kind feature --id S-SALES-001 --title "Basic Sales Recording"
  *     --domain S-DOMAIN-001 --uc UC-001:Record sale,UC-002:Adjust sale --masters M-CLIENTS --apis API-ORDERS-LIST
  *
  * Legacy support:
