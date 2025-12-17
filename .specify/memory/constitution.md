@@ -520,7 +520,7 @@ Code organization:
 Before Code Review:
 
 - All linting checks pass (for example `npm run lint`).
-- Specification lint (`node .specify/scripts/spec-lint.js`) passes
+- Specification lint (`node .specify/scripts/spec-lint.cjs`) passes
   (enforced in CI).
 - All tests pass (for example `npm run test`).
 - TypeScript (and other typed languages) compile without errors

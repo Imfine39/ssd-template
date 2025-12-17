@@ -146,7 +146,7 @@ gh issue create --title "[Feature] <title>" --body "..." --label feature
 ### Step 4: Create Branch
 
 ```bash
-node .specify/scripts/branch.js --type feature --slug <slug> --issue <num>
+node .specify/scripts/branch.cjs --type feature --slug <slug> --issue <num>
 ```
 
 ---
@@ -161,7 +161,7 @@ node .specify/scripts/branch.js --type feature --slug <slug> --issue <num>
 
 ### Step 6: Create Feature Spec
 
-- Scaffold: `node .specify/scripts/scaffold-spec.js --kind feature --id S-XXX-001 --title "..." --domain S-DOMAIN-001`
+- Scaffold: `node .specify/scripts/scaffold-spec.cjs --kind feature --id S-XXX-001 --title "..." --domain S-DOMAIN-001`
 - Fill sections: Purpose, Actors, Domain Model (M-*, API-*), UC, FR, SC, Edge Cases, NFR
 - Reference analyzed code patterns and constraints
 - Mark unclear items as `[NEEDS CLARIFICATION]`
@@ -269,7 +269,7 @@ Open `.specify/specs/domain/spec.md` and add entry in Section 8 (Feature Index):
 ### Step 9: Run Lint
 
 ```bash
-node .specify/scripts/spec-lint.js
+node .specify/scripts/spec-lint.cjs
 ```
 - Check Feature correctly references Domain M-*/API-*
 - Check Feature Index entry exists
@@ -293,7 +293,7 @@ node .specify/scripts/spec-lint.js
 
 2. **入力ファイルをリセット**:
    ```bash
-   node .specify/scripts/reset-input.js add
+   node .specify/scripts/reset-input.cjs add
    ```
 
 ---

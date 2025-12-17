@@ -51,7 +51,7 @@ Lists Issues → User selects → Creates Branch → Creates Feature Spec. Clari
 
 1) **Check repo state** (warning-based):
    ```bash
-   node .specify/scripts/state.js query --repo
+   node .specify/scripts/state.cjs query --repo
    ```
    - Check Domain status
    - If status is not "approved" or "clarified":
@@ -132,8 +132,8 @@ Lists Issues → User selects → Creates Branch → Creates Feature Spec. Clari
    ```
 
 8) **Create branch**:
-   - Feature: `node .specify/scripts/branch.js --type feature --slug <slug> --issue <num>`
-   - Bug fix: `node .specify/scripts/branch.js --type fix --slug <slug> --issue <num>`
+   - Feature: `node .specify/scripts/branch.cjs --type feature --slug <slug> --issue <num>`
+   - Bug fix: `node .specify/scripts/branch.cjs --type fix --slug <slug> --issue <num>`
    - Note: branch.js automatically updates branch-state.json
 
 ### Step 5: Analyze Codebase
@@ -152,7 +152,7 @@ Lists Issues → User selects → Creates Branch → Creates Feature Spec. Clari
 
 10) **Scaffold Feature spec**:
     ```bash
-    node .specify/scripts/scaffold-spec.js --kind feature --id S-XXX-001 --title "..." --domain S-DOMAIN-001
+    node .specify/scripts/scaffold-spec.cjs --kind feature --id S-XXX-001 --title "..." --domain S-DOMAIN-001
     ```
 
 11) **Fill Feature spec sections**:
@@ -293,7 +293,7 @@ Lists Issues → User selects → Creates Branch → Creates Feature Spec. Clari
 
 17) **Run lint**:
     ```bash
-    node .specify/scripts/spec-lint.js
+    node .specify/scripts/spec-lint.cjs
     ```
     - Check Feature correctly references Domain M-*/API-*
     - Check UC IDs are unique
@@ -344,13 +344,13 @@ Lists Issues → User selects → Creates Branch → Creates Feature Spec. Clari
 
 21) **Update branch state** (on approval):
     ```bash
-    node .specify/scripts/state.js branch --set-spec-id S-XXX-001 --set-spec-path .specify/specs/s-xxx-001/spec.md --set-step spec_review
+    node .specify/scripts/state.cjs branch --set-spec-id S-XXX-001 --set-spec-path .specify/specs/s-xxx-001/spec.md --set-step spec_review
     ```
 
 21) **Update repo state** (if Case 2 occurred):
     ```bash
     # Add new definitions that were added during Feature Spec creation
-    node .specify/scripts/state.js repo --add-master M-NEW-ENTITY --add-api API-NEW-ENDPOINT
+    node .specify/scripts/state.cjs repo --add-master M-NEW-ENTITY --add-api API-NEW-ENDPOINT
     ```
 
 ## Output

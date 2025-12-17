@@ -25,7 +25,7 @@ AI コーディングアシスタント（Claude Code など）と人間の協�
 gh auth login
 
 # 2. 状態初期化
-node .specify/scripts/state.js init
+node .specify/scripts/state.cjs init
 
 # 3. 新規プロジェクト開始
 /speckit.vision あなたのプロジェクト説明

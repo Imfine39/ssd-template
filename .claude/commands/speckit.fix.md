@@ -182,7 +182,7 @@ gh issue edit <num> --add-label urgent
 ### Step 5: Create Branch
 
 ```bash
-node .specify/scripts/branch.js --type fix --slug <slug> --issue <num>
+node .specify/scripts/branch.cjs --type fix --slug <slug> --issue <num>
 ```
 
 ---
@@ -223,7 +223,7 @@ If bug fix reveals incorrect M-*/API-*/BR-*/SCR-* definition:
 ### Step 8: Run Lint
 
 ```bash
-node .specify/scripts/spec-lint.js
+node .specify/scripts/spec-lint.cjs
 ```
 
 ---
@@ -237,7 +237,7 @@ node .specify/scripts/spec-lint.js
 
 2. **入力ファイルをリセット**:
    ```bash
-   node .specify/scripts/reset-input.js fix
+   node .specify/scripts/reset-input.cjs fix
    ```
 
 **Note:** `--quick` モードの場合はリセット不要（入力ファイルを使用していないため）。

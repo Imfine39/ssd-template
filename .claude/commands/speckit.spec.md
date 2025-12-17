@@ -34,17 +34,17 @@ Use scaffold script for initial creation:
 
 **Vision:**
 ```bash
-node .specify/scripts/scaffold-spec.js --kind vision --id S-VISION-001 --title "Project Vision"
+node .specify/scripts/scaffold-spec.cjs --kind vision --id S-VISION-001 --title "Project Vision"
 ```
 
 **Domain:**
 ```bash
-node .specify/scripts/scaffold-spec.js --kind domain --id S-DOMAIN-001 --title "System Domain" --vision S-VISION-001
+node .specify/scripts/scaffold-spec.cjs --kind domain --id S-DOMAIN-001 --title "System Domain" --vision S-VISION-001
 ```
 
 **Feature:**
 ```bash
-node .specify/scripts/scaffold-spec.js --kind feature --id S-FEATURE-001 --title "Feature Title" --domain S-DOMAIN-001
+node .specify/scripts/scaffold-spec.cjs --kind feature --id S-FEATURE-001 --title "Feature Title" --domain S-DOMAIN-001
 ```
 
 ### Mode 2: Full Spec Generation
@@ -80,7 +80,7 @@ Generate detailed spec content from description.
    - For Feature: auto-update Domain's Feature index table
 
 5) **Run lint**:
-   - Execute: `node .specify/scripts/spec-lint.js`
+   - Execute: `node .specify/scripts/spec-lint.cjs`
 
 6) **Summary & Clarify 推奨**:
    ```

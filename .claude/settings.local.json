@@ -39,7 +39,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node .specify/scripts/state.js query --all 2>/dev/null || echo \"[SSD State] Not initialized\""
+            "command": "node .specify/scripts/state.cjs query --all 2>/dev/null || echo \"[SSD State] Not initialized\""
           }
         ]
       }

@@ -34,7 +34,7 @@ node --version
 ls .specify/state/
 
 # 状態を初期化
-node .specify/scripts/state.js init
+node .specify/scripts/state.cjs init
 ```
 
 ---
@@ -56,7 +56,7 @@ node .specify/scripts/state.js init
 mkdir -p .specify/specs/vision
 
 # scaffold-spec.js を直接実行
-node .specify/scripts/scaffold-spec.js --kind vision --id S-VISION-001 --title "Project Name"
+node .specify/scripts/scaffold-spec.cjs --kind vision --id S-VISION-001 --title "Project Name"
 ```
 
 ---
@@ -115,7 +115,7 @@ gh issue edit <num> --add-label feature --add-label backlog
 git branch --show-current
 
 # 状態を手動更新
-node .specify/scripts/state.js branch --set-step implement
+node .specify/scripts/state.cjs branch --set-step implement
 
 # 状態ファイルを確認
 cat .specify/state/branch-state.json
@@ -131,7 +131,7 @@ cat .specify/state/branch-state.json
 **解決:**
 ```bash
 # 全状態を確認
-node .specify/scripts/state.js query --all
+node .specify/scripts/state.cjs query --all
 
 # branch-state.json を直接確認
 cat .specify/state/branch-state.json | jq '.branches | to_entries[] | select(.value.suspended)'
@@ -198,7 +198,7 @@ git branch -a | grep 123
 git branch -d feature/123-xxx
 
 # または別の名前で作成
-node .specify/scripts/branch.js --type feature --slug xxx-v2 --issue 123
+node .specify/scripts/branch.cjs --type feature --slug xxx-v2 --issue 123
 ```
 
 ---
@@ -278,7 +278,7 @@ grep -rn "NEEDS CLARIFICATION" .specify/specs/
 ```bash
 # 状態ファイルのみリセット
 rm .specify/state/*.json
-node .specify/scripts/state.js init
+node .specify/scripts/state.cjs init
 
 # 全 Spec を残して状態のみリセット
 # Spec は .specify/specs/ に残ります
@@ -293,14 +293,14 @@ node .specify/scripts/state.js init
 cp .specify/state/repo-state.json.bak .specify/state/repo-state.json
 
 # バックアップがない場合、初期化して再構築
-node .specify/scripts/state.js init
+node .specify/scripts/state.cjs init
 
 # 既存 Spec から状態を再構築
 # Vision があれば
-node .specify/scripts/state.js repo --set-vision-status approved
+node .specify/scripts/state.cjs repo --set-vision-status approved
 
 # Domain があれば
-node .specify/scripts/state.js repo --set-domain-status approved
+node .specify/scripts/state.cjs repo --set-domain-status approved
 ```
 
 ---

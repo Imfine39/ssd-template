@@ -126,7 +126,7 @@ Phase 5: /speckit.plan → /speckit.tasks → /speckit.implement → /speckit.pr
 - [x] `/speckit.screen` は廃止（削除済み）
 
 ### スクリプト
-- [x] `.specify/scripts/spec-lint.js` - Screen ↔ Domain 整合性チェック追加
+- [x] `.specify/scripts/spec-lint.cjs` - Screen ↔ Domain 整合性チェック追加
 
 ### ドキュメント
 - [x] `CLAUDE.md` - ワークフロー説明を更新

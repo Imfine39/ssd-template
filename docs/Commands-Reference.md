@@ -335,7 +335,7 @@
 
 **Script:**
 ```bash
-node .specify/scripts/spec-lint.js
+node .specify/scripts/spec-lint.cjs
 ```
 
 ---

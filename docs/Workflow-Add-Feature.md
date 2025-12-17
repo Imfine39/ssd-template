@@ -35,7 +35,7 @@
 
 2. **Branch 作成**
    ```bash
-   node .specify/scripts/branch.js --type feature --slug auth --issue <num>
+   node .specify/scripts/branch.cjs --type feature --slug auth --issue <num>
    ```
 
 3. **[Spec-First] Screen Spec 更新**（画面変更がある場合）
@@ -158,7 +158,7 @@ AI に Feature 候補を提案させたい場合。
 
 2. **Branch 作成**
    ```bash
-   node .specify/scripts/branch.js --type fix --slug login-error --issue <num>
+   node .specify/scripts/branch.cjs --type fix --slug login-error --issue <num>
    ```
 
 3. **既存 Spec 特定**
@@ -197,7 +197,7 @@ Vision または Domain Spec の変更が必要な場合。
 
 1. **現在のブランチを suspend**（Feature 作業中の場合）
    ```bash
-   node .specify/scripts/state.js suspend --reason "Domain change required" --related <issue>
+   node .specify/scripts/state.cjs suspend --reason "Domain change required" --related <issue>
    ```
 
 2. **Spec 変更 Issue 作成**
@@ -207,7 +207,7 @@ Vision または Domain Spec の変更が必要な場合。
 
 3. **Spec 変更 Branch 作成**
    ```bash
-   node .specify/scripts/branch.js --type spec-change --slug product-field --issue <num>
+   node .specify/scripts/branch.cjs --type spec-change --slug product-field --issue <num>
    ```
 
 4. **Domain Spec 更新**
@@ -219,7 +219,7 @@ Vision または Domain Spec の変更が必要な場合。
 
 6. **元のブランチを resume**
    ```bash
-   node .specify/scripts/state.js resume
+   node .specify/scripts/state.cjs resume
    ```
 
 ---

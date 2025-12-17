@@ -5,7 +5,7 @@ description: Run spec lint to check Vision/Domain/Screen/Feature consistency.
 Run from the repo root:
 
 ```bash
-node .specify/scripts/spec-lint.js
+node .specify/scripts/spec-lint.cjs
 ```
 
 What this checks:

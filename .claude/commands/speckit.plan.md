@@ -49,7 +49,7 @@ This is a **base command** that can be:
    - Keep IDs and headings; remove unused sections
 
 5) **Run lint**:
-   - Execute: `node .specify/scripts/spec-lint.js`
+   - Execute: `node .specify/scripts/spec-lint.cjs`
 
 6) **Request human review**:
    - Show plan summary
@@ -58,11 +58,11 @@ This is a **base command** that can be:
 
 7) **Update branch state** (on approval):
    ```bash
-   node .specify/scripts/state.js branch --set-step plan_review
+   node .specify/scripts/state.cjs branch --set-step plan_review
    ```
    After human approval:
    ```bash
-   node .specify/scripts/state.js branch --set-step tasks
+   node .specify/scripts/state.cjs branch --set-step tasks
    ```
 
 ## Output

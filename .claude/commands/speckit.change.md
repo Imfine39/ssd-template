@@ -207,7 +207,7 @@ This command handles **modifications to existing items**, not additions.
 
 13) **Create branch**:
     ```bash
-    node .specify/scripts/branch.js --type spec --slug <slug> --issue <spec-issue-num>
+    node .specify/scripts/branch.cjs --type spec --slug <slug> --issue <spec-issue-num>
     ```
 
 14) **Update Vision or Domain Spec**:
@@ -228,7 +228,7 @@ This command handles **modifications to existing items**, not additions.
 
 17) **Run lint**:
     ```bash
-    node .specify/scripts/spec-lint.js
+    node .specify/scripts/spec-lint.cjs
     ```
 
 18) **Show summary**:
@@ -311,7 +311,7 @@ AI: 現在の作業を中断します。
     - Step: implement (tasks 3/10)
 
     # Suspend the current branch
-    node .specify/scripts/state.js suspend --branch feature/5-inventory --reason spec-change --related 20 --resume-after "PR #30 merged"
+    node .specify/scripts/state.cjs suspend --branch feature/5-inventory --reason spec-change --related 20 --resume-after "PR #30 merged"
 
     /speckit.change を開始...
 
@@ -323,7 +323,7 @@ AI: 現在の作業を中断します。
 人間: はい
 
 AI: # Resume the suspended branch
-    node .specify/scripts/state.js resume --branch feature/5-inventory --step implement
+    node .specify/scripts/state.cjs resume --branch feature/5-inventory --step implement
 
     feature/5-inventory に切り替えました。
     Feature Spec の変更を確認してください。
@@ -333,13 +333,13 @@ AI: # Resume the suspended branch
 **State management commands for suspension**:
 ```bash
 # Check for suspended work before starting
-node .specify/scripts/state.js query --suspended
+node .specify/scripts/state.cjs query --suspended
 
 # Suspend current work
-node .specify/scripts/state.js suspend --branch <branch> --reason spec-change --related <issue-num>
+node .specify/scripts/state.cjs suspend --branch <branch> --reason spec-change --related <issue-num>
 
 # Resume after change is merged
-node .specify/scripts/state.js resume --branch <branch> --step implement
+node .specify/scripts/state.cjs resume --branch <branch> --step implement
 ```
 
 ## Example

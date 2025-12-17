@@ -322,13 +322,13 @@ Clarify 完了後、Spec の status を更新:
 
 ```bash
 # Vision Spec の場合
-node .specify/scripts/state.js repo --set-vision-status clarified
+node .specify/scripts/state.cjs repo --set-vision-status clarified
 
 # Domain Spec の場合
-node .specify/scripts/state.js repo --set-domain-status clarified
+node .specify/scripts/state.cjs repo --set-domain-status clarified
 
 # Feature Spec の場合（ブランチ状態を更新）
-node .specify/scripts/state.js branch --set-step spec-clarified
+node .specify/scripts/state.cjs branch --set-step spec-clarified
 ```
 
 ---

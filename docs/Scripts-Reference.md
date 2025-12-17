@@ -28,22 +28,22 @@ Node.js スクリプトのリファレンスです。
 
 ```bash
 # 初期化
-node .specify/scripts/state.js init
+node .specify/scripts/state.cjs init
 
 # Repo 状態更新
-node .specify/scripts/state.js repo [options]
+node .specify/scripts/state.cjs repo [options]
 
 # Branch 状態更新
-node .specify/scripts/state.js branch [options]
+node .specify/scripts/state.cjs branch [options]
 
 # 中断
-node .specify/scripts/state.js suspend [options]
+node .specify/scripts/state.cjs suspend [options]
 
 # 再開
-node .specify/scripts/state.js resume [options]
+node .specify/scripts/state.cjs resume [options]
 
 # 状態照会
-node .specify/scripts/state.js query [options]
+node .specify/scripts/state.cjs query [options]
 ```
 
 ### Repo Options
@@ -107,19 +107,19 @@ node .specify/scripts/state.js query [options]
 
 ```bash
 # Repo 状態確認
-node .specify/scripts/state.js query --repo
+node .specify/scripts/state.cjs query --repo
 
 # Vision 承認済みに設定
-node .specify/scripts/state.js repo --set-vision-status approved --set-vision-clarify true
+node .specify/scripts/state.cjs repo --set-vision-status approved --set-vision-clarify true
 
 # Branch の step を更新
-node .specify/scripts/state.js branch --set-step implement
+node .specify/scripts/state.cjs branch --set-step implement
 
 # ブランチを中断
-node .specify/scripts/state.js suspend --reason "Domain change required" --related 123
+node .specify/scripts/state.cjs suspend --reason "Domain change required" --related 123
 
 # 中断中のブランチを確認
-node .specify/scripts/state.js query --suspended
+node .specify/scripts/state.cjs query --suspended
 ```
 
 ---
@@ -131,7 +131,7 @@ node .specify/scripts/state.js query --suspended
 ### Usage
 
 ```bash
-node .specify/scripts/scaffold-spec.js --kind <kind> --id <id> --title <title> [options]
+node .specify/scripts/scaffold-spec.cjs --kind <kind> --id <id> --title <title> [options]
 ```
 
 ### Required Arguments
@@ -153,16 +153,16 @@ node .specify/scripts/scaffold-spec.js --kind <kind> --id <id> --title <title> [
 
 ```bash
 # Vision Spec 作成
-node .specify/scripts/scaffold-spec.js --kind vision --id S-VISION-001 --title "在庫管理システム"
+node .specify/scripts/scaffold-spec.cjs --kind vision --id S-VISION-001 --title "在庫管理システム"
 
 # Domain Spec 作成
-node .specify/scripts/scaffold-spec.js --kind domain --id S-DOMAIN-001 --title "在庫管理 Domain" --vision S-VISION-001
+node .specify/scripts/scaffold-spec.cjs --kind domain --id S-DOMAIN-001 --title "在庫管理 Domain" --vision S-VISION-001
 
 # Screen Spec 作成
-node .specify/scripts/scaffold-spec.js --kind screen --id S-SCREEN-001 --title "在庫管理 Screens" --vision S-VISION-001 --domain S-DOMAIN-001
+node .specify/scripts/scaffold-spec.cjs --kind screen --id S-SCREEN-001 --title "在庫管理 Screens" --vision S-VISION-001 --domain S-DOMAIN-001
 
 # Feature Spec 作成
-node .specify/scripts/scaffold-spec.js --kind feature --id S-INVENTORY-001 --title "在庫一覧" --domain S-DOMAIN-001
+node .specify/scripts/scaffold-spec.cjs --kind feature --id S-INVENTORY-001 --title "在庫一覧" --domain S-DOMAIN-001
 ```
 
 ### Output Paths
@@ -183,7 +183,7 @@ node .specify/scripts/scaffold-spec.js --kind feature --id S-INVENTORY-001 --tit
 ### Usage
 
 ```bash
-node .specify/scripts/spec-lint.js [options]
+node .specify/scripts/spec-lint.cjs [options]
 ```
 
 ### Options
@@ -242,7 +242,7 @@ Summary: 1 warning, 0 errors
 ### Usage
 
 ```bash
-node .specify/scripts/branch.js --type <type> --slug <slug> --issue <num>
+node .specify/scripts/branch.cjs --type <type> --slug <slug> --issue <num>
 ```
 
 ### Arguments
@@ -257,13 +257,13 @@ node .specify/scripts/branch.js --type <type> --slug <slug> --issue <num>
 
 ```bash
 # Feature ブランチ作成
-node .specify/scripts/branch.js --type feature --slug inventory --issue 12
+node .specify/scripts/branch.cjs --type feature --slug inventory --issue 12
 
 # Fix ブランチ作成
-node .specify/scripts/branch.js --type fix --slug login-error --issue 15
+node .specify/scripts/branch.cjs --type fix --slug login-error --issue 15
 
 # Spec 変更ブランチ作成
-node .specify/scripts/branch.js --type spec-change --slug product-field --issue 20
+node .specify/scripts/branch.cjs --type spec-change --slug product-field --issue 20
 ```
 
 ### Output Branch Names
@@ -284,7 +284,7 @@ node .specify/scripts/branch.js --type spec-change --slug product-field --issue 
 ### Usage
 
 ```bash
-node .specify/scripts/pr.js [options]
+node .specify/scripts/pr.cjs [options]
 ```
 
 ### Options
@@ -309,7 +309,7 @@ node .specify/scripts/pr.js [options]
 ### Usage
 
 ```bash
-node .specify/scripts/spec-metrics.js [options]
+node .specify/scripts/spec-metrics.cjs [options]
 ```
 
 ### Options
@@ -376,7 +376,7 @@ HEALTH
 ### Usage
 
 ```bash
-node .specify/scripts/reset-input.js <type>
+node .specify/scripts/reset-input.cjs <type>
 ```
 
 ### Arguments
@@ -392,10 +392,10 @@ node .specify/scripts/reset-input.js <type>
 
 ```bash
 # Vision 入力ファイルをリセット
-node .specify/scripts/reset-input.js vision
+node .specify/scripts/reset-input.cjs vision
 
 # 全入力ファイルをリセット
-node .specify/scripts/reset-input.js all
+node .specify/scripts/reset-input.cjs all
 ```
 
 ### Notes

@@ -42,7 +42,7 @@ Step 3 of the 6-step workflow. Breaks down the plan into concrete, reviewable ta
 
 7) **Update branch state**:
    ```bash
-   node .specify/scripts/state.js branch --set-step implement
+   node .specify/scripts/state.cjs branch --set-step implement
    ```
 
 ## Output

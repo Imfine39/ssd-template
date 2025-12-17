@@ -56,7 +56,7 @@ Step 5 of the 6-step workflow. Before creating a PR, this command:
    - If yes, run `/speckit.feedback` for each item
 
 3) **Run quality checks**:
-   - spec-lint: `node .specify/scripts/spec-lint.js`
+   - spec-lint: `node .specify/scripts/spec-lint.cjs`
    - Project lint (if configured): `npm run lint` or equivalent
    - Tests: `npm test` or configured test command
    - Build (if applicable): `npm run build`
@@ -107,12 +107,12 @@ Step 5 of the 6-step workflow. Before creating a PR, this command:
       ```
 
 5) **Create PR**:
-   - Run: `node .specify/scripts/pr.js --title "..." --body-file pr-body.md`
+   - Run: `node .specify/scripts/pr.cjs --title "..." --body-file pr-body.md`
    - Display PR URL
 
 6) **Update branch state**:
    ```bash
-   node .specify/scripts/state.js branch --set-step pr
+   node .specify/scripts/state.cjs branch --set-step pr
    ```
 
 7) **Post-PR guidance**:
@@ -160,7 +160,7 @@ AI will auto-detect context from current branch and spec.
 
 If you need to customize:
 ```bash
-node .specify/scripts/pr.js --title "custom title" --body "custom body" --test "npm test"
+node .specify/scripts/pr.cjs --title "custom title" --body "custom body" --test "npm test"
 ```
 
 ## Human Checkpoint

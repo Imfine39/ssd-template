@@ -243,17 +243,17 @@ ID は以下で参照され、追跡可能性を確保します：
 
 ```bash
 # 状態確認
-node .specify/scripts/state.js query --repo
-node .specify/scripts/state.js query --branch
-node .specify/scripts/state.js query --all
+node .specify/scripts/state.cjs query --repo
+node .specify/scripts/state.cjs query --branch
+node .specify/scripts/state.cjs query --all
 
 # 状態更新
-node .specify/scripts/state.js repo --set-phase development
-node .specify/scripts/state.js branch --set-step implement
+node .specify/scripts/state.cjs repo --set-phase development
+node .specify/scripts/state.cjs branch --set-step implement
 
 # 中断・再開
-node .specify/scripts/state.js suspend --reason "Domain change required"
-node .specify/scripts/state.js resume
+node .specify/scripts/state.cjs suspend --reason "Domain change required"
+node .specify/scripts/state.cjs resume
 ```
 
 ---
@@ -403,7 +403,7 @@ Draft → In Review → Approved → Implementing → Completed
         "hooks": [
           {
             "type": "command",
-            "command": "node .specify/scripts/state.js query --all 2>/dev/null || echo \"[SSD State] Not initialized\""
+            "command": "node .specify/scripts/state.cjs query --all 2>/dev/null || echo \"[SSD State] Not initialized\""
           }
         ]
       }

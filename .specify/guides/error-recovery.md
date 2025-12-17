@@ -215,7 +215,7 @@ constraints discovered during implementation.
 
 **Recovery steps**:
 
-1. **Run locally**: `node .specify/scripts/spec-lint.js`
+1. **Run locally**: `node .specify/scripts/spec-lint.cjs`
 2. **Fix reported errors**:
    - Missing Spec Type or ID → Add to spec header.
    - Duplicate IDs → Rename one of the duplicates.
@@ -243,7 +243,7 @@ or spec-lint reports unknown screen references.
 3. **If modifying existing screen**:
    - Add entry to Modification Log (Section 2.1).
    - Update wireframe to show planned changes.
-4. **Run spec-lint** to verify: `node .specify/scripts/spec-lint.js`
+4. **Run spec-lint** to verify: `node .specify/scripts/spec-lint.cjs`
 5. **Continue with Feature Spec** after Screen Spec is updated.
 
 ### 6.2 Screen Status Not Updated After PR Merge
@@ -330,7 +330,7 @@ missing navigation paths.
 2. **Restore from git history**:
    ```bash
    git log --oneline .specify/
-   git checkout <commit> -- .specify/scripts/spec-lint.js
+   git checkout <commit> -- .specify/scripts/spec-lint.cjs
    ```
 3. **Report issue** - If it's a template bug, report to template maintainers.
 

@@ -68,7 +68,7 @@ $ARGUMENTS
 
 1) **Check repo state** (warning-based):
    ```bash
-   node .specify/scripts/state.js query --repo
+   node .specify/scripts/state.cjs query --repo
    ```
    - Check Vision status
    - If status is not "approved" or "clarified":
@@ -221,8 +221,8 @@ Screen 情報がありません。
 
 11) **Screen Spec と Domain Spec を scaffold**:
     ```bash
-    node .specify/scripts/scaffold-spec.js --kind screen --id S-SCREEN-001 --title "[Project Name] Screen" --vision S-VISION-001
-    node .specify/scripts/scaffold-spec.js --kind domain --id S-DOMAIN-001 --title "[Project Name] Domain" --vision S-VISION-001
+    node .specify/scripts/scaffold-spec.cjs --kind screen --id S-SCREEN-001 --title "[Project Name] Screen" --vision S-VISION-001
+    node .specify/scripts/scaffold-spec.cjs --kind domain --id S-DOMAIN-001 --title "[Project Name] Domain" --vision S-VISION-001
     ```
 
 #### 4.4 Screen Spec の作成
@@ -283,7 +283,7 @@ Screen 情報がありません。
 
 15) **Run lint**:
     ```bash
-    node .specify/scripts/spec-lint.js
+    node .specify/scripts/spec-lint.cjs
     ```
 
 ### Step 6: Create Foundation Issue
@@ -372,7 +372,7 @@ Screen 情報がありません。
 
 20) **Update repo state**:
     ```bash
-    node .specify/scripts/state.js repo --set-screen-status draft --set-domain-status draft --set-phase design
+    node .specify/scripts/state.cjs repo --set-screen-status draft --set-domain-status draft --set-phase design
     ```
 
 **Note:** Screen/Domain status は `draft`。Clarify 完了後に `clarified`、承認後に `approved` に更新される。

@@ -198,7 +198,7 @@ When a PR has conflicts with main:
 2. **For spec file conflicts**:
    - Carefully review both versions.
    - Ensure no ID duplicates are introduced.
-   - Run `node .specify/scripts/spec-lint.js` after resolution.
+   - Run `node .specify/scripts/spec-lint.cjs` after resolution.
 
 3. **For code conflicts**:
    - Understand both changes before resolving.

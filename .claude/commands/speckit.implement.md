@@ -33,7 +33,7 @@ Step 4 of the 6-step workflow. Implements tasks from the plan while:
 
    **Update task progress**:
    ```bash
-   node .specify/scripts/state.js branch --set-task-progress <completed>/<total>
+   node .specify/scripts/state.cjs branch --set-task-progress <completed>/<total>
    ```
 
    a) **Read task requirements**:
@@ -83,7 +83,7 @@ Step 4 of the 6-step workflow. Implements tasks from the plan while:
 
 4) **After all tasks**:
    - Run full test suite
-   - Run spec-lint: `node .specify/scripts/spec-lint.js`
+   - Run spec-lint: `node .specify/scripts/spec-lint.cjs`
    - Summarize:
      - Tasks completed
      - Tests added/modified

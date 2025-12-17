@@ -230,10 +230,10 @@ Domain Spec で全 Feature を表形式で管理:
 
 ### scaffold スクリプト
 ```bash
-node .specify/scripts/scaffold-spec.js --kind vision --id S-VISION-001 --title "..."
-node .specify/scripts/scaffold-spec.js --kind domain --id S-DOMAIN-001 --title "..." --vision S-VISION-001
-node .specify/scripts/scaffold-spec.js --kind screen --id S-SCREEN-001 --title "..." --vision S-VISION-001 --domain S-DOMAIN-001
-node .specify/scripts/scaffold-spec.js --kind feature --id S-XXX-001 --title "..." --domain S-DOMAIN-001
+node .specify/scripts/scaffold-spec.cjs --kind vision --id S-VISION-001 --title "..."
+node .specify/scripts/scaffold-spec.cjs --kind domain --id S-DOMAIN-001 --title "..." --vision S-VISION-001
+node .specify/scripts/scaffold-spec.cjs --kind screen --id S-SCREEN-001 --title "..." --vision S-VISION-001 --domain S-DOMAIN-001
+node .specify/scripts/scaffold-spec.cjs --kind feature --id S-XXX-001 --title "..." --domain S-DOMAIN-001
 ```
 
 ### Quick Input システム
@@ -285,8 +285,8 @@ Part C: デザイン希望（任意）
 
 **リセットスクリプト:**
 ```bash
-node .specify/scripts/reset-input.js vision   # vision のみリセット
-node .specify/scripts/reset-input.js all      # 全てリセット
+node .specify/scripts/reset-input.cjs vision   # vision のみリセット
+node .specify/scripts/reset-input.cjs all      # 全てリセット
 ```
 
 ---
@@ -295,7 +295,7 @@ node .specify/scripts/reset-input.js all      # 全てリセット
 
 - `main` への直接 push は禁止。常に Issue 連動ブランチで作業。
 - ブランチ命名: `spec/<issue>-...` / `feature/<issue>-...` / `fix/<issue>-...`
-- ブランチ作成: `node .specify/scripts/branch.js --type feature --slug <slug> --issue <num>`
+- ブランチ作成: `node .specify/scripts/branch.cjs --type feature --slug <slug> --issue <num>`
 - PR 作成時に必ず記載:
   - 関連 Issue (`Fixes #123`)
   - 関連 Spec ID (`Implements S-001, UC-003` など)
@@ -362,10 +362,10 @@ git push
 
 ### 状態管理コマンド
 ```bash
-node .specify/scripts/state.js init                    # 初期化
-node .specify/scripts/state.js query --repo            # Repo 状態確認
-node .specify/scripts/state.js query --branch          # 現在のブランチ状態確認
-node .specify/scripts/state.js query --suspended       # 中断中のブランチ確認
+node .specify/scripts/state.cjs init                    # 初期化
+node .specify/scripts/state.cjs query --repo            # Repo 状態確認
+node .specify/scripts/state.cjs query --branch          # 現在のブランチ状態確認
+node .specify/scripts/state.cjs query --suspended       # 中断中のブランチ確認
 ```
 
 ### 警告ベースアプローチ
@@ -383,7 +383,7 @@ node .specify/scripts/state.js query --suspended       # 中断中のブラン�
     "SessionStart": [{
       "hooks": [{
         "type": "command",
-        "command": "node .specify/scripts/state.js query --all 2>/dev/null || echo \"[SSD State] Not initialized\""
+        "command": "node .specify/scripts/state.cjs query --all 2>/dev/null || echo \"[SSD State] Not initialized\""
       }]
     }]
   }
@@ -413,10 +413,10 @@ Feature Spec 作成時（/speckit.issue, /speckit.add）に必要な M-*/API-* �
 
 ## 11. 補助ツールとガイド
 
-- **整合性チェック**: `/speckit.lint` または `node .specify/scripts/spec-lint.js`
+- **整合性チェック**: `/speckit.lint` または `node .specify/scripts/spec-lint.cjs`
 - **実装分析**: `/speckit.analyze` で PR 前の安心確認
-- **プロジェクト健全性**: `node .specify/scripts/spec-metrics.js` でスコアと問題点を確認
-- **状態確認**: `node .specify/scripts/state.js query --all` で全状態確認
+- **プロジェクト健全性**: `node .specify/scripts/spec-metrics.cjs` でスコアと問題点を確認
+- **状態確認**: `node .specify/scripts/state.cjs query --all` で全状態確認
 - **エラーリカバリー**: `.specify/guides/error-recovery.md`
 - **並行開発**: `.specify/guides/parallel-development.md`
 - **変更サイズ分類**: Trivial/Small/Medium/Large/Emergency に応じてフローが異なる（constitution.md 参照）

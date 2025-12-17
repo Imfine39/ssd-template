@@ -159,7 +159,7 @@ Option B: チャットで情報を提供
 **【必須】Bash ツールで以下のコマンドを実行すること。**
 
 ```bash
-node .specify/scripts/scaffold-spec.js --kind vision --id S-VISION-001 --title "[プロジェクト名]"
+node .specify/scripts/scaffold-spec.cjs --kind vision --id S-VISION-001 --title "[プロジェクト名]"
 ```
 
 **[プロジェクト名] は Step 1 で取得したユーザー入力から取得すること。Example の値を使用しないこと。**
@@ -283,7 +283,7 @@ Note: Screen Hints が入力されていない場合、/speckit.design で画面
 
 2. **入力ファイルをリセット**:
    ```bash
-   node .specify/scripts/reset-input.js vision
+   node .specify/scripts/reset-input.cjs vision
    ```
 
 **Note:** チャットからの入力の場合は、Clarifications セクションに記録される。
@@ -293,7 +293,7 @@ Note: Screen Hints が入力されていない場合、/speckit.design で画面
 ### Step 5: Update State
 
 ```bash
-node .specify/scripts/state.js repo --set-vision-status draft --set-phase vision
+node .specify/scripts/state.cjs repo --set-vision-status draft --set-phase vision
 ```
 
 **Note:** Vision status は `draft`。Clarify 完了後に `clarified`、承認後に `approved` に更新される。

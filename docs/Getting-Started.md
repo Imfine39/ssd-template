@@ -57,7 +57,7 @@ git clone https://github.com/your-org/ssd-template.git my-project
 cd my-project
 
 # 状態管理を初期化
-node .specify/scripts/state.js init
+node .specify/scripts/state.cjs init
 ```
 
 ### Option 2: 既存プロジェクトに追加
@@ -70,7 +70,7 @@ cp ssd-template/CLAUDE.md your-project/
 
 # 状態管理を初期化
 cd your-project
-node .specify/scripts/state.js init
+node .specify/scripts/state.cjs init
 ```
 
 ---
@@ -194,7 +194,7 @@ AI が Issue を作成し、Feature Spec の作成を開始します。
 
 3. **状態を初期化**
    ```bash
-   node .specify/scripts/state.js init
+   node .specify/scripts/state.cjs init
    ```
 
 4. **最初のコマンドを実行**
@@ -210,10 +210,10 @@ AI が Issue を作成し、Feature Spec の作成を開始します。
 
 ```bash
 # 状態管理スクリプトが動作するか確認
-node .specify/scripts/state.js query --repo
+node .specify/scripts/state.cjs query --repo
 
 # spec-lint が動作するか確認
-node .specify/scripts/spec-lint.js
+node .specify/scripts/spec-lint.cjs
 
 # GitHub CLI が認証されているか確認
 gh auth status
