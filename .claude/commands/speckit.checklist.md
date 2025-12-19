@@ -37,6 +37,33 @@ Spec の**要件品質**を検証するチェックリストを生成する。
 
 ---
 
+## Execution Protocol (MUST FOLLOW)
+
+**Before starting:**
+
+1. Use **TodoWrite** to create todos for all main Steps:
+   - "Step 1: Identify target spec"
+   - "Step 2: Select focus areas"
+   - "Step 3: Generate checklist"
+   - "Step 4: Format and save"
+   - "Step 5: Report and recommend"
+
+**During execution:**
+
+2. Before each Step: Mark the corresponding todo as `in_progress`
+3. After each Step:
+   - Run the **Self-Check** at the end of that Step
+   - Only if Self-Check passes: Mark todo as `completed`
+   - Output: `✓ Step N 完了: [1-line summary]`
+
+**Rules:**
+
+- **DO NOT** skip any Step
+- **DO NOT** mark a Step as completed before its Self-Check passes
+- If a Self-Check fails: Fix the issue before proceeding
+
+---
+
 ## Core Concept: Unit Tests for English
 
 ### ❌ WRONG - 実装テスト（これは書かない）
@@ -73,6 +100,12 @@ Spec の**要件品質**を検証するチェックリストを生成する。
    - Domain → Domain Quality Dimensions
    - Feature → Feature Quality Dimensions + Domain-specific checks
 
+#### Self-Check (Step 1)
+
+- [ ] $ARGUMENTS から Spec ID またはドメインを抽出したか
+- [ ] 対象 Spec を Read ツールで読み込んだか
+- [ ] Spec の種類（Vision/Domain/Feature）を特定したか
+
 ---
 
 ### Step 2: Select Focus Areas
@@ -96,6 +129,12 @@ Spec の**要件品質**を検証するチェックリストを生成する。
 
    複数選択可（例: "A,B" または "all"）
    ```
+
+#### Self-Check (Step 2)
+
+- [ ] $ARGUMENTS でドメインが指定されていれば、それを使用したか
+- [ ] ドメイン未指定の場合、ユーザーに選択肢を提示したか
+- [ ] フォーカスエリアを決定したか
 
 ---
 
@@ -159,6 +198,12 @@ Spec の**要件品質**を検証するチェックリストを生成する。
 - Retention and archival requirements
 - Backup and recovery requirements
 - Cross-entity consistency
+
+#### Self-Check (Step 3)
+
+- [ ] Quality Dimensions（Completeness, Clarity, Consistency, Measurability, Coverage）を適用したか
+- [ ] 選択したフォーカスエリアのドメイン固有チェックを適用したか
+- [ ] チェックリスト項目を生成したか
 
 ---
 
@@ -231,6 +276,13 @@ Issues that should be addressed before proceeding:
 | Low      | CHK-030 | Define measurable UX criteria or accept subjective evaluation |
 ```
 
+#### Self-Check (Step 4)
+
+- [ ] チェックリストを正しいパスに保存したか
+- [ ] Quality Summary テーブルを含めたか
+- [ ] CHK-XXX 形式で項目 ID を付与したか
+- [ ] Action Items セクションを含めたか
+
 ---
 
 ### Step 5: Report and Recommend
@@ -266,6 +318,14 @@ Issues that should be addressed before proceeding:
 9. **If critical issues found**:
    - Recommend running `/speckit.clarify` to address them
    - Do NOT block, but warn
+
+#### Self-Check (Step 5)
+
+- [ ] サマリーを表示したか（Focus, Total items, Quality Summary）
+- [ ] High Priority Issues を一覧表示したか
+- [ ] チェックリストの保存パスを表示したか
+- [ ] 次のステップ（clarify or plan）を提示したか
+- [ ] 全ての Step が完了し、todo を全て `completed` にマークしたか
 
 ---
 

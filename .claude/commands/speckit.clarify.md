@@ -67,6 +67,36 @@ Spec（Vision、Domain、または Feature）の曖昧な点を特定し、人�
 
 ---
 
+## Execution Protocol (MUST FOLLOW)
+
+**Before starting:**
+
+1. Use **TodoWrite** to create todos for all main Steps:
+   - "Step 1: Identify Target Spec"
+   - "Step 2: Structured Ambiguity Scan"
+   - "Step 3: Generate Question Queue"
+   - "Step 4: Batch Questioning Loop"
+   - "Step 5: Incremental Update"
+   - "Step 6: Validation"
+   - "Step 7: Update State"
+   - "Step 8: Completion Report"
+
+**During execution:**
+
+2. Before each Step: Mark the corresponding todo as `in_progress`
+3. After each Step:
+   - Run the **Self-Check** at the end of that Step
+   - Only if Self-Check passes: Mark todo as `completed`
+   - Output: `✓ Step N 完了: [1-line summary]`
+
+**Rules:**
+
+- **DO NOT** skip any Step
+- **DO NOT** mark a Step as completed before its Self-Check passes
+- If a Self-Check fails: Fix the issue before proceeding
+
+---
+
 ## Steps
 
 ### Step 1: Identify Target Spec
@@ -85,6 +115,12 @@ Spec（Vision、Domain、または Feature）の曖昧な点を特定し、人�
    - Feature: `/speckit.issue` または `/speckit.add` を先に実行するよう指示
 
 5. Spec Type（Vision, Domain, Screen, or Feature）を判定し、対応するタクソノミーを選択
+
+#### Self-Check (Step 1)
+
+- [ ] Read tool で対象 Spec ファイルを実際に読み込んだか
+- [ ] Spec が存在しない場合、適切なコマンドを提案したか
+- [ ] Spec Type を正しく判定したか
 
 ---
 
@@ -152,6 +188,12 @@ Spec の内容を読み込み、以下のタクソノミーに基づいて各カ
 - TODO / TBD / 未決定の記述
 - 曖昧な形容詞（「適切な」「十分な」「高速な」など数値化されていない表現）
 
+#### Self-Check (Step 2)
+
+- [ ] Spec Type に応じたタクソノミーを適用したか
+- [ ] 各カテゴリのステータス（Clear/Partial/Missing）を判定したか
+- [ ] `[NEEDS CLARIFICATION]` マーカーを検出したか
+
 ---
 
 ### Step 3: Generate Question Queue
@@ -165,6 +207,12 @@ Spec の内容を読み込み、以下のタクソノミーに基づいて各カ
    - 既に回答済み
    - 実装フェーズで決めるべき詳細
    - 影響が小さいスタイル的な好み
+
+#### Self-Check (Step 3)
+
+- [ ] 質問候補を生成したか（最大12問）
+- [ ] Impact × Uncertainty で優先順位付けしたか
+- [ ] Example の値を使用せず、実際の Spec 内容から質問を生成したか
 
 ---
 
@@ -233,6 +281,13 @@ Q4: [カテゴリ名] について
 - 全ての重要な曖昧点が解消された
 - ユーザーが終了を指示（"done", "good", "no more", "stop", "proceed"）
 - 3ラウンド（12問）に到達
+
+#### Self-Check (Step 4)
+
+- [ ] 4問ずつバッチ形式で質問を提示したか
+- [ ] 各質問に Recommended/Suggested を明示したか
+- [ ] 回答を正しくパースしたか
+- [ ] 4問を超えて1ラウンドで質問していないか
 
 ---
 
@@ -307,6 +362,13 @@ Q4: [カテゴリ名] について
 - Markdown構造を維持（見出しの階層、箇条書きのインデント）
 - **更新後すぐにファイル保存**（コンテキスト喪失リスクを最小化）
 
+#### Self-Check (Step 5)
+
+- [ ] Write/Edit tool で Spec ファイルを実際に更新したか
+- [ ] Clarifications セクションに回答を記録したか
+- [ ] 該当セクションに回答内容を統合したか
+- [ ] `[NEEDS CLARIFICATION]` マーカーを削除したか
+
 ---
 
 ### Step 6: Validation (各更新後 + 最終)
@@ -317,6 +379,11 @@ Q4: [カテゴリ名] について
 - [ ] 更新したセクションに古い矛盾した記述が残っていない
 - [ ] Markdown構造が有効
 - [ ] 用語の一貫性（同じ概念に異なる用語を使っていない）
+
+#### Self-Check (Step 6)
+
+- [ ] 上記の検証項目を全てチェックしたか
+- [ ] 矛盾や重複がないか確認したか
 
 ---
 
@@ -334,6 +401,10 @@ node .specify/scripts/state.cjs repo --set-domain-status clarified
 # Feature Spec の場合（ブランチ状態を更新）
 node .specify/scripts/state.cjs branch --set-step spec-clarified
 ```
+
+#### Self-Check (Step 7)
+
+- [ ] state.cjs コマンドを実行して状態を更新したか
 
 ---
 
@@ -393,6 +464,13 @@ Domain/Screen が明確になりました。Feature の実装を始めましょ�
 
 Feature Spec が明確になりました。人間のレビュー後、Plan を作成します。
 ```
+
+#### Self-Check (Step 8)
+
+- [ ] Completion Report を出力したか
+- [ ] カバレッジサマリーを表形式で出力したか
+- [ ] Spec Type に応じた次のステップを提示したか
+- [ ] 全ての Step が完了し、todo を全て `completed` にマークしたか
 
 ---
 

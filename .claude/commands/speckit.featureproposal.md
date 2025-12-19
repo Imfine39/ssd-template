@@ -34,6 +34,30 @@ Propose additional Features based on user intent and create GitHub Issues.
 - Domain Spec should exist (warning if not)
 - Existing Feature Issues are checked to avoid duplication
 
+## Execution Protocol (MUST FOLLOW)
+
+**Before starting:**
+
+1. Use **TodoWrite** to create todos for all main Steps:
+   - "Step 1: Check context"
+   - "Step 2: Generate proposals"
+   - "Step 3: Create Issues"
+   - "Step 4: Present results"
+
+**During execution:**
+
+2. Before each Step: Mark the corresponding todo as `in_progress`
+3. After each Step:
+   - Run the **Self-Check** at the end of that Step
+   - Only if Self-Check passes: Mark todo as `completed`
+   - Output: `✓ Step N 完了: [1-line summary]`
+
+**Rules:**
+
+- **DO NOT** skip any Step
+- **DO NOT** mark a Step as completed before its Self-Check passes
+- If a Self-Check fails: Fix the issue before proceeding
+
 ## Critical Instructions
 
 **IMPORTANT - MUST READ:**
@@ -80,6 +104,13 @@ Propose additional Features based on user intent and create GitHub Issues.
 
    - Identify existing Feature IDs to avoid duplication
 
+#### Self-Check (Step 1)
+
+- [ ] Domain Spec を Read ツールで確認したか
+- [ ] Vision Spec を Read ツールで確認したか（存在する場合）
+- [ ] gh issue list で既存 Issue を取得したか
+- [ ] 重複を避けるため既存 Feature ID を確認したか
+
 ### Step 2: Generate Proposals
 
 4. **Parse user intent**:
@@ -123,6 +154,13 @@ Propose additional Features based on user intent and create GitHub Issues.
    - 「追加: [説明]」: 別の Feature を追加提案
    ```
 
+#### Self-Check (Step 2)
+
+- [ ] $ARGUMENTS からユーザーの意図を抽出したか
+- [ ] Example の値（レポート機能等）を使用していないか
+- [ ] 実際の Domain Spec に基づいて提案を生成したか
+- [ ] ユーザーに提案を提示したか
+
 ### Step 3: Create Issues
 
 7. **Batch-create Feature Issues**:
@@ -153,6 +191,11 @@ Propose additional Features based on user intent and create GitHub Issues.
    - Add new Features to Feature Index table
    - Status: Draft
 
+#### Self-Check (Step 3)
+
+- [ ] ユーザーが採用した Feature ごとに gh issue create を実行したか
+- [ ] Domain Spec の Feature Index を更新したか
+
 ### Step 4: Present Results
 
 9. **Show summary**:
@@ -169,6 +212,12 @@ Propose additional Features based on user intent and create GitHub Issues.
    次のステップ:
    `/speckit.issue` で Feature を選択して開始してください。
    ```
+
+#### Self-Check (Step 4)
+
+- [ ] 作成した Issue 一覧を表示したか
+- [ ] 次のステップ（/speckit.issue）を提示したか
+- [ ] 全ての Step が完了し、todo を全て `completed` にマークしたか
 
 ## Output
 

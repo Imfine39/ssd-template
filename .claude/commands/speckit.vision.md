@@ -63,6 +63,33 @@ $ARGUMENTS
 
 ---
 
+## Execution Protocol (MUST FOLLOW)
+
+**Before starting:**
+
+1. Use **TodoWrite** to create todos for all main Steps:
+   - "Step 1: Quick Input Collection"
+   - "Step 2: Vision Spec 生成"
+   - "Step 3: Vision Summary & Clarify 推奨"
+   - "Step 4: Record Original Input"
+   - "Step 5: Update State"
+
+**During execution:**
+
+2. Before each Step: Mark the corresponding todo as `in_progress`
+3. After each Step:
+   - Run the **Self-Check** at the end of that Step
+   - Only if Self-Check passes: Mark todo as `completed`
+   - Output: `✓ Step N 完了: [1-line summary]`
+
+**Rules:**
+
+- **DO NOT** skip any Step
+- **DO NOT** mark a Step as completed before its Self-Check passes
+- If a Self-Check fails: Fix the issue before proceeding
+
+---
+
 ## Steps
 
 ### Step 1: Quick Input Collection
@@ -153,6 +180,13 @@ Option B: チャットで情報を提供
 | レスポンシブ対応 | Section 5.3 Responsive       |
 | 参考画像         | Section 5.3 Reference Images |
 
+#### Self-Check (white running Step 1)
+
+- [ ] Read tool で `.specify/input/vision-input.md` を実際に読み込んだか
+- [ ] Example の値（社内在庫管理システム等）を使用していないか
+- [ ] プロジェクト名が実際のユーザー入力から取得されているか
+- [ ] 入力が不十分な場合、ユーザーに確認を求めたか
+
 ---
 
 ### Step 2: Vision Spec 生成
@@ -219,6 +253,14 @@ Quick Input の内容を各セクションに展開:
 - Constraints が空の場合
 - Risks が推定のみの場合
 
+#### Self-Check (Step 2)
+
+- [ ] Bash tool で scaffold-spec.cjs を実際に実行したか
+- [ ] Write/Edit tool で spec ファイルを実際に作成/編集したか
+- [ ] Example の値を使用せず、Step 1 で取得した実データを使用したか
+- [ ] 曖昧な箇所に `[NEEDS CLARIFICATION]` マークを付けたか
+- [ ] `.specify/specs/vision/spec.md` が存在するか
+
 ---
 
 ### Step 3: Vision Summary & Clarify 推奨
@@ -275,6 +317,12 @@ Clarify をスキップすると、後工程での手戻りリスクが高まり
 Note: Screen Hints が入力されていない場合、/speckit.design で画面情報の入力を促します。
 ```
 
+#### Self-Check (Step 3)
+
+- [ ] Vision Summary を実際に出力したか
+- [ ] 曖昧点レポートを出力したか（`[NEEDS CLARIFICATION]` の数を報告）
+- [ ] 次のステップを提示したか（`/speckit.clarify` 推奨）
+
 ---
 
 ### Step 4: Record Original Input
@@ -300,6 +348,11 @@ Note: Screen Hints が入力されていない場合、/speckit.design で画面
 
 **Note:** チャットからの入力の場合は、Clarifications セクションに記録される。
 
+#### Self-Check (Step 4)
+
+- [ ] 入力ファイルから入力があった場合、Original Input セクションを追加したか
+- [ ] 入力ファイルのリセット（reset-input.cjs）を実行したか（入力ファイル使用時のみ）
+
 ---
 
 ### Step 5: Update State
@@ -309,6 +362,11 @@ node .specify/scripts/state.cjs repo --set-vision-status draft --set-phase visio
 ```
 
 **Note:** Vision status は `draft`。Clarify 完了後に `clarified`、承認後に `approved` に更新される。
+
+#### Self-Check (Step 5)
+
+- [ ] state.cjs コマンドを実行して状態を更新したか
+- [ ] 全ての Step が完了し、todo を全て `completed` にマークしたか
 
 ---
 

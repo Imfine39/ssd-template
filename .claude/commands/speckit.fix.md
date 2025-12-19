@@ -42,6 +42,37 @@ Creates Issue → Branch → Spec update. Clarify は別コマンドで実行。
 
 この場合、入力ファイル読み込みをスキップし、`$ARGUMENTS` のみで処理を開始します。
 
+## Execution Protocol (MUST FOLLOW)
+
+**Before starting:**
+
+1. Use **TodoWrite** to create todos for all main Steps:
+   - "Step 1: Quick Input Collection"
+   - "Step 2: Analyze codebase"
+   - "Step 3: Identify affected Spec"
+   - "Step 4: Create GitHub Issue"
+   - "Step 5: Create branch"
+   - "Step 6: Update affected Spec"
+   - "Step 7: Check if Domain/Screen changes needed"
+   - "Step 7.5: Update Cross-Reference Matrix"
+   - "Step 8: Run lint"
+   - "Step 9: Record Original Input & Reset"
+   - "Step 10: Summary & Next Steps"
+
+**During execution:**
+
+2. Before each Step: Mark the corresponding todo as `in_progress`
+3. After each Step:
+   - Run the **Self-Check** at the end of that Step
+   - Only if Self-Check passes: Mark todo as `completed`
+   - Output: `✓ Step N 完了: [1-line summary]`
+
+**Rules:**
+
+- **DO NOT** skip any Step
+- **DO NOT** mark a Step as completed before its Self-Check passes
+- If a Self-Check fails: Fix the issue before proceeding
+
 ---
 
 ## Critical Instructions
@@ -142,6 +173,13 @@ Option C: 緊急対応
 | 緊急度           | Issue ラベルの判断に使用        |
 | 関連情報         | Issue Body, Spec Changelog      |
 
+#### Self-Check (Step 1)
+
+- [ ] --quick モードか通常モードかを判定したか
+- [ ] 通常モードの場合、Read ツールで `.specify/input/fix-input.md` を読み込んだか
+- [ ] Example の値（特殊文字パスワード等）を使用していないか
+- [ ] 入力が不十分な場合、ユーザーに確認を求めたか
+
 ---
 
 ### Step 2: Analyze Codebase
@@ -150,12 +188,22 @@ Option C: 緊急対応
 - Identify the affected component and its spec
 - Search existing specs for related UC/FR
 
+#### Self-Check (Step 2)
+
+- [ ] 関連コードを探索したか
+- [ ] 影響を受けるコンポーネントを特定したか
+
 ---
 
 ### Step 3: Identify Affected Spec
 
 - Ask user to confirm which spec is affected
 - If no spec exists, warn: "該当するSpecがありません。新規機能の可能性があります"
+
+#### Self-Check (Step 3)
+
+- [ ] 影響を受ける Spec を特定したか
+- [ ] ユーザーに確認を求めたか
 
 ---
 
@@ -180,6 +228,12 @@ gh label create urgent --description "Urgent fix needed" --color FF0000 --force
 gh issue edit <num> --add-label urgent
 ```
 
+#### Self-Check (Step 4)
+
+- [ ] gh issue create を実行したか
+- [ ] Issue 番号を取得したか
+- [ ] 緊急度が高い場合、urgent ラベルを追加したか
+
 ---
 
 ### Step 5: Create Branch
@@ -188,6 +242,10 @@ gh issue edit <num> --add-label urgent
 node .specify/scripts/branch.cjs --type fix --slug <slug> --issue <num>
 ```
 
+#### Self-Check (Step 5)
+
+- [ ] branch.cjs でブランチを作成したか
+
 ---
 
 ### Step 6: Update Affected Spec
@@ -195,6 +253,11 @@ node .specify/scripts/branch.cjs --type fix --slug <slug> --issue <num>
 - Add Changelog entry: `| [DATE] | Bug Fix | [Description] | #[Issue] |`
 - If fix requires FR changes, note in Implementation Notes
 - Mark unclear items as `[NEEDS CLARIFICATION]`
+
+#### Self-Check (Step 6)
+
+- [ ] Spec の Changelog にエントリを追加したか
+- [ ] 曖昧な項目に [NEEDS CLARIFICATION] マークを付けたか
 
 ---
 
@@ -222,6 +285,11 @@ If bug fix reveals incorrect M-_/API-_/BR-_/SCR-_ definition:
 
 - If yes: Trigger `/speckit.change`, then resume fix after merge
 - If no: Continue with current spec (document limitation)
+
+#### Self-Check (Step 7)
+
+- [ ] Domain/Screen 変更が必要かどうか確認したか
+- [ ] 変更が必要な場合、ユーザーに /speckit.change への誘導を行ったか
 
 ---
 
@@ -252,6 +320,12 @@ If bug fix reveals incorrect M-_/API-_/BR-_/SCR-_ definition:
    node .specify/scripts/generate-matrix-view.cjs
    ```
 
+#### Self-Check (Step 7.5)
+
+- [ ] Matrix 更新が必要かどうか確認したか
+- [ ] 必要な場合、Matrix を更新したか
+- [ ] generate-matrix-view.cjs を実行したか
+
 ---
 
 ### Step 8: Run Lint
@@ -259,6 +333,11 @@ If bug fix reveals incorrect M-_/API-_/BR-_/SCR-_ definition:
 ```bash
 node .specify/scripts/spec-lint.cjs
 ```
+
+#### Self-Check (Step 8)
+
+- [ ] spec-lint.cjs を実行したか
+- [ ] エラーがあれば修正したか
 
 ---
 
@@ -275,6 +354,10 @@ node .specify/scripts/spec-lint.cjs
    ```
 
 **Note:** `--quick` モードの場合はリセット不要（入力ファイルを使用していないため）。
+
+#### Self-Check (Step 9)
+
+- [ ] 通常モードの場合、reset-input.cjs を実行したか
 
 ---
 
@@ -325,6 +408,13 @@ Changelog 追加:
 1. `/speckit.clarify` - 曖昧点を解消（推奨）
 2. `/speckit.plan` - 実装計画を作成
 ```
+
+#### Self-Check (Step 10)
+
+- [ ] Fix Summary を出力したか
+- [ ] 曖昧点レポートを出力したか
+- [ ] 次のステップを提示したか
+- [ ] 全ての Step が完了し、todo を全て `completed` にマークしたか
 
 ---
 

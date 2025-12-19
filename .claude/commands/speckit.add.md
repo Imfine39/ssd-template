@@ -28,6 +28,39 @@ Creates Issue → Branch → Spec. Clarify は別コマンドで実行。
 **Use `/speckit.issue` instead when:** Issues already exist (from `/speckit.design` or human creation).
 **Next steps:** `/speckit.clarify` で曖昧点を解消 → `/speckit.plan` で実装計画
 
+## Execution Protocol (MUST FOLLOW)
+
+**Before starting:**
+
+1. Use **TodoWrite** to create todos for all main Steps:
+   - "Step 1: Quick Input Collection"
+   - "Step 2: Check prerequisites"
+   - "Step 3: Create GitHub Issue"
+   - "Step 4: Create branch"
+   - "Step 5: Analyze codebase"
+   - "Step 6: Create Feature Spec"
+   - "Step 6.5: Update Screen Spec First (Spec-First)"
+   - "Step 7: Check M-*/API-* Requirements"
+   - "Step 8: Update Domain Spec Feature Index"
+   - "Step 8.5: Update Cross-Reference Matrix"
+   - "Step 9: Run lint"
+   - "Step 10: Record Original Input & Reset"
+   - "Step 11: Summary & Clarify 推奨"
+
+**During execution:**
+
+2. Before each Step: Mark the corresponding todo as `in_progress`
+3. After each Step:
+   - Run the **Self-Check** at the end of that Step
+   - Only if Self-Check passes: Mark todo as `completed`
+   - Output: `✓ Step N 完了: [1-line summary]`
+
+**Rules:**
+
+- **DO NOT** skip any Step
+- **DO NOT** mark a Step as completed before its Self-Check passes
+- If a Self-Check fails: Fix the issue before proceeding
+
 ## Critical Instructions
 
 **IMPORTANT - MUST READ:**
@@ -117,6 +150,13 @@ Option B: チャットで情報を提供
 | 関連する既存機能 | Section 2 (Domain Dependencies)                     |
 | 制約             | Section 8 (Non-Functional Requirements)             |
 
+#### Self-Check (Step 1)
+
+- [ ] Read ツールで `.specify/input/add-input.md` を読み込んだか
+- [ ] Example の値（PDFエクスポート等）を使用していないか
+- [ ] 入力方式を正しく判定したか（入力ファイル/ARGUMENTS/不十分）
+- [ ] 入力が不十分な場合、ユーザーに確認を求めたか
+
 ---
 
 ### Step 2: Check Prerequisites
@@ -134,6 +174,12 @@ Option B: チャットで情報を提供
      "WARNING: Screen Spec が見つかりません。`/speckit.design` で画面設計を含めて作成することを推奨します。"
    - If found: Extract Screen Index for Step 6.5
 
+#### Self-Check (Step 2)
+
+- [ ] Domain Spec を Read ツールで確認したか
+- [ ] M-*/API-* 定義が存在するか確認したか
+- [ ] Screen Spec の存在を確認したか
+
 ---
 
 ### Step 3: Create GitHub Issue
@@ -141,6 +187,11 @@ Option B: チャットで情報を提供
 ```bash
 gh issue create --title "[Feature] <title>" --body "..." --label feature
 ```
+
+#### Self-Check (Step 3)
+
+- [ ] gh issue create を実行したか
+- [ ] Issue 番号を取得したか
 
 ---
 
@@ -150,6 +201,10 @@ gh issue create --title "[Feature] <title>" --body "..." --label feature
 node .specify/scripts/branch.cjs --type feature --slug <slug> --issue <num>
 ```
 
+#### Self-Check (Step 4)
+
+- [ ] branch.cjs でブランチを作成したか
+
 ---
 
 ### Step 5: Analyze Codebase
@@ -157,6 +212,11 @@ node .specify/scripts/branch.cjs --type feature --slug <slug> --issue <num>
 - Use Serena to explore existing code structure
 - Identify related components, patterns, dependencies
 - Use context7 for library documentation if needed
+
+#### Self-Check (Step 5)
+
+- [ ] コードベースを探索したか
+- [ ] 関連コンポーネント/パターンを特定したか
 
 ---
 
@@ -166,6 +226,12 @@ node .specify/scripts/branch.cjs --type feature --slug <slug> --issue <num>
 - Fill sections: Purpose, Actors, Domain Model (M-_, API-_), UC, FR, SC, Edge Cases, NFR
 - Reference analyzed code patterns and constraints
 - Mark unclear items as `[NEEDS CLARIFICATION]`
+
+#### Self-Check (Step 6)
+
+- [ ] scaffold-spec.cjs で Feature Spec をスキャフォールドしたか
+- [ ] 各セクションを埋めたか
+- [ ] 曖昧な項目に [NEEDS CLARIFICATION] マークを付けたか
 
 ---
 
@@ -191,15 +257,15 @@ node .specify/scripts/branch.cjs --type feature --slug <slug> --issue <num>
    ```
 
 2. **Check screen requirements**:
-   - 既存画面のみ使用 → Step 3 へ
-   - 既存画面の変更が必要 → Step 4 へ
-   - 新規画面が必要 → Step 5 へ
+   - 既存画面のみ使用 → 6.5.3 へ
+   - 既存画面の変更が必要 → 6.5.4 へ
+   - 新規画面が必要 → 6.5.5 へ
 
-3. **Reference existing screens**:
+3. **Reference existing screens** (6.5.3):
    - Feature Spec Section 8.1 に SCR-\* 参照を追加
    - 変更なしの場合はそのまま Feature Spec 作成へ
 
-4. **Update Screen Spec for modifications** (Spec-First):
+4. **Update Screen Spec for modifications** (6.5.4, Spec-First):
 
    ```
    === Screen Spec 更新（Spec-First） ===
@@ -217,7 +283,7 @@ node .specify/scripts/branch.cjs --type feature --slug <slug> --issue <num>
 
    - Screen Spec 更新後、Feature Spec 作成を続行
 
-5. **Add new screens to Screen Spec** (Spec-First):
+5. **Add new screens to Screen Spec** (6.5.5, Spec-First):
 
    ```
    === 新規画面追加（Spec-First） ===
@@ -238,6 +304,13 @@ node .specify/scripts/branch.cjs --type feature --slug <slug> --issue <num>
 6. **Update Feature Spec Section 8**:
    - Section 8.1: 関連する SCR-\* を参照
    - Section 8.3: Screen Spec への参照を記録（変更内容は Screen Spec に記載済み）
+
+#### Self-Check (Step 6.5)
+
+- [ ] Screen Spec が存在する場合、画面選択を実施したか
+- [ ] 既存画面の変更がある場合、Screen Spec を先に更新したか
+- [ ] 新規画面がある場合、Screen Spec に追加したか
+- [ ] Feature Spec Section 8 を更新したか
 
 ---
 
@@ -262,6 +335,13 @@ Identify all M-_, API-_, BR-\* that this Feature needs and classify:
 - Stop Feature Spec creation
 - Prompt: "既存の [M-xxx] の変更が必要です。`/speckit.change` を実行しますか？"
 - After change merged, resume with `/speckit.issue`
+
+#### Self-Check (Step 7)
+
+- [ ] M-*/API-*/BR-* の必要性を特定したか
+- [ ] Case 1/2/3 の分類を行ったか
+- [ ] Case 2 の場合、Domain Spec に新規定義を追加したか
+- [ ] Case 3 の場合、/speckit.change への誘導を行ったか
 
 ---
 
@@ -307,6 +387,12 @@ Open `.specify/specs/domain/spec.md` and add entry in Section 8 (Feature Index):
    node .specify/scripts/generate-matrix-view.cjs
    ```
 
+#### Self-Check (Steps 8-8.5)
+
+- [ ] Domain Spec の Feature Index を更新したか
+- [ ] Matrix が存在する場合、Feature エントリを追加したか
+- [ ] generate-matrix-view.cjs を実行したか
+
 ---
 
 ### Step 9: Run Lint
@@ -317,6 +403,11 @@ node .specify/scripts/spec-lint.cjs
 
 - Check Feature correctly references Domain M-_/API-_
 - Check Feature Index entry exists
+
+#### Self-Check (Step 9)
+
+- [ ] spec-lint.cjs を実行したか
+- [ ] エラーがあれば修正したか
 
 ---
 
@@ -340,6 +431,11 @@ node .specify/scripts/spec-lint.cjs
    ```bash
    node .specify/scripts/reset-input.cjs add
    ```
+
+#### Self-Check (Step 10)
+
+- [ ] 入力ファイルから入力があった場合、Original Input セクションを追加したか
+- [ ] reset-input.cjs を実行したか
 
 ---
 
@@ -386,6 +482,13 @@ Spec: .specify/specs/s-xxx-001/spec.md
 
 Clarify をスキップすると、実装中の手戻りリスクが高まります。
 ```
+
+#### Self-Check (Step 11)
+
+- [ ] Spec Summary を出力したか
+- [ ] 曖昧点レポートを出力したか
+- [ ] 次のステップ（/speckit.clarify 推奨）を提示したか
+- [ ] 全ての Step が完了し、todo を全て `completed` にマークしたか
 
 ## Output
 

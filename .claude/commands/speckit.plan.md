@@ -21,6 +21,33 @@ This is a **base command** that can be:
 - Called automatically after `/speckit.add`, `/speckit.fix`, `/speckit.issue`
 - Called directly to restart from this step
 
+## Execution Protocol (MUST FOLLOW)
+
+**Before starting:**
+
+1. Use **TodoWrite** to create todos for all main Steps:
+   - "Step 1: Load context"
+   - "Step 2: Fill required sections"
+   - "Step 3: Use tools for codebase exploration"
+   - "Step 4: Save plan"
+   - "Step 5: Run lint"
+   - "Step 6: Request human review"
+   - "Step 7: Update branch state"
+
+**During execution:**
+
+2. Before each Step: Mark the corresponding todo as `in_progress`
+3. After each Step:
+   - Run the **Self-Check** at the end of that Step
+   - Only if Self-Check passes: Mark todo as `completed`
+   - Output: `✓ Step N 完了: [1-line summary]`
+
+**Rules:**
+
+- **DO NOT** skip any Step
+- **DO NOT** mark a Step as completed before its Self-Check passes
+- If a Self-Check fails: Fix the issue before proceeding
+
 ## Steps
 
 1. **Load context**:
@@ -45,12 +72,24 @@ This is a **base command** that can be:
    - Serena: explore codebase for paths/structure
    - context7: library documentation if needed
 
+#### Self-Check (Steps 1-3)
+
+- [ ] Read tool で Feature Spec と Domain Spec を読み込んだか
+- [ ] Plan template を読み込んだか
+- [ ] 必要に応じてコードベースを探索したか
+
 4. **Save plan**:
    - Save to `plan.md` in the Feature directory
    - Keep IDs and headings; remove unused sections
 
 5. **Run lint**:
    - Execute: `node .specify/scripts/spec-lint.cjs`
+
+#### Self-Check (Steps 4-5)
+
+- [ ] Write tool で plan.md を保存したか
+- [ ] spec-lint.cjs を実行したか
+- [ ] lint エラーがあれば修正したか
 
 6. **Request human review**:
    - Show plan summary
@@ -65,6 +104,14 @@ This is a **base command** that can be:
    ```bash
    node .specify/scripts/state.cjs branch --set-step tasks
    ```
+
+#### Self-Check (Steps 6-7)
+
+- [ ] Plan サマリーを出力したか
+- [ ] Open Questions を提示したか
+- [ ] 人間の承認を待ったか
+- [ ] 承認後に state.cjs を実行したか
+- [ ] 全ての Step が完了し、todo を全て `completed` にマークしたか
 
 ## Output
 

@@ -8,6 +8,31 @@ PR作成前の「安心確認」として、実装が Spec/Domain の要件を�
 
 **ユーティリティコマンド** - いつでも単独実行可能。
 
+## Execution Protocol (MUST FOLLOW)
+
+**Before starting:**
+
+1. Use **TodoWrite** to create todos for all main Steps:
+   - "Step 1: Load context"
+   - "Step 2: Explore codebase"
+   - "Step 3: Cross-reference analysis"
+   - "Step 4: Generate report"
+   - "Step 5: Provide recommendations"
+
+**During execution:**
+
+2. Before each Step: Mark the corresponding todo as `in_progress`
+3. After each Step:
+   - Run the **Self-Check** at the end of that Step
+   - Only if Self-Check passes: Mark todo as `completed`
+   - Output: `✓ Step N 完了: [1-line summary]`
+
+**Rules:**
+
+- **DO NOT** skip any Step
+- **DO NOT** mark a Step as completed before its Self-Check passes
+- If a Self-Check fails: Fix the issue before proceeding
+
 ## What This Checks
 
 ### 1. Spec要件の充足確認
@@ -62,10 +87,22 @@ Matrix が存在する場合（`.specify/matrix/cross-reference.json`）:
    - 実装済みコード
    - テストコード
 
+#### Self-Check (Step 1)
+
+- [ ] Feature Spec を Read ツールで読み込んだか
+- [ ] Domain Spec を Read ツールで読み込んだか
+- [ ] Screen Spec を Read ツールで読み込んだか（存在する場合）
+- [ ] Matrix を Read ツールで読み込んだか（存在する場合）
+
 2. **Use Serena** to explore:
    - 実装されたファイル/クラス/関数
    - テストファイル
    - 既存コードとの関係
+
+#### Self-Check (Step 2)
+
+- [ ] 実装されたファイルを特定したか
+- [ ] テストファイルを特定したか
 
 3. **Cross-reference analysis**:
    - Spec の各 UC/FR/SC と実装を照合
@@ -73,6 +110,13 @@ Matrix が存在する場合（`.specify/matrix/cross-reference.json`）:
    - Screen Spec の SCR-\* 参照と画面実装を照合
    - Matrix の対応関係と実装を照合
    - Plan の設計方針と実装を照合
+
+#### Self-Check (Step 3)
+
+- [ ] UC/FR/SC と実装の照合を行ったか
+- [ ] Domain との整合性を確認したか
+- [ ] Screen との整合性を確認したか
+- [ ] Matrix との整合性を確認したか
 
 4. **Generate report**:
 
@@ -97,9 +141,22 @@ Matrix が存在する場合（`.specify/matrix/cross-reference.json`）:
      - SC: 4/5 (80%)
    ```
 
+#### Self-Check (Step 4)
+
+- [ ] 充足している要件を一覧表示したか
+- [ ] 要確認項目を一覧表示したか
+- [ ] 問題点を一覧表示したか
+- [ ] カバレッジサマリーを表示したか
+
 5. **Provide recommendations**:
    - 問題がある場合: 修正提案
    - 問題がない場合: PR作成の推奨
+
+#### Self-Check (Step 5)
+
+- [ ] 推奨アクションを提示したか
+- [ ] 次のステップ（/speckit.pr 等）を提示したか
+- [ ] 全ての Step が完了し、todo を全て `completed` にマークしたか
 
 ## Output
 

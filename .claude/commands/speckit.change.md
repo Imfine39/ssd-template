@@ -44,6 +44,34 @@ This command handles **modifications to existing items**, not additions.
 3. `/speckit.feedback` determines Spec change is required
 4. Implementation reveals spec inconsistency
 
+## Execution Protocol (MUST FOLLOW)
+
+**Before starting:**
+
+1. Use **TodoWrite** to create todos for all main Steps:
+   - "Step 1: Identify change target"
+   - "Step 2: Impact analysis"
+   - "Step 3: Determine Issue requirement"
+   - "Step 4: Create Issues (if needed)"
+   - "Step 5: Create branch and change Spec"
+   - "Step 5.5: Update Cross-Reference Matrix"
+   - "Step 6: Lint and review"
+   - "Step 7: Create PR"
+
+**During execution:**
+
+2. Before each Step: Mark the corresponding todo as `in_progress`
+3. After each Step:
+   - Run the **Self-Check** at the end of that Step
+   - Only if Self-Check passes: Mark todo as `completed`
+   - Output: `✓ Step N 完了: [1-line summary]`
+
+**Rules:**
+
+- **DO NOT** skip any Step
+- **DO NOT** mark a Step as completed before its Self-Check passes
+- If a Self-Check fails: Fix the issue before proceeding
+
 ## Critical Instructions
 
 **IMPORTANT - MUST READ:**
@@ -90,16 +118,31 @@ This command handles **modifications to existing items**, not additions.
    理由: [ユーザーに確認 or $ARGUMENTS から抽出]
    ```
 
+#### Self-Check (Step 1)
+
+- [ ] 変更対象を $ARGUMENTS から抽出したか
+- [ ] 対象 Spec（Vision/Domain/Screen）を特定したか
+- [ ] 具体的な変更項目（M-*/API-*/SCR-* 等）を特定したか
+- [ ] 変更内容と理由を確認したか
+
 ### Step 2: Impact Analysis
 
 5. **Search for references**:
 
-   ```bash
+   Use the Grep tool to find Features referencing the changed item:
+
+   ```
    # Find Features referencing the changed item (Domain)
-   grep -r "M-USER" .specify/specs/*/spec.md --include="spec.md"
+   Grep pattern="M-USER" path=".specify/specs/" glob="**/spec.md"
 
    # For Screen changes, also find Feature SCR-* references
-   grep -r "SCR-001" .specify/specs/*/spec.md --include="spec.md"
+   Grep pattern="SCR-001" path=".specify/specs/" glob="**/spec.md"
+   ```
+
+   Or via bash (cross-platform compatible):
+   ```bash
+   grep -r "M-USER" .specify/specs/ --include="spec.md"
+   grep -r "SCR-001" .specify/specs/ --include="spec.md"
    ```
 
 6. **Analyze each Feature**:
@@ -139,6 +182,13 @@ This command handles **modifications to existing items**, not additions.
    - 影響なし: 1
    ```
 
+#### Self-Check (Step 2)
+
+- [ ] Grep ツールまたは grep コマンドで参照を検索したか
+- [ ] 影響を受ける Feature を全て特定したか
+- [ ] 各 Feature の影響度（影響なし/Spec更新/実装修正必要）を判定したか
+- [ ] 影響分析結果を表示したか
+
 ### Step 3: Determine Issue Requirement
 
 8. **Check if Issue is needed**:
@@ -148,6 +198,11 @@ This command handles **modifications to existing items**, not additions.
 9. **If Issue not needed**:
    - Skip to Step 5 (Spec Change)
    - Create PR directly after change
+
+#### Self-Check (Step 3)
+
+- [ ] 影響 Feature 数に基づいて Issue 要否を判定したか
+- [ ] 判定結果をユーザーに確認したか
 
 ### Step 4: Create Issues (Sub-issue Structure)
 
@@ -211,6 +266,12 @@ This command handles **modifications to existing items**, not additions.
       --label fix
     ```
 
+#### Self-Check (Step 4)
+
+- [ ] Issue 作成が必要な場合、親 Issue を作成したか
+- [ ] Spec 更新用の子 Issue を作成したか
+- [ ] 実装修正が必要な Feature ごとに子 Issue を作成したか
+
 ### Step 5: Create Branch and Change Spec
 
 13. **Create branch**:
@@ -228,6 +289,13 @@ This command handles **modifications to existing items**, not additions.
     - Update Domain Dependencies section
     - Update affected FR/UC
     - Add Changelog entry noting the change
+
+#### Self-Check (Step 5)
+
+- [ ] branch.cjs でブランチを作成したか
+- [ ] Vision/Domain/Screen Spec を更新したか
+- [ ] 影響を受ける Feature Spec を更新したか
+- [ ] 各 Spec に Changelog エントリを追加したか
 
 ### Step 5.5: Update Cross-Reference Matrix
 
@@ -268,6 +336,12 @@ This command handles **modifications to existing items**, not additions.
     - If change introduces ambiguity, mark as `[NEEDS CLARIFICATION]`
     - 推奨: `/speckit.clarify` で曖昧点を解消
 
+#### Self-Check (Step 5.5)
+
+- [ ] Matrix 更新が必要かどうか確認したか
+- [ ] 必要な場合、Matrix を更新したか
+- [ ] generate-matrix-view.cjs を実行したか
+
 ### Step 6: Lint and Review
 
 20. **Run lint**:
@@ -301,6 +375,12 @@ This command handles **modifications to existing items**, not additions.
     2. マージ後、#22, #23 の実装修正に取り掛かる
     ```
 
+#### Self-Check (Step 6)
+
+- [ ] spec-lint.cjs を実行したか
+- [ ] エラーがあれば修正したか
+- [ ] サマリーを出力したか
+
 ### Step 7: Create PR
 
 22. **Create PR**:
@@ -325,6 +405,12 @@ This command handles **modifications to existing items**, not additions.
     - #22 S-AUTH-001
     - #23 S-REGISTRATION-001"
     ```
+
+#### Self-Check (Step 7)
+
+- [ ] gh pr create で PR を作成したか
+- [ ] 次のステップ（実装修正 Issue）を提示したか
+- [ ] 全ての Step が完了し、todo を全て `completed` にマークしたか
 
 ## Output
 

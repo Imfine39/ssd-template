@@ -23,6 +23,32 @@ specification. This command provides a structured way to record:
 - Ambiguities that needed resolution
 - Design decisions made during implementation
 
+## Execution Protocol (MUST FOLLOW)
+
+**Before starting:**
+
+1. Use **TodoWrite** to create todos for all main Steps:
+   - "Step 1: Identify feedback type"
+   - "Step 2: Locate relevant spec"
+   - "Step 3: Record feedback"
+   - "Step 4: Update spec"
+   - "Step 5: Assess severity"
+   - "Step 6: Handle major changes (if needed)"
+
+**During execution:**
+
+2. Before each Step: Mark the corresponding todo as `in_progress`
+3. After each Step:
+   - Run the **Self-Check** at the end of that Step
+   - Only if Self-Check passes: Mark todo as `completed`
+   - Output: `✓ Step N 完了: [1-line summary]`
+
+**Rules:**
+
+- **DO NOT** skip any Step
+- **DO NOT** mark a Step as completed before its Self-Check passes
+- If a Self-Check fails: Fix the issue before proceeding
+
 ## Steps
 
 1. **Identify the feedback type** from `$ARGUMENTS`:
@@ -33,11 +59,22 @@ specification. This command provides a structured way to record:
    - `deviation` - Intentional deviation from spec (with justification)
    - `screen` - UI/UX feedback that affects Screen Spec (layout, navigation, usability)
 
+#### Self-Check (Step 1)
+
+- [ ] $ARGUMENTS からフィードバックタイプを抽出したか
+- [ ] 有効なタイプ（constraint/discovery/clarification/decision/deviation/screen）か確認したか
+
 2. **Locate the relevant spec**:
    - Find the spec being implemented (from branch name or context)
    - Read the current spec content
    - Identify the affected sections (UC, FR, SC, etc.)
    - For `screen` type: Also check Screen Spec (`.specify/specs/screen/spec.md`)
+
+#### Self-Check (Step 2)
+
+- [ ] 関連する Spec を Read ツールで読み込んだか
+- [ ] 影響を受けるセクション（UC/FR/SC 等）を特定したか
+- [ ] screen タイプの場合、Screen Spec も確認したか
 
 3. **Record the feedback**:
 
@@ -48,14 +85,19 @@ specification. This command provides a structured way to record:
    - Impact on the spec
    - Proposed resolution (if any)
 
+#### Self-Check (Step 3)
+
+- [ ] フィードバック項目を構造化して記録したか
+- [ ] 影響を受ける Spec ID を特定したか
+
 4. **Update the spec**:
-   - Add entry to "## 17. Changelog" section:
+   - Add entry to the **Changelog** section (typically near the end of spec):
 
      ```
      | [DATE] | [Type] | [Description] | #[Issue] |
      ```
 
-   - Add details to "## 18. Implementation Notes" section:
+   - Add details to the **Implementation Notes** section (last section of spec):
      ```
      - Technical constraints discovered:
        - [Constraint description and impact]
@@ -65,10 +107,20 @@ specification. This command provides a structured way to record:
        - [Deviation, reason, and approval status]
      ```
 
+#### Self-Check (Step 4)
+
+- [ ] Changelog エントリを追加したか
+- [ ] Implementation Notes セクションを更新したか
+
 5. **Assess severity**:
    - **Minor** (no spec change needed): Just document in Implementation Notes.
    - **Moderate** (spec clarification needed): Update affected UC/FR/SC.
    - **Major** (spec change needed): Create Issue, follow spec change workflow.
+
+#### Self-Check (Step 5)
+
+- [ ] 深刻度（Minor/Moderate/Major）を判定したか
+- [ ] 判定に基づいて次のアクションを決定したか
 
 6. **If major change needed**:
    - Do NOT modify UC/FR/SC directly.
@@ -76,6 +128,22 @@ specification. This command provides a structured way to record:
    - Reference the affected spec IDs.
    - Propose the change for review.
    - Continue implementation with current spec until change is approved.
+
+   **If switching to `/speckit.change`**, suspend current work:
+
+   ```bash
+   # Suspend current branch before switching to spec change
+   node .specify/scripts/state.cjs suspend --branch <current-branch> --reason spec-change --related <issue-num>
+
+   # After spec change is merged, resume
+   node .specify/scripts/state.cjs resume --branch <current-branch> --step implement
+   ```
+
+#### Self-Check (Step 6)
+
+- [ ] Major 変更の場合、Issue を作成したか
+- [ ] /speckit.change への切り替えが必要な場合、作業を中断したか
+- [ ] 全ての Step が完了し、todo を全て `completed` にマークしたか
 
 ## Output
 

@@ -1,5 +1,5 @@
 ---
-description: Create Domain Spec (M-*/API-*) with Feature proposal. Technical design phase after Vision.
+description: Create Screen Spec + Domain Spec simultaneously with Feature proposal. Technical design phase after Vision.
 handoffs:
   - label: Clarify Domain
     agent: speckit.clarify
@@ -63,6 +63,36 @@ $ARGUMENTS
 
 ---
 
+## Execution Protocol (MUST FOLLOW)
+
+**Before starting:**
+
+1. Use **TodoWrite** to create todos for all main Steps:
+   - "Step 1: Check Prerequisites"
+   - "Step 2: Screen Information Collection"
+   - "Step 3: Feature Proposal"
+   - "Step 4: Simultaneous Screen + Domain Spec Creation"
+   - "Step 5: Cross-Reference Verification"
+   - "Step 6: Create Foundation Issue"
+   - "Step 7: Design Summary & Clarify 推奨"
+   - "Step 8: Update State"
+
+**During execution:**
+
+2. Before each Step: Mark the corresponding todo as `in_progress`
+3. After each Step:
+   - Run the **Self-Check** at the end of that Step
+   - Only if Self-Check passes: Mark todo as `completed`
+   - Output: `✓ Step N 完了: [1-line summary]`
+
+**Rules:**
+
+- **DO NOT** skip any Step
+- **DO NOT** mark a Step as completed before its Self-Check passes
+- If a Self-Check fails: Fix the issue before proceeding
+
+---
+
 ## Steps
 
 ### Step 1: Check Prerequisites
@@ -95,6 +125,12 @@ $ARGUMENTS
    - Extract scope boundaries
    - **Extract Screen Hints (Section 5)** - 画面リスト、遷移、デザイン希望
 
+#### Self-Check (Step 1)
+
+- [ ] Read tool で Vision Spec を実際に読み込んだか
+- [ ] state.cjs query を実行して状態を確認したか
+- [ ] Vision が存在しない/未承認の場合、警告を表示したか
+
 ### Step 2: Screen Information Collection
 
 4. **Check Screen Hints**:
@@ -123,6 +159,12 @@ Screen 情報がありません。
 ```
 
 **人間から画面情報を受け取る。**
+
+#### Self-Check (Step 2)
+
+- [ ] Screen Hints の有無を確認したか
+- [ ] Screen Hints が空の場合、ユーザーに入力を促したか
+- [ ] 画面リスト（3-10画面）が確定したか
 
 ### Step 3: Feature Proposal
 
@@ -184,6 +226,13 @@ Screen 情報がありません。
      Backlog - waiting for Screen + Domain Spec and Feature Spec creation." \
        --label feature --label backlog
      ```
+
+#### Self-Check (Step 3)
+
+- [ ] gh label create で必要なラベルを作成したか
+- [ ] Feature 候補を提案し、ユーザーに確認したか
+- [ ] 採用された Feature ごとに gh issue create を実行したか
+- [ ] Example の値（S-INVENTORY-001 等）を使用していないか
 
 ### Step 4: Simultaneous Screen + Domain Spec Creation
 
@@ -290,6 +339,8 @@ Screen 情報がありません。
 
 14. **Create `.specify/matrix/cross-reference.json`**:
 
+    AI が Screen Spec と Domain Spec の内容を理解し、適切なマッピングを作成する。
+
     ```json
     {
       "$schema": "../templates/cross-reference-schema.json",
@@ -316,23 +367,40 @@ Screen 情報がありません。
     ```
     - Creates `.specify/matrix/cross-reference.md` (human-readable view)
 
+#### Self-Check (Step 4)
+
+- [ ] scaffold-spec.cjs で Screen Spec と Domain Spec を作成したか
+- [ ] Write/Edit tool で両 Spec のセクションを埋めたか
+- [ ] cross-reference.json を作成したか
+- [ ] generate-matrix-view.cjs を実行したか
+- [ ] Example の値を使用せず、実データを使用したか
+- [ ] 曖昧な箇所に `[NEEDS CLARIFICATION]` マークを付けたか
+
 ### Step 5: Cross-Reference Verification
 
-16. **Cross-Reference Matrix 整合性チェック**:
+15. **Cross-Reference Matrix 整合性チェック**:
     - [ ] 全 SCR-\* が Matrix の screens に定義されている
     - [ ] 全 M-\* が Matrix の screens/features から参照されている
     - [ ] 全 API-\* が Matrix の screens/features/permissions から参照されている
     - [ ] 孤立した定義がない
 
-17. **Run lint** (includes Matrix validation):
+16. **Run lint and validate Matrix**:
     ```bash
     node .specify/scripts/spec-lint.cjs
+    node .specify/scripts/validate-matrix.cjs
     ```
-    - Screen/Domain/Matrix の整合性を自動検証
+    - spec-lint.cjs: Matrix → Spec の参照整合性（Matrix が参照するものが Spec に存在するか）
+    - validate-matrix.cjs: Spec → Matrix の完全性（Spec の内容が Matrix に反映されているか）
+
+#### Self-Check (Step 5)
+
+- [ ] spec-lint.cjs を実行したか
+- [ ] validate-matrix.cjs を実行したか
+- [ ] エラーがあれば修正したか
 
 ### Step 6: Create Foundation Issue
 
-16. **Create Foundation Issue**:
+17. **Create Foundation Issue**:
 
     ```bash
     gh issue create \
@@ -357,9 +425,14 @@ Screen 情報がありません。
       --label feature --label backlog
     ```
 
+#### Self-Check (Step 6)
+
+- [ ] Foundation Issue を gh issue create で作成したか
+- [ ] Issue 番号を記録したか
+
 ### Step 7: Design Summary & Clarify 推奨
 
-19. **Show summary**:
+18. **Show summary**:
 
     ```
     === Design 完了（Screen + Domain + Matrix 同時作成）===
@@ -391,7 +464,7 @@ Screen 情報がありません。
     - .specify/matrix/cross-reference.md (auto-generated)
     ```
 
-18. **曖昧点レポート**:
+19. **曖昧点レポート**:
 
     ```
     === 曖昧点 ===
@@ -410,7 +483,7 @@ Screen 情報がありません。
     推奨: `/speckit.clarify` で曖昧点を解消してください。
     ```
 
-19. **次のステップ提示**:
+20. **次のステップ提示**:
 
     ```
     次のステップ:
@@ -421,14 +494,25 @@ Screen 情報がありません。
     Clarify をスキップすると、実装中の手戻りリスクが高まります。
     ```
 
+#### Self-Check (Step 7)
+
+- [ ] Design 完了サマリーを出力したか
+- [ ] 曖昧点レポートを出力したか（`[NEEDS CLARIFICATION]` の数を報告）
+- [ ] 次のステップを提示したか（`/speckit.clarify` 推奨）
+
 ### Step 8: Update State
 
-20. **Update repo state**:
+21. **Update repo state**:
     ```bash
     node .specify/scripts/state.cjs repo --set-screen-status draft --set-domain-status draft --set-phase design
     ```
 
 **Note:** Screen/Domain status は `draft`。Clarify 完了後に `clarified`、承認後に `approved` に更新される。
+
+#### Self-Check (Step 8)
+
+- [ ] state.cjs コマンドを実行して状態を更新したか
+- [ ] 全ての Step が完了し、todo を全て `completed` にマークしたか
 
 ---
 

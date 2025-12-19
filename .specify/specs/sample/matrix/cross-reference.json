@@ -1,0 +1,130 @@
+{
+  "screens": {
+    "SCR-001": {
+      "name": "ログイン画面",
+      "masters": [],
+      "apis": ["API-AUTH-LOGIN-001", "API-AUTH-CALLBACK-001"]
+    },
+    "SCR-002": {
+      "name": "ダッシュボード",
+      "masters": ["M-USER", "M-LEAD", "M-ORDER", "M-SALES-RECORD", "M-SALES-TARGET"],
+      "apis": ["API-DASHBOARD-001"]
+    },
+    "SCR-003": {
+      "name": "リード案件一覧画面",
+      "masters": ["M-LEAD", "M-USER", "M-SECTOR"],
+      "apis": ["API-LEAD-LIST-001"]
+    },
+    "SCR-004": {
+      "name": "リード案件詳細画面",
+      "masters": ["M-LEAD", "M-ACTIVITY", "M-USER", "M-SECTOR"],
+      "apis": ["API-LEAD-GET-001", "API-LEAD-CREATE-001", "API-LEAD-UPDATE-001", "API-LEAD-CONVERT-001"]
+    },
+    "SCR-005": {
+      "name": "受注案件一覧画面",
+      "masters": ["M-ORDER", "M-USER", "M-SECTOR"],
+      "apis": ["API-ORDER-LIST-001"]
+    },
+    "SCR-006": {
+      "name": "受注案件詳細画面",
+      "masters": ["M-ORDER", "M-ASSIGNMENT", "M-SALES-RECORD", "M-USER"],
+      "apis": ["API-ORDER-GET-001", "API-ASSIGNMENT-CREATE-001", "API-SALES-RECORD-CREATE-001"]
+    },
+    "SCR-007": {
+      "name": "売上実績一覧画面",
+      "masters": ["M-SALES-RECORD", "M-SALES-TARGET", "M-SECTOR"],
+      "apis": ["API-SALES-SUMMARY-001"]
+    },
+    "SCR-008": {
+      "name": "メンバー管理画面",
+      "masters": ["M-USER", "M-ROLE", "M-SECTOR", "M-ASSIGNMENT"],
+      "apis": ["API-MEMBER-LIST-001"]
+    },
+    "SCR-009": {
+      "name": "セクター別売上目標画面",
+      "masters": ["M-SALES-TARGET", "M-SECTOR"],
+      "apis": ["API-SALES-SUMMARY-001", "API-SALES-TARGET-SET-001"]
+    },
+    "SCR-010": {
+      "name": "設定画面",
+      "masters": ["M-USER", "M-ROLE", "M-SECTOR"],
+      "apis": []
+    }
+  },
+  "features": {
+    "S-FOUNDATION-001": {
+      "title": "基盤構築",
+      "screens": [],
+      "masters": ["M-USER", "M-ROLE", "M-SECTOR"],
+      "apis": ["API-AUTH-LOGIN-001", "API-AUTH-CALLBACK-001", "API-AUTH-LOGOUT-001"],
+      "rules": []
+    },
+    "S-AUTH-001": {
+      "title": "Azure AD 認証",
+      "screens": ["SCR-001"],
+      "masters": ["M-USER", "M-ROLE"],
+      "apis": ["API-AUTH-LOGIN-001", "API-AUTH-CALLBACK-001", "API-AUTH-LOGOUT-001"],
+      "rules": []
+    },
+    "S-LEAD-001": {
+      "title": "リード案件管理",
+      "screens": ["SCR-003", "SCR-004"],
+      "masters": ["M-LEAD", "M-ACTIVITY", "M-USER", "M-SECTOR"],
+      "apis": ["API-LEAD-LIST-001", "API-LEAD-GET-001", "API-LEAD-CREATE-001", "API-LEAD-UPDATE-001", "API-LEAD-CONVERT-001"],
+      "rules": ["BR-001", "BR-005", "VR-001", "VR-002"]
+    },
+    "S-ORDER-001": {
+      "title": "受注案件管理",
+      "screens": ["SCR-005", "SCR-006"],
+      "masters": ["M-ORDER", "M-ASSIGNMENT", "M-USER", "M-SECTOR"],
+      "apis": ["API-ORDER-LIST-001", "API-ORDER-GET-001", "API-ASSIGNMENT-CREATE-001"],
+      "rules": ["BR-002", "VR-003", "VR-004", "VR-005", "VR-006", "VR-007", "CR-003"]
+    },
+    "S-SALES-001": {
+      "title": "売上実績管理",
+      "screens": ["SCR-006", "SCR-007"],
+      "masters": ["M-SALES-RECORD", "M-ORDER"],
+      "apis": ["API-SALES-RECORD-CREATE-001", "API-SALES-SUMMARY-001"],
+      "rules": ["BR-003", "CR-002"]
+    },
+    "S-MEMBER-001": {
+      "title": "メンバー稼働率管理",
+      "screens": ["SCR-008"],
+      "masters": ["M-USER", "M-ROLE", "M-SECTOR", "M-ASSIGNMENT"],
+      "apis": ["API-MEMBER-LIST-001"],
+      "rules": ["CR-001"]
+    },
+    "S-TARGET-001": {
+      "title": "セクター売上目標管理",
+      "screens": ["SCR-009"],
+      "masters": ["M-SALES-TARGET", "M-SECTOR"],
+      "apis": ["API-SALES-TARGET-SET-001", "API-SALES-SUMMARY-001"],
+      "rules": ["BR-004", "BR-006", "CR-004"]
+    },
+    "S-DASHBOARD-001": {
+      "title": "ダッシュボード",
+      "screens": ["SCR-002"],
+      "masters": ["M-USER", "M-LEAD", "M-ORDER", "M-SALES-RECORD", "M-SALES-TARGET"],
+      "apis": ["API-DASHBOARD-001"],
+      "rules": ["CR-002", "CR-004"]
+    }
+  },
+  "permissions": {
+    "API-AUTH-LOGIN-001": ["Public"],
+    "API-AUTH-CALLBACK-001": ["Public"],
+    "API-AUTH-LOGOUT-001": ["Authenticated"],
+    "API-LEAD-LIST-001": ["SeniorConsultant", "AssociateManager", "Manager", "SeniorManager"],
+    "API-LEAD-GET-001": ["SeniorConsultant", "AssociateManager", "Manager", "SeniorManager"],
+    "API-LEAD-CREATE-001": ["SeniorConsultant", "AssociateManager", "Manager", "SeniorManager"],
+    "API-LEAD-UPDATE-001": ["SeniorConsultant", "AssociateManager", "Manager", "SeniorManager"],
+    "API-LEAD-CONVERT-001": ["SeniorConsultant", "AssociateManager", "Manager", "SeniorManager"],
+    "API-ORDER-LIST-001": ["SeniorConsultant", "AssociateManager", "Manager", "SeniorManager"],
+    "API-ORDER-GET-001": ["SeniorConsultant", "AssociateManager", "Manager", "SeniorManager"],
+    "API-ASSIGNMENT-CREATE-001": ["SeniorConsultant", "AssociateManager", "Manager", "SeniorManager"],
+    "API-SALES-RECORD-CREATE-001": ["SeniorConsultant", "AssociateManager", "Manager", "SeniorManager"],
+    "API-SALES-SUMMARY-001": ["SeniorConsultant", "AssociateManager", "Manager", "SeniorManager"],
+    "API-SALES-TARGET-SET-001": ["Manager", "SeniorManager"],
+    "API-MEMBER-LIST-001": ["SeniorConsultant", "AssociateManager", "Manager", "SeniorManager"],
+    "API-DASHBOARD-001": ["Associate", "Consultant", "SeniorConsultant", "AssociateManager", "Manager", "SeniorManager"]
+  }
+}

@@ -19,6 +19,31 @@ Step 4 of the 6-step workflow. Implements tasks from the plan while:
 - Writing tests first or alongside code
 - Requesting human permission when spec feedback is needed
 
+## Execution Protocol (MUST FOLLOW)
+
+**Before starting:**
+
+1. Use **TodoWrite** to create todos for all main Steps:
+   - "Step 1: Verify context"
+   - "Step 2: Load tasks"
+   - "Step 3: Implement each task"
+   - "Step 4: After all tasks - run tests and lint"
+   - "Step 5: Recommend next step"
+
+**During execution:**
+
+2. Before each Step: Mark the corresponding todo as `in_progress`
+3. After each Step:
+   - Run the **Self-Check** at the end of that Step
+   - Only if Self-Check passes: Mark todo as `completed`
+   - Output: `✓ Step N 完了: [1-line summary]`
+
+**Rules:**
+
+- **DO NOT** skip any Step
+- **DO NOT** mark a Step as completed before its Self-Check passes
+- If a Self-Check fails: Fix the issue before proceeding
+
 ## Steps
 
 1. **Verify context**:
@@ -29,6 +54,11 @@ Step 4 of the 6-step workflow. Implements tasks from the plan while:
 2. **Load tasks**:
    - Parse tasks.md for pending tasks
    - Present task list and confirm implementation order
+
+#### Self-Check (Steps 1-2)
+
+- [ ] Read tool で Spec, Plan, Tasks を読み込んだか
+- [ ] ブランチが Issue にリンクされているか確認したか
 
 3. **For each task**:
 
@@ -85,6 +115,14 @@ Step 4 of the 6-step workflow. Implements tasks from the plan while:
    - If human approves → Run `/speckit.feedback` with the details
    - If human declines → Continue without recording
 
+#### Self-Check (Step 3 - 各タスクごと)
+
+- [ ] テストを先に書いたか（fail-first）
+- [ ] コードを実装したか
+- [ ] テストが通ったか
+- [ ] state.cjs でタスク進捗を更新したか
+- [ ] Feedback が必要な場合、人間に確認したか
+
 4. **After all tasks**:
    - Run full test suite
    - Run spec-lint: `node .specify/scripts/spec-lint.cjs`
@@ -98,6 +136,14 @@ Step 4 of the 6-step workflow. Implements tasks from the plan while:
    - If all tasks done and tests pass → Suggest `/speckit.pr`
    - If tasks remain → Continue with next task
    - If blocked → Suggest `/speckit.clarify`
+
+#### Self-Check (Steps 4-5)
+
+- [ ] テストスイートを実行したか
+- [ ] spec-lint を実行したか
+- [ ] サマリーを出力したか
+- [ ] 次のステップを提示したか
+- [ ] 全ての Step が完了し、todo を全て `completed` にマークしたか
 
 ## Output
 

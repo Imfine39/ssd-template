@@ -466,7 +466,10 @@ Feature Spec 作成時（/speckit.issue, /speckit.add）に必要な M-_/API-_ �
 
 ## 11. 補助ツールとガイド
 
-- **整合性チェック**: `/speckit.lint` または `node .specify/scripts/spec-lint.cjs`（Matrix 検証含む）
+- **整合性チェック**:
+  - `node .specify/scripts/spec-lint.cjs`: Matrix → Spec の参照整合性（Matrix が参照するものが Spec に存在するか）
+  - `node .specify/scripts/validate-matrix.cjs`: Spec → Matrix の完全性（Spec の内容が Matrix に反映されているか）
+  - `/speckit.lint` は両方を実行
 - **Matrix ビュー生成**: `node .specify/scripts/generate-matrix-view.cjs`（cross-reference.md 自動生成）
 - **実装分析**: `/speckit.analyze` で PR 前の安心確認
 - **プロジェクト健全性**: `node .specify/scripts/spec-metrics.cjs` でスコアと問題点を確認

@@ -11,6 +11,33 @@ Step 5 of the 6-step workflow. Before creating a PR, this command:
 3. Records any remaining feedback
 4. Creates the PR with proper references
 
+## Execution Protocol (MUST FOLLOW)
+
+**Before starting:**
+
+1. Use **TodoWrite** to create todos for all main Steps:
+   - "Step 1: Integrity check"
+   - "Step 2: Final feedback opportunity"
+   - "Step 3: Run quality checks"
+   - "Step 4: Generate PR content"
+   - "Step 5: Create PR"
+   - "Step 6: Update branch state"
+   - "Step 7: Post-PR guidance"
+
+**During execution:**
+
+2. Before each Step: Mark the corresponding todo as `in_progress`
+3. After each Step:
+   - Run the **Self-Check** at the end of that Step
+   - Only if Self-Check passes: Mark todo as `completed`
+   - Output: `✓ Step N 完了: [1-line summary]`
+
+**Rules:**
+
+- **DO NOT** skip any Step
+- **DO NOT** mark a Step as completed before its Self-Check passes
+- If a Self-Check fails: Fix the issue before proceeding
+
 ## Steps
 
 1. **Integrity check - Spec vs Implementation**:
@@ -47,6 +74,12 @@ Step 5 of the 6-step workflow. Before creating a PR, this command:
    - Screen Status updates needed: [SCR-* list with Planned status, or "None"]
    ```
 
+#### Self-Check (Step 1)
+
+- [ ] Read tool で Spec を読み込んだか
+- [ ] git diff で変更ファイルを確認したか
+- [ ] UC/FR カバレッジを報告したか
+
 2. **Final feedback opportunity**:
    - If undocumented items found, ask human:
      ```
@@ -59,6 +92,7 @@ Step 5 of the 6-step workflow. Before creating a PR, this command:
 
 3. **Run quality checks**:
    - spec-lint: `node .specify/scripts/spec-lint.cjs`
+   - validate-matrix: `node .specify/scripts/validate-matrix.cjs`
    - Project lint (if configured): `npm run lint` or equivalent
    - Tests: `npm test` or configured test command
    - Build (if applicable): `npm run build`
@@ -67,6 +101,14 @@ Step 5 of the 6-step workflow. Before creating a PR, this command:
    - Report the failure
    - Suggest fix or ask human how to proceed
    - Do NOT create PR with failing checks
+
+#### Self-Check (Steps 2-3)
+
+- [ ] 未ドキュメント項目があれば人間に確認したか
+- [ ] spec-lint を実行したか
+- [ ] validate-matrix を実行したか
+- [ ] テストを実行したか
+- [ ] 全てのチェックがパスしたか
 
 4. **Generate PR content**:
 
@@ -164,6 +206,14 @@ Step 5 of the 6-step workflow. Before creating a PR, this command:
    Note: Spec-First アプローチでは、ワイヤーフレームは既に
    Feature 作成時に計画状態として更新済みです。
    ```
+
+#### Self-Check (Steps 4-7)
+
+- [ ] PR タイトルとボディを生成したか
+- [ ] gh pr create で PR を作成したか
+- [ ] state.cjs を実行したか
+- [ ] Post-PR guidance を出力したか
+- [ ] 全ての Step が完了し、todo を全て `completed` にマークしたか
 
 ## Usage
 
