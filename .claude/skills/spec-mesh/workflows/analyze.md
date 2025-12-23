@@ -102,10 +102,65 @@ Spec: .specify/specs/{project}/features/{id}/spec.md
 
 ---
 
+## Success Criteria
+
+分析結果は以下の基準で判定:
+
+### PASS (PR 可能)
+
+| Metric | Threshold |
+|--------|-----------|
+| Spec Coverage | >= 100% (全 UC/FR が実装済み) |
+| Test Coverage | >= 80% (UC/FR に対応するテスト) |
+| Critical Issues | 0 件 |
+| Major Issues | 0 件 |
+
+### WARN (条件付き PR)
+
+| Metric | Threshold |
+|--------|-----------|
+| Spec Coverage | >= 100% |
+| Test Coverage | >= 60% |
+| Critical Issues | 0 件 |
+| Major Issues | <= 2 件 (文書化されていれば可) |
+
+### FAIL (PR 不可)
+
+以下のいずれかに該当:
+- Spec Coverage < 100% (未実装の UC/FR がある)
+- Critical Issues > 0
+- Test Coverage < 60%
+
+```
+=== 分析結果サマリ ===
+
+Status: {PASS|WARN|FAIL}
+
+Spec Coverage: {N}% (Required: 100%)
+Test Coverage: {N}% (Required: >= 80%)
+Critical: {N} (Required: 0)
+Major: {N} (Required: 0 for PASS)
+
+{PASS の場合}
+分析完了。PR 作成に進めます。
+Next: /spec-mesh pr
+
+{WARN の場合}
+軽微な問題があります。以下を確認してから PR してください:
+- {issue_list}
+
+{FAIL の場合}
+以下を解決してから再分析してください:
+- {issue_list}
+```
+
+---
+
 ## Next Steps
 
 | Status | Action |
 |--------|--------|
-| All covered | `/spec-mesh pr` |
-| Missing items | Implement, then re-analyze |
-| Extra items | Consider adding to spec or removing |
+| PASS | `/spec-mesh pr` |
+| WARN | Issue を確認後 `/spec-mesh pr` |
+| FAIL - Missing | 実装追加後 `/spec-mesh analyze` |
+| FAIL - Extra | Spec 追加 or コード削除後 `/spec-mesh analyze` |

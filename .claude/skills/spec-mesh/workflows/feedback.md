@@ -14,6 +14,20 @@ This workflow records these discoveries for future reference.
 
 ---
 
+## Supported Spec Types
+
+このワークフローは以下の全 Spec タイプに対応:
+
+| Spec Type | Path | Feedback セクション |
+|-----------|------|-------------------|
+| Vision | `.specify/specs/{project}/overview/vision/spec.md` | Implementation Notes |
+| Domain | `.specify/specs/{project}/overview/domain/spec.md` | Implementation Notes |
+| Screen | `.specify/specs/{project}/overview/screen/spec.md` | Implementation Notes |
+| Feature | `.specify/specs/{project}/features/{id}/spec.md` | Clarifications |
+| Fix | `.specify/specs/{project}/fixes/{id}/spec.md` | Clarifications |
+
+---
+
 ## Steps
 
 ### Step 1: Identify Feedback Type
@@ -41,10 +55,19 @@ Impact: {Spec への影響}
 
 1. **Read current Spec:**
    ```
-   Read tool: .specify/specs/{project}/features/{id}/spec.md
+   Read tool: {spec_path}
    ```
 
-2. **Add to Clarifications section:**
+   Spec タイプに応じたパス:
+   - Vision: `.specify/specs/{project}/overview/vision/spec.md`
+   - Domain: `.specify/specs/{project}/overview/domain/spec.md`
+   - Screen: `.specify/specs/{project}/overview/screen/spec.md`
+   - Feature: `.specify/specs/{project}/features/{id}/spec.md`
+   - Fix: `.specify/specs/{project}/fixes/{id}/spec.md`
+
+2. **Add to appropriate section:**
+
+   **For Feature/Fix Specs (Clarifications section):**
    ```markdown
    ## Clarifications
 
@@ -56,7 +79,24 @@ Impact: {Spec への影響}
    - Rationale: {理由}
    ```
 
+   **For Vision/Domain/Screen Specs (Implementation Notes section):**
+   ```markdown
+   ## Implementation Notes
+
+   ### Feedback (YYYY-MM-DD)
+
+   **{Feedback Type}**: {Title}
+   - Context: {背景}
+   - Decision: {決定内容}
+   - Rationale: {理由}
+   - Affected Items: {影響を受ける M-*/API-*/SCR-* ID}
+   ```
+
 3. **Update affected sections** if needed
+
+4. **Cross-update related Specs** if the feedback affects multiple Specs:
+   - Domain 変更 → Screen/Feature への影響を確認
+   - Screen 変更 → Feature への影響を確認
 
 ### Step 4: Run Lint
 
@@ -70,12 +110,17 @@ Display:
 ```
 === Feedback 記録完了 ===
 
-Spec: .specify/specs/{project}/features/{id}/spec.md
-Section: Clarifications
+Spec: {spec_path}
+Spec Type: {Vision|Domain|Screen|Feature|Fix}
+Section: {Clarifications|Implementation Notes}
 
 記録内容:
 - Type: {Feedback Type}
 - Title: {Title}
+
+{関連 Spec がある場合}
+関連 Spec への影響:
+- {related_spec_path}: {影響内容}
 
 実装を続行してください: `/spec-mesh implement`
 ```

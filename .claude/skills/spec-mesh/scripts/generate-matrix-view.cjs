@@ -5,16 +5,42 @@
  * Generate cross-reference.md from cross-reference.json
  *
  * Usage:
- *   node .claude/skills/spec-mesh/scripts/generate-matrix-view.cjs [path-to-json]
+ *   node .claude/skills/spec-mesh/scripts/generate-matrix-view.cjs [options] [path-to-json]
  *
- * If no path provided, uses .specify/matrix/cross-reference.json
+ * Options:
+ *   --project <name>  Project name (default: sample)
+ *   --help            Show this help message
+ *
+ * If no path provided, uses .specify/specs/{project}/overview/matrix/cross-reference.json
  * Output is written to same directory as cross-reference.md
  */
 
 const fs = require('fs');
 const path = require('path');
 
-const DEFAULT_JSON_PATH = '.specify/matrix/cross-reference.json';
+// Default project
+const DEFAULT_PROJECT = 'sample';
+
+// Get default JSON path for a project
+function getDefaultJsonPath(project) {
+  return `.specify/specs/${project}/overview/matrix/cross-reference.json`;
+}
+
+// Legacy paths for backward compatibility
+const LEGACY_JSON_PATHS = [
+  '.specify/matrix/cross-reference.json'
+];
+
+// Find existing path from candidates
+function findExistingPath(candidates) {
+  for (const p of candidates) {
+    const resolved = path.isAbsolute(p) ? p : path.resolve(process.cwd(), p);
+    if (fs.existsSync(resolved)) {
+      return p;
+    }
+  }
+  return null;
+}
 
 function loadJson(jsonPath) {
   if (!fs.existsSync(jsonPath)) {
@@ -257,20 +283,71 @@ ${generatePermissionTable(data.permissions)}
   return md;
 }
 
-function main() {
+// Parse command line arguments
+function parseArgs() {
   const args = process.argv.slice(2);
-  let jsonPath = args[0] || DEFAULT_JSON_PATH;
+  let project = DEFAULT_PROJECT;
+  let jsonPath = null;
+
+  for (let i = 0; i < args.length; i++) {
+    switch (args[i]) {
+      case '--project':
+        project = args[++i];
+        break;
+      case '--help':
+        console.log(`
+Cross-Reference Matrix View Generator
+
+Generates a Markdown view (cross-reference.md) from cross-reference.json.
+
+Usage:
+  node .claude/skills/spec-mesh/scripts/generate-matrix-view.cjs [options] [path-to-json]
+
+Options:
+  --project <name>  Project name (default: ${DEFAULT_PROJECT})
+  --help            Show this help message
+
+If no path is provided, uses:
+  .specify/specs/{project}/overview/matrix/cross-reference.json
+
+Examples:
+  node .claude/skills/spec-mesh/scripts/generate-matrix-view.cjs
+  node .claude/skills/spec-mesh/scripts/generate-matrix-view.cjs --project myproject
+  node .claude/skills/spec-mesh/scripts/generate-matrix-view.cjs .specify/specs/sample/overview/matrix/cross-reference.json
+        `);
+        process.exit(0);
+      default:
+        // Assume any non-option argument is the JSON path
+        if (!args[i].startsWith('--')) {
+          jsonPath = args[i];
+        }
+    }
+  }
+
+  // Determine JSON path: explicit > existing project path > existing legacy path > default project path
+  const projectPath = getDefaultJsonPath(project);
+  if (!jsonPath) {
+    jsonPath = findExistingPath([projectPath, ...LEGACY_JSON_PATHS]) || projectPath;
+  }
+
+  return { project, jsonPath };
+}
+
+function main() {
+  const { project, jsonPath: inputPath } = parseArgs();
 
   // Resolve to absolute path
+  let jsonPath = inputPath;
   if (!path.isAbsolute(jsonPath)) {
     jsonPath = path.resolve(process.cwd(), jsonPath);
   }
 
+  console.log(`Project: ${project}`);
   console.log(`Reading: ${jsonPath}`);
   const data = loadJson(jsonPath);
 
   const mdPath = jsonPath.replace(/\.json$/, '.md');
-  const markdown = generateMarkdown(data, jsonPath);
+  const markdown = generateMarkdown(data, inputPath);
 
   fs.writeFileSync(mdPath, markdown, 'utf8');
   console.log(`Generated: ${mdPath}`);

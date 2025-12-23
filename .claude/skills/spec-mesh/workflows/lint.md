@@ -9,6 +9,9 @@ Verify consistency between:
 - Cross-Reference Matrix
 - ID references (M-*, API-*, SCR-*, S-*)
 
+**呼び出し元:** このワークフローは [review.md](review.md) の Step 5 から呼び出されます。
+Review --> Lint の一方向の依存関係であり、Lint が Review を呼び出すことはありません（循環依存なし）。
+
 ---
 
 ## Steps
@@ -65,15 +68,37 @@ validate-matrix: ❌ FAILED
 
 ### Step 4: Auto-fix (if possible)
 
-Some issues can be auto-fixed:
-- Missing Matrix entries → Add to Matrix
-- Unused IDs → Warning only (human decision)
+#### Auto-fix Categories
+
+| Category | Action | Human Confirmation |
+|----------|--------|-------------------|
+| **Automatic (No confirmation)** | | |
+| - Markdown 構文修正 | 自動修正 | 不要 |
+| - 日付フォーマット統一 | 自動修正 | 不要 |
+| - 末尾空白・改行修正 | 自動修正 | 不要 |
+| **Semi-automatic (Confirmation required)** | | |
+| - Missing Matrix entries | 追加提案 | 必要 |
+| - 欠落している相互参照 | 追加提案 | 必要 |
+| **Manual only (No auto-fix)** | | |
+| - Unused IDs | 警告のみ | 削除は人間判断 |
+| - 内容の矛盾 | 報告のみ | 人間が修正 |
+| - セクション欠落 | 報告のみ | 人間が追加 |
 
 ```
-自動修正可能な問題: {N} 件
+=== Auto-fix 実行 ===
+
+自動修正（確認不要）: {N} 件
+- [完了] Markdown 構文修正 (3箇所)
+- [完了] 日付フォーマット統一 (2箇所)
+
+確認が必要な修正: {M} 件
 - Matrix に API-USER-CREATE を追加
 
-自動修正を実行しますか？ (y/N)
+上記の修正を実行しますか？ (y/N)
+
+手動対応が必要: {K} 件
+- SCR-005: 未使用ID（削除検討）
+- Section 3.2: 内容矛盾（人間が確認）
 ```
 
 ---

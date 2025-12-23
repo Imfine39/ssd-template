@@ -6,6 +6,9 @@ Resolve ambiguous requirements with 4-question batches.
 
 Detect `[NEEDS CLARIFICATION]` markers and resolve them through structured questions.
 
+**呼び出し元:** このワークフローは主に [review.md](review.md) の Step 6 から呼び出されます。
+Multi-Review で「ユーザー確認が必要」と判断された項目を解消するために使用します。
+
 ---
 
 ## Steps
@@ -65,6 +68,27 @@ Q4: ...
 
 回答を入力してください（例: 1A 2B 3C 4A）:
 ```
+
+#### Handling More Than 4 Ambiguities
+
+4件を超える曖昧点がある場合:
+
+1. **優先順位付け**: Critical/Blocking な項目を先にバッチ処理
+2. **バッチ繰り返し**: 4件ずつ処理し、各バッチ後に Spec を更新
+3. **進捗表示**: `(1-4 / 12)`, `(5-8 / 12)`, `(9-12 / 12)` のように表示
+
+```
+検出された曖昧点: 12 件
+
+優先順位:
+- Critical (実装ブロック): 5 件 → Batch 1-2 で処理
+- Major (品質影響): 4 件 → Batch 3 で処理
+- Minor (任意): 3 件 → Batch 4 で処理
+
+Batch 1/4 を開始します...
+```
+
+**注意:** 各バッチ完了後に必ず Spec を保存し、次のバッチに進む前に状態を確定させること。
 
 ### Step 4: Immediate Spec Update
 

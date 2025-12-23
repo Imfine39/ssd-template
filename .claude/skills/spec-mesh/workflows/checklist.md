@@ -6,6 +6,21 @@ Generate a requirements quality checklist. "Unit Tests for English."
 
 Create a structured checklist to verify spec quality before implementation.
 
+### Relationship with Review
+
+| Tool | タイミング | 用途 |
+|------|-----------|------|
+| **Checklist** | Spec 作成後、Review 前（任意） | 品質スコアの定量測定、自己チェック |
+| **Review** | Spec 作成後（必須） | 3観点からの多角的レビュー、問題発見 |
+
+**推奨フロー:**
+1. Spec 作成
+2. (任意) Checklist で自己評価 → 明らかな問題を先に修正
+3. Review で多角的レビュー → 発見された問題を修正
+4. Lint で構造検証
+
+Checklist はオプションです。Review は必須です。
+
 ---
 
 ## Steps
@@ -96,6 +111,53 @@ Checklist: .specify/specs/{project}/features/{id}/checklist.md
 - [ ] 5つのカテゴリでチェックしたか
 - [ ] checklist.md を保存したか
 - [ ] スコアを計算したか
+
+---
+
+## Quality Score Thresholds
+
+### Threshold Rationale
+
+スコアは 5 カテゴリ x 10 点 = 50 点満点で評価:
+
+| Category | Weight | Rationale |
+|----------|--------|-----------|
+| Completeness | 10 | 欠落があると実装時に仮定が必要になる |
+| Clarity | 10 | 曖昧さは実装者ごとに解釈が異なるリスク |
+| Consistency | 10 | 矛盾はバグの原因になる |
+| Testability | 10 | テスト不可な要件は検証できない |
+| Traceability | 10 | 追跡性がないと変更影響が分からない |
+
+### Threshold Levels
+
+| Score | Level | Meaning |
+|-------|-------|---------|
+| **40+ (80%+)** | READY | 全カテゴリで基本要件を満たす。実装開始可能 |
+| **30-39 (60-79%)** | NEEDS_WORK | 1-2 カテゴリで問題あり。軽微な修正で改善可能 |
+| **<30 (<60%)** | BLOCKED | 複数カテゴリで重大な問題。Clarify 必須 |
+
+### Customizing Thresholds
+
+プロジェクト固有の閾値が必要な場合:
+
+```javascript
+// .specify/config.json
+{
+  "checklist": {
+    "thresholds": {
+      "ready": 40,      // default: 40
+      "needsWork": 30   // default: 30
+    },
+    "weights": {
+      "completeness": 10,
+      "clarity": 10,
+      "consistency": 10,
+      "testability": 10,
+      "traceability": 10
+    }
+  }
+}
+```
 
 ---
 

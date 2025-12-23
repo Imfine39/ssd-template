@@ -151,7 +151,7 @@ Screen References:
 ### Step 10: Update State
 
 ```bash
-node .claude/skills/spec-mesh/scripts/state.cjs branch --set-step spec
+node .claude/skills/spec-mesh/scripts/state.cjs branch --set-step spec --set-feature {spec_id}
 ```
 
 ---
@@ -170,6 +170,8 @@ node .claude/skills/spec-mesh/scripts/state.cjs branch --set-step spec
 ---
 
 ## Next Steps
+
+**[HUMAN_CHECKPOINT]** Feature Spec の内容を確認してから次のステップに進んでください。
 
 | Action | Command | Description |
 |--------|---------|-------------|

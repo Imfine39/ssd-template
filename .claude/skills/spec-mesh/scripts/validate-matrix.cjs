@@ -5,15 +5,16 @@
  * Validate cross-reference.json against Screen Spec and Domain Spec
  *
  * Complements spec-lint.cjs:
- *   - spec-lint.cjs: Checks that Matrix references exist in Specs (Matrix → Spec)
- *   - validate-matrix.cjs: Checks that Specs are reflected in Matrix (Spec → Matrix)
+ *   - spec-lint.cjs: Checks that Matrix references exist in Specs (Matrix -> Spec)
+ *   - validate-matrix.cjs: Checks that Specs are reflected in Matrix (Spec -> Matrix)
  *
  * Usage:
  *   node .claude/skills/spec-mesh/scripts/validate-matrix.cjs [options]
  *
  * Options:
- *   --screen <path>  Path to Screen Spec (default: .specify/specs/screen/spec.md)
- *   --domain <path>  Path to Domain Spec (default: .specify/specs/domain/spec.md)
+ *   --project <name> Project name (default: sample)
+ *   --screen <path>  Path to Screen Spec (default: .specify/specs/{project}/overview/screen/spec.md)
+ *   --domain <path>  Path to Domain Spec (default: .specify/specs/{project}/overview/domain/spec.md)
  *   --matrix <path>  Path to Matrix JSON (default: .specify/specs/{project}/overview/matrix/cross-reference.json)
  *   --fix            Generate suggested additions to stdout
  *   --help           Show this help message
@@ -27,48 +28,77 @@
 const fs = require('fs');
 const path = require('path');
 
-// Default paths
-const DEFAULT_SCREEN_PATH = '.specify/specs/screen/spec.md';
-const DEFAULT_DOMAIN_PATH = '.specify/specs/domain/spec.md';
-const DEFAULT_MATRIX_PATH = '.specify/matrix/cross-reference.json';
+// Default project
+const DEFAULT_PROJECT = 'sample';
+
+// Get paths for a project
+function getProjectPaths(project) {
+  return {
+    screen: `.specify/specs/${project}/overview/screen/spec.md`,
+    domain: `.specify/specs/${project}/overview/domain/spec.md`,
+    matrix: `.specify/specs/${project}/overview/matrix/cross-reference.json`,
+  };
+}
+
+// Legacy paths for backward compatibility
+const LEGACY_PATHS = {
+  screen: ['.specify/specs/screen/spec.md'],
+  domain: ['.specify/specs/domain/spec.md', '.specify/specs/overview/spec.md'],
+  matrix: ['.specify/matrix/cross-reference.json'],
+};
+
+// Find existing path from candidates
+function findExistingPath(candidates) {
+  for (const p of candidates) {
+    const resolved = path.isAbsolute(p) ? p : path.resolve(process.cwd(), p);
+    if (fs.existsSync(resolved)) {
+      return p;
+    }
+  }
+  return null;
+}
 
 // Parse command line arguments
 function parseArgs() {
   const args = process.argv.slice(2);
-  const options = {
-    screenPath: DEFAULT_SCREEN_PATH,
-    domainPath: DEFAULT_DOMAIN_PATH,
-    matrixPath: DEFAULT_MATRIX_PATH,
-    fix: false,
-  };
+  let project = DEFAULT_PROJECT;
+  let screenPath = null;
+  let domainPath = null;
+  let matrixPath = null;
+  let fix = false;
 
   for (let i = 0; i < args.length; i++) {
     switch (args[i]) {
+      case '--project':
+        project = args[++i];
+        break;
       case '--screen':
-        options.screenPath = args[++i];
+        screenPath = args[++i];
         break;
       case '--domain':
-        options.domainPath = args[++i];
+        domainPath = args[++i];
         break;
       case '--matrix':
-        options.matrixPath = args[++i];
+        matrixPath = args[++i];
         break;
       case '--fix':
-        options.fix = true;
+        fix = true;
         break;
-      case '--help':
+      case '--help': {
+        const defaultPaths = getProjectPaths(DEFAULT_PROJECT);
         console.log(`
 Cross-Reference Matrix Validator
 
 Validates that Screen Spec and Domain Spec content is properly reflected in cross-reference.json.
-Complements spec-lint.cjs which checks the reverse direction (Matrix → Spec).
+Complements spec-lint.cjs which checks the reverse direction (Matrix -> Spec).
 
 Usage: node .claude/skills/spec-mesh/scripts/validate-matrix.cjs [options]
 
 Options:
-  --screen <path>  Path to Screen Spec (default: ${DEFAULT_SCREEN_PATH})
-  --domain <path>  Path to Domain Spec (default: ${DEFAULT_DOMAIN_PATH})
-  --matrix <path>  Path to Matrix JSON (default: ${DEFAULT_MATRIX_PATH})
+  --project <name> Project name (default: ${DEFAULT_PROJECT})
+  --screen <path>  Path to Screen Spec (default: .specify/specs/{project}/overview/screen/spec.md)
+  --domain <path>  Path to Domain Spec (default: .specify/specs/{project}/overview/domain/spec.md)
+  --matrix <path>  Path to Matrix JSON (default: .specify/specs/{project}/overview/matrix/cross-reference.json)
   --fix            Output suggested Matrix additions as JSON
   --help           Show this help message
 
@@ -79,12 +109,26 @@ Exit codes:
 
 Examples:
   node .claude/skills/spec-mesh/scripts/validate-matrix.cjs
+  node .claude/skills/spec-mesh/scripts/validate-matrix.cjs --project myproject
   node .claude/skills/spec-mesh/scripts/validate-matrix.cjs --fix > suggestions.json
   node .claude/skills/spec-mesh/scripts/validate-matrix.cjs --screen .specify/specs/sample/overview/screen/spec.md --domain .specify/specs/sample/overview/domain/spec.md --matrix .specify/specs/sample/overview/matrix/cross-reference.json
         `);
         process.exit(0);
+      }
     }
   }
+
+  // Get project-based default paths
+  const projectPaths = getProjectPaths(project);
+
+  // Use explicitly provided paths, or find existing (project path first, then legacy)
+  const options = {
+    screenPath: screenPath || findExistingPath([projectPaths.screen, ...LEGACY_PATHS.screen]) || projectPaths.screen,
+    domainPath: domainPath || findExistingPath([projectPaths.domain, ...LEGACY_PATHS.domain]) || projectPaths.domain,
+    matrixPath: matrixPath || findExistingPath([projectPaths.matrix, ...LEGACY_PATHS.matrix]) || projectPaths.matrix,
+    fix: fix,
+    project: project,
+  };
 
   return options;
 }

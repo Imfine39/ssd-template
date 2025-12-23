@@ -62,14 +62,18 @@ Version control MUST ensure traceability.
 
 ## Terminology
 
-| Term | Definition |
-|------|------------|
-| **Vision Spec** | Project purpose, target users, user journeys |
-| **Domain Spec** | Shared masters (M-*), APIs (API-*), business rules |
-| **Screen Spec** | Screen definitions (SCR-*), transitions, wireframes |
-| **Feature Spec** | User stories, functional requirements per feature |
-| **Fix Spec** | Bug analysis, root cause, fix proposal |
-| **Test Scenario Spec** | Test cases, test data, expected results per feature |
+### Spec Types
+
+| Spec Type | ID Format | Definition |
+|-----------|-----------|------------|
+| **Vision Spec** | S-VISION-001 | Project purpose, target users, user journeys |
+| **Domain Spec** | S-DOMAIN-001 | Shared masters (M-*), APIs (API-*), business rules |
+| **Screen Spec** | S-SCREEN-001 | Screen definitions (SCR-*), transitions, wireframes |
+| **Feature Spec** | S-{AREA}-{NNN} | User stories, functional requirements per feature |
+| **Fix Spec** | F-{AREA}-{NNN} | Bug analysis, root cause, fix proposal |
+| **Test Scenario Spec** | TS-{AREA}-{NNN} | Test cases (TC-*), test data, expected results per feature |
+
+See `guides/id-naming.md` for complete ID format definitions.
 
 ---
 

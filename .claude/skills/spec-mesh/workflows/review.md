@@ -335,7 +335,18 @@ MAX_REVIEW_ITERATIONS = 2
 
 | Tool | Relationship |
 |------|--------------|
-| Clarify | Review 後、ユーザー確認が必要な場合に使用 |
+| Clarify | Review 後、ユーザー確認が必要な場合に使用。[workflows/clarify.md](clarify.md) を参照 |
 | Lint | Review 後の自動検証として実行 |
 | Checklist | Review 前の入力品質チェックに使用可能 |
 | Analyze | 実装後の差分分析（Review とは別フロー） |
+
+---
+
+## Dependency Note
+
+**重要:** このワークフローは Step 5 で `lint.md` を呼び出します。
+
+- Review (this) --> calls --> Lint
+- Lint は Review を呼び出しません（循環依存なし）
+
+Lint は単純な構造検証のみを行い、Review が行う論理的レビューは行いません。

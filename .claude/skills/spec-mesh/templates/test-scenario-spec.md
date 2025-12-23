@@ -1,5 +1,30 @@
 # Test Scenario Spec: [FEATURE_NAME]
 
+<!--
+  Template: Test Scenario Spec
+
+  ID Formats:
+    - Test Scenario: TS-{FEATURE_ID} (e.g., TS-AUTH-001)
+    - Test Case (Positive): TC-{NNN} (e.g., TC-001, TC-002)
+    - Test Case (Negative): TC-N{NN} (e.g., TC-N01, TC-N02)
+    - Test Case (Journey): TC-J{NN} (e.g., TC-J01, TC-J02)
+  See: .claude/skills/spec-mesh/guides/id-naming.md
+
+  Valid Status Values:
+    - Draft: Initial creation
+    - In Review: Under stakeholder review
+    - Ready: Approved and ready for execution
+    - Executing: Test execution in progress
+    - Completed: All tests executed
+
+  Test Case Status Values:
+    - Pending: Not yet executed
+    - Pass: Test passed
+    - Fail: Test failed
+    - Blocked: Cannot execute due to dependencies
+    - Skipped: Intentionally skipped
+-->
+
 Spec Type: Test Scenario
 Spec ID: TS-[FEATURE_ID]
 Feature: S-[XXX]-001

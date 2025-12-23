@@ -3,6 +3,24 @@
 This guide provides procedures for recovering from common errors and exceptions
 in the spec-driven development workflow.
 
+**Related guide**: For parallel development scenarios (Domain conflicts, merge order,
+feature dependencies), see `parallel-development.md`.
+
+---
+
+## Scope
+
+This guide covers:
+- Individual workflow errors (spec, plan, implementation, PR)
+- Screen Spec issues
+- Emergency situations
+
+For team coordination issues during parallel development, see `parallel-development.md`:
+- Domain modification conflicts
+- Feature dependency management
+- Merge order coordination
+- Team communication patterns
+
 ---
 
 ## 1. Spec Errors

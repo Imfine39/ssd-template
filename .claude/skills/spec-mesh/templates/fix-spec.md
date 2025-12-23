@@ -1,7 +1,25 @@
 # Fix Specification: [BUG TITLE]
 
+<!--
+  Template: Fix Spec
+
+  ID Format: F-{AREA}-{NNN}
+    - AREA: Feature area identifier (2-15 uppercase chars)
+    - NNN: Sequential number (001, 002, ...)
+    - Examples: F-AUTH-001, F-ORDERS-001, F-DASHBOARD-001
+    - See: .claude/skills/spec-mesh/guides/id-naming.md
+
+  Valid Status Values:
+    - Draft: Initial creation, investigation in progress
+    - Analyzed: Root cause identified
+    - In Review: Under stakeholder review
+    - Approved: Ready for implementation
+    - Implementing: Fix in progress
+    - Completed: Fix implemented and verified
+-->
+
 Spec Type: Fix
-Spec ID: F-XXX-001
+Spec ID: F-{AREA}-{NNN}
 Created: YYYY-MM-DD
 Status: Draft
 Author: AI Generated

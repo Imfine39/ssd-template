@@ -90,15 +90,35 @@ Execute tasks in order following test-first approach:
 5. **Check for feedback needs**: Technical constraints not in spec?
 6. **Update progress**: Use state.cjs
 
-### 4. E2E Test Execution (Optional)
+### 4. E2E Test Execution (Optional but Recommended)
 
-After implementation, verify with browser-based E2E tests:
+**Timing**: After implementation is complete, BEFORE creating PR.
+
+E2E tests verify the implementation against Test Scenario Spec using browser automation:
 
 1. **Load Test Scenario Spec**: Read test cases from `.specify/specs/{project}/features/{feature}/test-scenarios.md`
 2. **Setup browser session**: Use Chrome extension tools (tabs_context_mcp, navigate)
 3. **Execute test cases**: Follow steps in Test Scenario Spec
 4. **Record evidence**: Screenshots and GIF recordings
 5. **Update Test Scenario Spec**: Record results in Execution Log section
+
+**Workflow position**:
+```
+Tasks -> Implement -> [E2E Tests] -> PR
+                          ^
+                          |
+                 Must pass before PR
+```
+
+**When to run E2E**:
+- Feature has user-facing UI changes
+- Test Scenario Spec exists for the feature
+- Critical path functionality
+
+**When E2E can be skipped**:
+- Backend-only changes with unit/integration tests
+- No Test Scenario Spec defined
+- Hotfix with expedited review
 
 See `/spec-mesh e2e` workflow for detailed procedures.
 

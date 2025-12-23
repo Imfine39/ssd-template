@@ -1,4 +1,4 @@
-# SSD-Template
+# SSD-MESH 
 
 **Spec-Driven Development Framework for AI-Assisted Projects**
 
@@ -189,7 +189,6 @@ npm install
 | ---------- | ------------------------------ |
 | serena     | プロジェクト探索・ファイル編集 |
 | context7   | ライブラリドキュメント検索     |
-| playwright | E2E テスト自動化               |
 
 ---
 

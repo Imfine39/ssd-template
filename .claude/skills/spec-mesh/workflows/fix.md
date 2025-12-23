@@ -135,6 +135,10 @@ Spec: .specify/specs/{project}/fixes/{id}/spec.md
 Root Cause: {原因の要約}
 Impact: {影響範囲}
 
+=== 曖昧点 ===
+[NEEDS CLARIFICATION]: [N] 箇所
+- [List of ambiguous items]
+
 === 次のステップ ===
 緊急度に応じて選択:
 - Trivial: `/spec-mesh implement` で直接修正
@@ -156,6 +160,8 @@ Impact: {影響範囲}
 ---
 
 ## Next Steps
+
+**[HUMAN_CHECKPOINT]** Fix Spec の内容を確認してから次のステップに進んでください。
 
 | Action | Command | Description |
 |--------|---------|-------------|

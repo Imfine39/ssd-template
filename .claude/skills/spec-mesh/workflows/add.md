@@ -140,7 +140,8 @@ Branch: feature/{issue_num}-{slug}
 Spec: .specify/specs/{project}/features/{id}/spec.md
 
 === 曖昧点 ===
-[NEEDS CLARIFICATION] マーク: [N] 箇所
+[NEEDS CLARIFICATION]: [N] 箇所
+- [List of ambiguous items]
 
 推奨: `/spec-mesh clarify` で曖昧点を解消してください。
 ```
@@ -161,6 +162,8 @@ Spec: .specify/specs/{project}/features/{id}/spec.md
 ---
 
 ## Next Steps
+
+**[HUMAN_CHECKPOINT]** Feature Spec の内容を確認してから次のステップに進んでください。
 
 | Action | Command | Description |
 |--------|---------|-------------|

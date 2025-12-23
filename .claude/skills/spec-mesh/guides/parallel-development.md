@@ -258,6 +258,50 @@ Keep the Domain's Feature index up to date:
 | S-DASHBOARD-001 | Dashboard | .specify/specs/dashboard/spec.md | Draft | @carol | S-ORDERS-001 |
 ```
 
+#### 7.1.1 Feature Index Update Procedure
+
+When working in parallel, follow this procedure to update the Feature Index:
+
+**When to update**:
+1. **Creating new Feature Spec**: Add entry with `Draft` status
+2. **Spec approval**: Update status to `Approved`
+3. **Starting implementation**: Update status to `Implementing`
+4. **PR merged**: Update status to `Implemented`
+
+**Update procedure**:
+
+1. **Before updating**: Check for concurrent changes
+   ```bash
+   git fetch origin main
+   git log origin/main -- .specify/specs/{project}/overview/domain/spec.md
+   ```
+
+2. **If no conflicts**: Update directly in your feature branch
+   ```markdown
+   # In Domain Spec's Feature Index section:
+   | S-MYFEATURE-001 | My Feature | .specify/specs/{project}/features/my-feature/spec.md | Draft | @you | S-AUTH-001 |
+   ```
+
+3. **If conflicts likely**: Create a separate spec branch
+   ```bash
+   git checkout -b spec/<issue>-update-feature-index
+   # Make minimal change to Feature Index only
+   git commit -m "chore: Add S-MYFEATURE-001 to Feature Index"
+   git push && gh pr create
+   ```
+
+4. **After merge**: Rebase your feature branch
+   ```bash
+   git fetch origin main
+   git rebase origin/main
+   ```
+
+**Best practices**:
+- Update Feature Index as early as possible (at Draft stage)
+- Include `Depends On` column when declaring dependencies
+- Use `Owner` column for parallel work coordination
+- Keep status current to prevent conflicts
+
 ### 7.2 Labels for Coordination
 
 Use GitHub labels to track coordination needs:

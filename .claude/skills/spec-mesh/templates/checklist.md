@@ -1,5 +1,28 @@
 # Requirements Quality Checklist: [SPEC_ID]
 
+<!--
+  Template: Requirements Quality Checklist
+
+  ID Formats:
+    - General: CHK-{NNN} (e.g., CHK-001, CHK-002)
+    - Domain-specific: CHK-{DOMAIN}-{NNN}
+      - CHK-UX-{NNN}: UX/UI related
+      - CHK-API-{NNN}: API related
+      - CHK-SEC-{NNN}: Security related
+      - CHK-PERF-{NNN}: Performance related
+      - CHK-DATA-{NNN}: Data related
+    - See: .claude/skills/spec-mesh/guides/id-naming.md
+
+  Valid Status Values:
+    - Draft: Checklist being created
+    - In Progress: Review in progress
+    - Completed: All items reviewed and addressed
+
+  Item Status:
+    - [ ] Unchecked: Not yet verified
+    - [x] Checked: Verified/Addressed
+-->
+
 Spec Type: [Vision | Domain | Feature]
 Spec Title: [SPEC_TITLE]
 Focus: [General | UX | API | Security | Performance | Data]

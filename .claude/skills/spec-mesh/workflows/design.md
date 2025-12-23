@@ -108,15 +108,7 @@ Generate readable view:
 node .claude/skills/spec-mesh/scripts/generate-matrix-view.cjs
 ```
 
-### Step 6: Create Foundation Issue
-
-```bash
-gh issue create --title "[Foundation] S-FOUNDATION-001: 基盤実装" --body "..."
-```
-
-Foundation includes: 認証、DB接続、基本構造
-
-### Step 7: Multi-Review (3観点並列レビュー)
+### Step 6: Multi-Review (3観点並列レビュー)
 
 Screen Spec と Domain Spec の品質を担保するため Multi-Review を実行：
 
@@ -132,24 +124,32 @@ Screen Spec と Domain Spec の品質を担保するため Multi-Review を実�
    - AI 修正可能な問題を修正
 
 3. **Handle results:**
-   - すべてパス → Step 8 へ
+   - すべてパス → Step 7 へ
    - 曖昧点あり → `/spec-mesh clarify` を推奨
    - Critical 未解決 → 問題をリストし対応を促す
 
-### Step 8: Run Lint
+### Step 7: Run Lint
 
 ```bash
 node .claude/skills/spec-mesh/scripts/spec-lint.cjs
 node .claude/skills/spec-mesh/scripts/validate-matrix.cjs
 ```
 
-### Step 9: Preserve Vision Input
+### Step 8: Preserve Design Input
 
 If Vision input file was used (contains Part B screen information):
 ```bash
 node .claude/skills/spec-mesh/scripts/preserve-input.cjs design --project {project}
 ```
 - Saves to: `.specify/specs/{project}/overview/domain/input.md`
+
+### Step 9: Create Foundation Issue
+
+```bash
+gh issue create --title "[Foundation] S-FOUNDATION-001: 基盤実装" --body "..."
+```
+
+Foundation includes: 認証、DB接続、基本構造
 
 ### Step 10: Summary
 
@@ -179,7 +179,7 @@ Foundation Issue: #{issue_num}
 ### Step 11: Update State
 
 ```bash
-node .claude/skills/spec-mesh/scripts/state.cjs repo --set-domain-status draft --set-phase design
+node .claude/skills/spec-mesh/scripts/state.cjs repo --set-domain-status draft --set-screen-status draft --set-phase design
 ```
 
 ---
@@ -194,11 +194,13 @@ node .claude/skills/spec-mesh/scripts/state.cjs repo --set-domain-status draft -
 - [ ] Foundation Issue を作成したか
 - [ ] **Multi-Review を実行したか（3観点並列）**
 - [ ] spec-lint + validate-matrix を実行したか
-- [ ] Vision Input を保存したか
+- [ ] Design Input を保存したか
 
 ---
 
 ## Next Steps
+
+**[HUMAN_CHECKPOINT]** Screen Spec と Domain Spec の内容を確認してから次のステップに進んでください。
 
 | Action | Command | Description |
 |--------|---------|-------------|

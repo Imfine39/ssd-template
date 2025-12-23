@@ -58,6 +58,42 @@ S-{AREA}-{NNN}
 - 具体的で意味のある名前
 - 略語は一般的なもののみ（AUTH, API, UI など）
 
+### 1.5 Fix Spec
+
+```
+F-{AREA}-{NNN}
+```
+
+**形式:**
+- `AREA`: 機能領域を表す大文字の識別子（2-15文字）
+- `NNN`: 3桁の連番（001, 002, ...）
+
+**例:**
+| ID | 説明 |
+|----|------|
+| `F-AUTH-001` | 認証関連のバグ修正 |
+| `F-ORDERS-001` | 注文機能のバグ修正 |
+| `F-UI-001` | UI関連のバグ修正 |
+
+**命名規則:**
+- Feature Spec の AREA 命名規則に準拠
+- 同じ機能領域のバグは連番で管理
+
+### 1.6 Test Scenario Spec
+
+```
+TS-{FEATURE_ID}
+```
+
+**形式:**
+- `FEATURE_ID`: 対応する Feature Spec の AREA-NNN 部分
+
+**例:**
+| ID | 対応 Feature | 説明 |
+|----|-------------|------|
+| `TS-AUTH-001` | S-AUTH-001 | 認証機能のテストシナリオ |
+| `TS-ORDERS-001` | S-ORDERS-001 | 注文機能のテストシナリオ |
+
 ---
 
 ## 2. Use Case IDs (UC-*)
@@ -260,13 +296,57 @@ T-{NNN}
 
 ---
 
-## 10. Checklist IDs (CHK-*)
+## 10. Test Case IDs (TC-*)
 
 ```
-CHK-{DOMAIN}-{NNN}
+TC-{NNN}       (Positive test cases)
+TC-N{NN}       (Negative test cases)
+TC-J{NN}       (Journey/E2E test cases)
+```
+
+Test Scenario Spec 内でのテストケース識別子。
+
+**形式:**
+- `TC-{NNN}`: 正常系テストケース（3桁連番）
+- `TC-N{NN}`: 異常系テストケース（2桁連番、N = Negative）
+- `TC-J{NN}`: E2E/ジャーニーテストケース（2桁連番、J = Journey）
+
+**例:**
+| ID | タイプ | 説明 |
+|----|--------|------|
+| `TC-001` | Positive | 正常なログイン |
+| `TC-002` | Positive | パスワード変更 |
+| `TC-N01` | Negative | 無効なパスワードでログイン失敗 |
+| `TC-N02` | Negative | 存在しないユーザーでエラー |
+| `TC-J01` | Journey | ユーザー登録〜ログイン〜設定変更の一連フロー |
+
+**命名規則:**
+- 各 Test Scenario Spec 内で連番をリセット
+- Positive/Negative/Journey を明確に区別
+
+---
+
+## 11. Checklist IDs (CHK-*)
+
+```
+CHK-{NNN}              (General)
+CHK-{DOMAIN}-{NNN}     (Domain-specific)
 ```
 
 要件品質チェックリスト用。
+
+**形式:**
+- `CHK-{NNN}`: 一般的なチェック項目（3桁連番）
+- `CHK-{DOMAIN}-{NNN}`: ドメイン固有チェック項目
+
+**有効なドメイン:**
+| Domain | 説明 |
+|--------|------|
+| `UX` | UX/UI 関連 |
+| `API` | API 関連 |
+| `SEC` | セキュリティ関連 |
+| `PERF` | パフォーマンス関連 |
+| `DATA` | データ関連 |
 
 **例:**
 | ID | 説明 |
@@ -278,7 +358,7 @@ CHK-{DOMAIN}-{NNN}
 
 ---
 
-## 11. Success Criteria IDs (SC-*)
+## 12. Success Criteria IDs (SC-*)
 
 ```
 SC-{AREA}-{NNN}
@@ -294,7 +374,7 @@ Feature の成功基準。
 
 ---
 
-## 12. Image Reference IDs (IMG-*)
+## 13. Image Reference IDs (IMG-*)
 
 ```
 IMG-{NNN}
@@ -319,6 +399,10 @@ IMG-{NNN}
 | Screen Spec | `S-SCREEN-001` | S-SCREEN-001 |
 | Feature Spec | `S-{AREA}-{NNN}` | S-AUTH-001 |
 | Fix Spec | `F-{AREA}-{NNN}` | F-AUTH-001 |
+| Test Scenario | `TS-{FEATURE_ID}` | TS-AUTH-001 |
+| Test Case (Positive) | `TC-{NNN}` | TC-001 |
+| Test Case (Negative) | `TC-N{NN}` | TC-N01 |
+| Test Case (Journey) | `TC-J{NN}` | TC-J01 |
 | Use Case | `UC-{AREA}-{NNN}` | UC-AUTH-001 |
 | Functional Req | `FR-{AREA}-{NNN}` | FR-AUTH-001 |
 | Master Data | `M-{NAME}` | M-USER |
@@ -329,6 +413,7 @@ IMG-{NNN}
 | Screen | `SCR-{NNN}` | SCR-001 |
 | Component | `COMP-{NNN}` | COMP-001 |
 | Task | `T-{NNN}` | T-001 |
-| Checklist | `CHK-{DOMAIN}-{NNN}` | CHK-UX-001 |
+| Checklist (General) | `CHK-{NNN}` | CHK-001 |
+| Checklist (Domain) | `CHK-{DOMAIN}-{NNN}` | CHK-UX-001 |
 | Success Criteria | `SC-{AREA}-{NNN}` | SC-AUTH-001 |
 | Image | `IMG-{NNN}` | IMG-001 |

@@ -151,6 +151,8 @@ Spec 作成後、品質を担保するため Multi-Review を実行：
 
 ## Next Steps
 
+**[HUMAN_CHECKPOINT]** Vision Spec の内容を確認してから次のステップに進んでください。
+
 | Action | Command | Description |
 |--------|---------|-------------|
 | Clarify | `/spec-mesh clarify` | 曖昧点を 4問バッチで解消 |
