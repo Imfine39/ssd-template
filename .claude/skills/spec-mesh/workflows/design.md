@@ -116,14 +116,34 @@ gh issue create --title "[Foundation] S-FOUNDATION-001: 基盤実装" --body "..
 
 Foundation includes: 認証、DB接続、基本構造
 
-### Step 7: Run Lint
+### Step 7: Multi-Review (3観点並列レビュー)
+
+Screen Spec と Domain Spec の品質を担保するため Multi-Review を実行：
+
+1. **Read review workflow:**
+   ```
+   Read tool: .claude/skills/spec-mesh/workflows/review.md
+   ```
+
+2. **Execute Multi-Review for each spec:**
+   - Screen Spec に対して 3 つの reviewer agent を並列実行
+   - Domain Spec に対して 3 つの reviewer agent を並列実行
+   - フィードバック統合
+   - AI 修正可能な問題を修正
+
+3. **Handle results:**
+   - すべてパス → Step 8 へ
+   - 曖昧点あり → `/spec-mesh clarify` を推奨
+   - Critical 未解決 → 問題をリストし対応を促す
+
+### Step 8: Run Lint
 
 ```bash
 node .claude/skills/spec-mesh/scripts/spec-lint.cjs
 node .claude/skills/spec-mesh/scripts/validate-matrix.cjs
 ```
 
-### Step 8: Preserve Vision Input
+### Step 9: Preserve Vision Input
 
 If Vision input file was used (contains Part B screen information):
 ```bash
@@ -131,7 +151,7 @@ node .claude/skills/spec-mesh/scripts/preserve-input.cjs design --project {proje
 ```
 - Saves to: `.specify/specs/{project}/overview/domain/input.md`
 
-### Step 9: Summary
+### Step 10: Summary
 
 Display:
 ```
@@ -156,7 +176,7 @@ Foundation Issue: #{issue_num}
 推奨: `/spec-mesh clarify` → `/spec-mesh issue` (Foundation)
 ```
 
-### Step 10: Update State
+### Step 11: Update State
 
 ```bash
 node .claude/skills/spec-mesh/scripts/state.cjs repo --set-domain-status draft --set-phase design
@@ -172,6 +192,7 @@ node .claude/skills/spec-mesh/scripts/state.cjs repo --set-domain-status draft -
 - [ ] Cross-Reference Matrix を作成したか
 - [ ] Feature Issues を作成したか
 - [ ] Foundation Issue を作成したか
+- [ ] **Multi-Review を実行したか（3観点並列）**
 - [ ] spec-lint + validate-matrix を実行したか
 - [ ] Vision Input を保存したか
 

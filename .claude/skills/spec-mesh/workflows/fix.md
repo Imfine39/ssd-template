@@ -83,13 +83,31 @@ Document findings in Fix Spec.
 3. **Check Screen impact** (if UI affected):
    - Add to Screen Modification Log with status `Planned`
 
-### Step 6: Run Lint
+### Step 6: Multi-Review (3観点並列レビュー)
+
+Fix Spec の品質を担保するため Multi-Review を実行：
+
+1. **Read review workflow:**
+   ```
+   Read tool: .claude/skills/spec-mesh/workflows/review.md
+   ```
+
+2. **Execute Multi-Review:**
+   - 3 つの reviewer agent を並列で起動
+   - フィードバック統合
+   - AI 修正可能な問題を修正
+
+3. **Handle results:**
+   - すべてパス → Step 7 へ
+   - Critical 未解決 → 問題をリストし対応を促す
+
+### Step 7: Run Lint
 
 ```bash
 node .claude/skills/spec-mesh/scripts/spec-lint.cjs
 ```
 
-### Step 7: Preserve & Reset Input
+### Step 8: Preserve & Reset Input
 
 If input file was used:
 1. **Preserve input to spec directory:**
@@ -103,7 +121,7 @@ If input file was used:
    node .claude/skills/spec-mesh/scripts/reset-input.cjs fix
    ```
 
-### Step 8: Summary
+### Step 9: Summary
 
 Display:
 ```
@@ -132,6 +150,7 @@ Impact: {影響範囲}
 - [ ] branch.cjs でブランチを作成したか
 - [ ] 原因調査を実施したか
 - [ ] Fix Spec に Root Cause を記載したか
+- [ ] **Multi-Review を実行したか（3観点並列）**
 - [ ] spec-lint.cjs を実行したか
 
 ---

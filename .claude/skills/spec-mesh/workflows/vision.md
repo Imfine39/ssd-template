@@ -111,6 +111,26 @@ If input file was used:
 node .claude/skills/spec-mesh/scripts/state.cjs repo --set-vision-status draft --set-phase vision
 ```
 
+### Step 6: Multi-Review (3観点並列レビュー)
+
+Spec 作成後、品質を担保するため Multi-Review を実行：
+
+1. **Read review workflow:**
+   ```
+   Read tool: .claude/skills/spec-mesh/workflows/review.md
+   ```
+
+2. **Execute Multi-Review:**
+   - 3 つの reviewer agent を並列で起動
+   - フィードバック統合
+   - AI 修正可能な問題を修正
+   - Lint 実行
+
+3. **Handle results:**
+   - すべてパス → Step 7 (Output Summary) へ
+   - 曖昧点あり → `/spec-mesh clarify` を推奨
+   - Critical 未解決 → 問題をリストし対応を促す
+
 ---
 
 ## Self-Check
@@ -120,6 +140,8 @@ node .claude/skills/spec-mesh/scripts/state.cjs repo --set-vision-status draft -
 - [ ] Write/Edit tool で spec を作成したか
 - [ ] Example データ（社内在庫管理システム等）を使用していないか
 - [ ] 曖昧点に `[NEEDS CLARIFICATION]` をマークしたか
+- [ ] **Multi-Review を実行したか（3観点並列）**
+- [ ] **Lint を実行したか**
 - [ ] 次のステップを提示したか
 
 ---

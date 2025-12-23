@@ -85,14 +85,32 @@ node .claude/skills/spec-mesh/scripts/branch.cjs --type spec --slug {slug} --iss
    ```
 3. **Update affected Feature Specs** (if needed)
 
-### Step 7: Run Lint
+### Step 7: Multi-Review (3観点並列レビュー)
+
+変更後の Spec の品質を担保するため Multi-Review を実行：
+
+1. **Read review workflow:**
+   ```
+   Read tool: .claude/skills/spec-mesh/workflows/review.md
+   ```
+
+2. **Execute Multi-Review:**
+   - 変更した Spec に対して 3 つの reviewer agent を並列実行
+   - フィードバック統合
+   - AI 修正可能な問題を修正
+
+3. **Handle results:**
+   - すべてパス → Step 8 へ
+   - Critical 未解決 → 問題をリストし対応を促す
+
+### Step 8: Run Lint
 
 ```bash
 node .claude/skills/spec-mesh/scripts/spec-lint.cjs
 node .claude/skills/spec-mesh/scripts/validate-matrix.cjs
 ```
 
-### Step 8: Summary
+### Step 9: Summary
 
 ```
 === Spec Change 完了 ===
@@ -122,6 +140,7 @@ Matrix: 更新済み
 - [ ] 対象 Spec を更新したか
 - [ ] Matrix を更新したか
 - [ ] 影響を受ける Feature Spec を更新したか
+- [ ] **Multi-Review を実行したか（3観点並列）**
 - [ ] lint を実行したか
 
 ---
