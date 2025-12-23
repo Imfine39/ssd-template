@@ -66,19 +66,7 @@ node .claude/skills/spec-mesh/scripts/state.cjs init
 Context7 は、ライブラリの最新ドキュメントを取得するための MCP サーバーです。
 
 **設定方法:**
-
-`.mcp.json` または Claude Code の設定で以下を追加：
-
-```json
-{
-  "mcpServers": {
-    "context7": {
-      "command": "npx",
-      "args": ["-y", "@context7/mcp-server"]
-    }
-  }
-}
-```
+/plugin のmarketplaceからcontext7を選択
 
 **用途:**
 - 実装時にライブラリの最新 API を参照
@@ -90,16 +78,10 @@ Serena は LSP（Language Server Protocol）を通じてコード解析を行う
 
 **設定方法:**
 
-```json
-{
-  "mcpServers": {
-    "serena": {
-      "command": "uvx",
-      "args": ["serena"]
-    }
-  }
-}
-```
+1. uvをinstall
+  - https://docs.astral.sh/uv/getting-started/installation/
+2.コマンドを実行
+  - `claude mcp add serena -- uvx --from git+https://github.com/oraios/serena serena start-mcp-server --context claude-code --project "$(pwd)"`
 
 **用途:**
 - 関数・クラスの定義ジャンプ
@@ -112,22 +94,9 @@ Serena は LSP（Language Server Protocol）を通じてコード解析を行う
 
 **インストール:**
 
-1. Chrome ウェブストアから「Claude in Chrome」をインストール
-2. 拡張機能を有効化
-3. Claude Code から MCP 接続
+公式サイトを参照
+- `https://code.claude.com/docs/en/chrome`
 
-**設定方法:**
-
-```json
-{
-  "mcpServers": {
-    "claude-in-chrome": {
-      "command": "npx",
-      "args": ["-y", "@anthropic/claude-in-chrome-mcp"]
-    }
-  }
-}
-```
 
 **用途:**
 - ブラウザでの自動操作
