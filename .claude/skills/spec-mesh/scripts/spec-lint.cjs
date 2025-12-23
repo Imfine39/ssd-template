@@ -3,6 +3,34 @@
 
 /**
  * Specification linter for Vision/Domain/Screen/Feature consistency.
+ *
+ * Error Handling:
+ *   Exit Code 0: Validation passed (may have warnings)
+ *   Exit Code 1: Validation failed with errors
+ *     - Missing Spec Type or Spec ID
+ *     - Duplicate Spec IDs or UC IDs
+ *     - Unknown master/API/screen references
+ *     - Feature ID not in Domain Feature index
+ *     - Feature index path points to missing file
+ *     - Matrix references undefined entities
+ *     - Superseded spec without successor reference
+ *
+ * Warnings (exit code still 0):
+ *   - Unexpected status value
+ *   - Unused masters/APIs/screens
+ *   - Missing User Stories or Functional Requirements section
+ *   - No UC IDs in non-draft feature spec
+ *   - Feature modified before Domain update
+ *   - Plan/Tasks don't reference spec IDs
+ *   - Deprecated spec without documented reason
+ *   - No cross-reference.json found
+ *
+ * Common Errors:
+ *   - "Missing Spec Type in X" - Add "Spec Type: [Type]" to spec metadata
+ *   - "Missing Spec ID(s) in X" - Add "Spec ID: S-XXX-001" to spec metadata
+ *   - "Spec ID X is duplicated" - Each spec must have unique ID
+ *   - "Unknown master/API/screen X referenced in feature" - Add to Domain/Screen spec first
+ *   - "Feature ID X is not listed in Domain Feature index" - Update Domain spec's Feature Index table
  * Checks:
  *  - Spec Type and Spec ID presence
  *  - Unique Spec IDs and UC IDs

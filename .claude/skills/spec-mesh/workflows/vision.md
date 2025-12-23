@@ -80,7 +80,7 @@ Main Journeys:
 Spec: .specify/specs/{project}/overview/vision/spec.md
 
 === 曖昧点 ===
-[NEEDS CLARIFICATION] マーク: [N] 箇所
+[NEEDS CLARIFICATION] マーク: {N} 箇所
 - [List of ambiguous items]
 
 推奨: `/spec-mesh clarify` で曖昧点を解消してください。
@@ -151,9 +151,15 @@ Spec 作成後、品質を担保するため Multi-Review を実行：
 
 ## Next Steps
 
-**[HUMAN_CHECKPOINT]** Vision Spec の内容を確認してから次のステップに進んでください。
+**[HUMAN_CHECKPOINT]**
+- [ ] Vision Spec の Purpose が課題/問題を正確に反映しているか
+- [ ] Target Users と User Journeys が適切に定義されているか
+- [ ] Scope (In/Out) が要件と一致しているか
+- [ ] [NEEDS CLARIFICATION] マーカーの箇所を確認したか
 
-| Action | Command | Description |
-|--------|---------|-------------|
-| Clarify | `/spec-mesh clarify` | 曖昧点を 4問バッチで解消 |
-| Design | `/spec-mesh design` | Screen + Domain + Matrix 同時作成 |
+承認後、次のステップへ進んでください。
+
+| Condition | Command | Description |
+|-----------|---------|-------------|
+| 曖昧点がある場合 | `/spec-mesh clarify` | 曖昧点を 4問バッチで解消 |
+| 曖昧点が解消済み | `/spec-mesh design` | Screen + Domain + Matrix 同時作成 |

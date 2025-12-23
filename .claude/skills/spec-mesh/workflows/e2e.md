@@ -302,11 +302,13 @@ find でマッチしない場合:
 
 ## Next Steps
 
-| Result | Action |
-|--------|--------|
-| All Pass | `/spec-mesh pr` で PR 作成 |
-| Some Fail | 実装修正後、再度 `/spec-mesh e2e` |
-| Spec Issue | `/spec-mesh change` で Spec 更新 |
+**[HUMAN_CHECKPOINT]** E2E テスト結果を確認してから次のステップに進んでください。
+
+| Condition | Command | Description |
+|-----------|---------|-------------|
+| 全テストパスの場合 | `/spec-mesh pr` | PR 作成 |
+| 一部失敗の場合 | `/spec-mesh e2e` | 実装修正後に再テスト |
+| Spec に問題がある場合 | `/spec-mesh change` | Spec 更新 |
 
 ---
 

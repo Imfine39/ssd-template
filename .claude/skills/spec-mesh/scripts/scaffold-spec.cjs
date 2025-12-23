@@ -4,6 +4,26 @@
 /**
  * Scaffold Vision, Domain, Screen, Feature, or Fix specs from templates.
  *
+ * Error Handling:
+ *   Exit Code 0: Success
+ *   Exit Code 1: Invalid arguments or missing dependencies
+ *     - Missing required parameters (--kind, --id, --title)
+ *     - Invalid kind value
+ *     - Feature kind without --domain
+ *     - Test-scenario kind without --feature
+ *     - Template file not found
+ *     - Feature directory not found (for test-scenario)
+ *
+ * Common Errors:
+ *   - "ERROR: --kind, --id, --title are required" - All three are mandatory
+ *   - "ERROR: Invalid kind X" - Use: vision, domain, screen, feature, fix, test-scenario
+ *   - "ERROR: Feature requires --domain" - Feature specs must reference a Domain Spec
+ *   - "ERROR: Test-scenario requires --feature" - Test scenarios need a feature directory
+ *   - "ERROR: Template not found: X" - Template file missing from templates/
+ *   - "ERROR: Feature directory not found: X" - Create feature first before test-scenario
+ *   - "WARNING: Domain spec should reference a Vision spec" - Add --vision for traceability
+ *   - "WARNING: Screen spec should reference a Domain spec" - Add --domain for traceability
+ *
  * Examples:
  *   node .claude/skills/spec-mesh/scripts/scaffold-spec.cjs --kind vision --id S-VISION-001 --title "Project Vision" --project sample
  *
@@ -142,7 +162,7 @@ function buildSpecContent(template, args, relDir) {
   // Common replacements
   content = content.replace('[PROJECT_NAME]', args.title);
   content = content.replace('[TITLE]', args.title);
-  content = content.replace(/\[DATE\]/g, now);
+  content = content.replace(/\{date\}/g, now);
   content = content.replace(/Status: \[Draft[^\]]*\]/, 'Status: Draft');
   content = content.replace('Author: [OWNER]', 'Author: [OWNER]');
 
@@ -163,23 +183,23 @@ function buildSpecContent(template, args, relDir) {
       content = content.replace('Related Domain: S-DOMAIN-001', `Related Domain: ${args.domain}`);
     }
   } else if (args.kind === 'feature') {
-    content = content.replace('Spec ID: S-[XXX]-001', `Spec ID: ${args.id}`);
+    content = content.replace('Spec ID: S-{XXX}-001', `Spec ID: ${args.id}`);
     if (args.domain) {
       content = content.replace('Related Domain: S-DOMAIN-001', `Related Domain: ${args.domain}`);
     }
     content = content.replace('Related Issue(s): [#123]', 'Related Issue(s): ');
   } else if (args.kind === 'fix') {
-    content = content.replace('Spec ID: F-[XXX]-001', `Spec ID: ${args.id}`);
+    content = content.replace('Spec ID: F-{XXX}-001', `Spec ID: ${args.id}`);
     if (args.issue) {
       content = content.replace('Related Issue: [#N]', `Related Issue: #${args.issue}`);
     }
   } else if (args.kind === 'test-scenario') {
-    content = content.replace('Spec ID: TS-[FEATURE_ID]', `Spec ID: ${args.id}`);
+    content = content.replace('Spec ID: TS-{FEATURE_ID}', `Spec ID: ${args.id}`);
     content = content.replace('[FEATURE_NAME]', args.title);
     if (args.feature) {
-      content = content.replace('Feature: S-[XXX]-001', `Feature: ${args.feature}`);
-      content = content.replace('.specify/specs/[project]/features/[feature]/spec.md', `${relDir}/spec.md`);
-      content = content.replace('.specify/specs/[project]/features/[feature]', relDir);
+      content = content.replace('Feature: S-{XXX}-001', `Feature: ${args.feature}`);
+      content = content.replace('.specify/specs/{project}/features/{feature}/spec.md', `${relDir}/spec.md`);
+      content = content.replace(/\.specify\/specs\/\{project\}\/features\/\{feature\}/g, relDir);
     }
   }
 

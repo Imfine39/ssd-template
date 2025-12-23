@@ -140,7 +140,15 @@ node .claude/skills/spec-mesh/scripts/state.cjs branch --set-step plan
 
 ## Next Steps
 
-| Action | Command | Description |
-|--------|---------|-------------|
-| Tasks | `/spec-mesh tasks` | タスク分割（承認後） |
-| Clarify | `/spec-mesh clarify` | 不明点確認 |
+**[HUMAN_CHECKPOINT]**
+- [ ] High-Level Design が技術的に妥当か
+- [ ] Work Breakdown が適切な粒度か
+- [ ] Risks/Trade-offs が許容範囲か
+- [ ] Open Questions に回答できるか（回答が必要）
+
+承認後、`/spec-mesh tasks` でタスク分割に進んでください。
+
+| Condition | Command | Description |
+|-----------|---------|-------------|
+| Plan 承認後 | `/spec-mesh tasks` | タスク分割 |
+| 不明点がある場合 | `/spec-mesh clarify` | 不明点確認 |

@@ -144,7 +144,9 @@ node .claude/skills/spec-mesh/scripts/state.cjs branch --set-step implement --se
 
 ## Next Steps
 
-| Action | Command | Description |
-|--------|---------|-------------|
-| PR | `/spec-mesh pr` | PR 作成 |
-| Feedback | `/spec-mesh feedback` | Spec へのフィードバック記録 |
+**[HUMAN_CHECKPOINT]** 実装結果とテスト結果を確認してから次のステップに進んでください。
+
+| Condition | Command | Description |
+|-----------|---------|-------------|
+| 実装完了後 | `/spec-mesh pr` | PR 作成 |
+| Spec へのフィードバックがある場合 | `/spec-mesh feedback` | Spec へのフィードバック記録 |

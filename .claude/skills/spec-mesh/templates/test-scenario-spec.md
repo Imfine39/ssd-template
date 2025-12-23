@@ -10,25 +10,26 @@
     - Test Case (Journey): TC-J{NN} (e.g., TC-J01, TC-J02)
   See: .claude/skills/spec-mesh/guides/id-naming.md
 
-  Valid Status Values:
+  Status Values (from constitution.md - Status Values section):
+    Test Scenario Spec Status:
     - Draft: Initial creation
     - In Review: Under stakeholder review
     - Ready: Approved and ready for execution
     - Executing: Test execution in progress
     - Completed: All tests executed
 
-  Test Case Status Values:
+    Test Status (for individual test cases):
     - Pending: Not yet executed
     - Pass: Test passed
     - Fail: Test failed
-    - Blocked: Cannot execute due to dependencies
+    - Blocked: Cannot run due to dependencies
     - Skipped: Intentionally skipped
 -->
 
 Spec Type: Test Scenario
-Spec ID: TS-[FEATURE_ID]
-Feature: S-[XXX]-001
-Created: [DATE]
+Spec ID: TS-{FEATURE_ID}
+Feature: S-{XXX}-001
+Created: {date}
 Status: Draft
 
 ---
@@ -40,7 +41,7 @@ Status: Draft
 | Item | Value |
 |------|-------|
 | Feature | [Feature Name] |
-| Feature Spec | `.specify/specs/[project]/features/[feature]/spec.md` |
+| Feature Spec | `.specify/specs/{project}/features/{feature}/spec.md` |
 | Screens | SCR-001, SCR-002 |
 | APIs | API-XXX-001, API-XXX-002 |
 
@@ -210,7 +211,7 @@ Status: Draft
 
 ## 7. Detailed Results
 
-### Latest Execution: [DATE]
+### Latest Execution: {date}
 
 | TC ID | Result | Duration | Evidence | Notes |
 |-------|--------|----------|----------|-------|
@@ -241,9 +242,9 @@ Status: Draft
 
 ## 8. Related Documents
 
-- Feature Spec: `.specify/specs/[project]/features/[feature]/spec.md`
-- Screen Spec: `.specify/specs/[project]/overview/screen/spec.md`
-- Domain Spec: `.specify/specs/[project]/overview/domain/spec.md`
+- Feature Spec: `.specify/specs/{project}/features/{feature}/spec.md`
+- Screen Spec: `.specify/specs/{project}/overview/screen/spec.md`
+- Domain Spec: `.specify/specs/{project}/overview/domain/spec.md`
 
 ---
 
@@ -251,6 +252,6 @@ Status: Draft
 
 | Date | Change Type | Description | Author |
 |------|-------------|-------------|--------|
-| [DATE] | Created | Initial test scenario spec | AI Assistant |
+| {date} | Created | Initial test scenario spec | AI Assistant |
 
 Change types: Created, Updated, Executed, Reviewed

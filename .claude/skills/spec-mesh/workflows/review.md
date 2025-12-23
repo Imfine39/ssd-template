@@ -342,6 +342,18 @@ MAX_REVIEW_ITERATIONS = 2
 
 ---
 
+## Next Steps
+
+**[HUMAN_CHECKPOINT]** Multi-Review の結果を確認してから次のステップに進んでください。
+
+| Condition | Command | Description |
+|-----------|---------|-------------|
+| すべてパスした場合 | (呼び出し元へ戻る) | 次のワークフローステップへ |
+| 曖昧点がある場合 | `/spec-mesh clarify` | 曖昧点解消 |
+| 修正が必要な場合 | `/spec-mesh review` | 修正後に再レビュー |
+
+---
+
 ## Dependency Note
 
 **重要:** このワークフローは Step 5 で `lint.md` を呼び出します。

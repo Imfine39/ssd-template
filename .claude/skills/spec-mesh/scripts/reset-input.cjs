@@ -4,6 +4,16 @@
 /**
  * Reset Quick Input files to their default template state.
  *
+ * Error Handling:
+ *   Exit Code 0: Success or help/list shown
+ *   Exit Code 1: Invalid arguments or missing files
+ *     - Unknown input type
+ *     - Template file not found
+ *
+ * Common Errors:
+ *   - "ERROR: Unknown input type X" - Use one of: vision, add, fix, all
+ *   - "ERROR: Template not found: X" - Template file missing from templates/inputs/
+ *
  * Usage:
  *   node .claude/skills/spec-mesh/scripts/reset-input.cjs vision    # Reset vision input only
  *   node .claude/skills/spec-mesh/scripts/reset-input.cjs add       # Reset add input only

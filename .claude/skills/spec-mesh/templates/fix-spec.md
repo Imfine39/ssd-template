@@ -9,19 +9,19 @@
     - Examples: F-AUTH-001, F-ORDERS-001, F-DASHBOARD-001
     - See: .claude/skills/spec-mesh/guides/id-naming.md
 
-  Valid Status Values:
-    - Draft: Initial creation, investigation in progress
-    - Analyzed: Root cause identified
-    - In Review: Under stakeholder review
-    - Approved: Ready for implementation
-    - Implementing: Fix in progress
-    - Completed: Fix implemented and verified
+  Status Values (from constitution.md - Status Values section):
+    Spec Status:
+    - Draft: Initial creation, not reviewed
+    - In Review: Under Multi-Review or stakeholder review
+    - Clarified: All [NEEDS CLARIFICATION] markers resolved
+    - Approved: Human approved, ready for implementation
+    - Implemented: Code complete
 -->
 
 Spec Type: Fix
-Spec ID: F-{AREA}-{NNN}
-Created: YYYY-MM-DD
-Status: Draft
+Spec ID: F-{XXX}-001
+Created: {date}
+Status: [Draft | In Review | Clarified | Approved | Implemented]
 Author: AI Generated
 Related Issue: #XX
 
@@ -149,6 +149,6 @@ Related Issue: #XX
 
 | Date | Change Type | Description | Issue |
 |------|-------------|-------------|-------|
-| YYYY-MM-DD | Created | Initial fix specification | #XX |
+| {date} | Created | Initial fix specification | #XX |
 
 Change types: Created, Updated, Clarified, Approved, Implemented

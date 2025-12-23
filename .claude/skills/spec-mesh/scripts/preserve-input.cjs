@@ -4,6 +4,23 @@
 /**
  * Preserve input files to spec directories for future reference.
  *
+ * Error Handling:
+ *   Exit Code 0: Success or skipped (empty/template-only input)
+ *   Exit Code 1: Invalid arguments or missing files
+ *     - Missing type argument
+ *     - Unknown type value
+ *     - Missing --feature for add type
+ *     - Missing --fix for fix type
+ *     - Input file not found
+ *
+ * Common Errors:
+ *   - "ERROR: Type is required" - Provide type: vision, add, fix, or design
+ *   - "ERROR: Unknown type X" - Use one of: vision, add, fix, design
+ *   - "ERROR: --feature is required for add type" - Specify feature directory name
+ *   - "ERROR: --fix is required for fix type" - Specify fix directory name
+ *   - "ERROR: Input file not found: X" - Ensure input file exists in .specify/input/
+ *   - "NOTE: Input file appears to be empty" - No content to preserve, skipped
+ *
  * Usage:
  *   node .claude/skills/spec-mesh/scripts/preserve-input.cjs vision --project sample
  *   node .claude/skills/spec-mesh/scripts/preserve-input.cjs add --project sample --feature s-lead-001

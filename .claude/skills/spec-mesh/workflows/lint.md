@@ -113,7 +113,9 @@ validate-matrix: ❌ FAILED
 
 ## Next Steps
 
-| Status | Action |
-|--------|--------|
-| All passed | Continue with workflow |
-| Errors | Fix issues, then re-run `/spec-mesh lint` |
+**[HUMAN_CHECKPOINT]** Lint 結果を確認してから次のステップに進んでください。
+
+| Condition | Command | Description |
+|-----------|---------|-------------|
+| すべてパスした場合 | (次のワークフローへ) | 現在のワークフローを続行 |
+| エラーがある場合 | `/spec-mesh lint` | 修正後に再実行 |

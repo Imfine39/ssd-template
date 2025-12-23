@@ -233,10 +233,12 @@ Test Data:
 
 ## Next Steps
 
-| Action | Command | Description |
-|--------|---------|-------------|
-| E2E Test | `/spec-mesh e2e` | E2E テスト実行 |
-| Plan | `/spec-mesh plan` | 実装計画作成（テスト前に実装する場合） |
+**[HUMAN_CHECKPOINT]** Test Scenario Spec の内容を確認してから次のステップに進んでください。
+
+| Condition | Command | Description |
+|-----------|---------|-------------|
+| 実装完了後 | `/spec-mesh e2e` | E2E テスト実行 |
+| テスト前に実装する場合 | `/spec-mesh plan` | 実装計画作成 |
 
 ---
 

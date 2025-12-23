@@ -162,9 +162,11 @@ node .claude/skills/spec-mesh/scripts/state.cjs repo --set-{spec_type}-status cl
 
 ## Next Steps
 
-| Spec Type | Next Command |
-|-----------|--------------|
-| Vision | `/spec-mesh design` |
-| Domain | `/spec-mesh issue` |
-| Feature | `/spec-mesh plan` |
-| Fix | `/spec-mesh plan` |
+**[HUMAN_CHECKPOINT]** 曖昧点の解消結果を確認してから次のステップに進んでください。
+
+| Condition | Command | Description |
+|-----------|---------|-------------|
+| Vision Spec の場合 | `/spec-mesh design` | Screen + Domain + Matrix 作成 |
+| Domain Spec の場合 | `/spec-mesh issue` | Issue から開発開始 |
+| Feature Spec の場合 | `/spec-mesh plan` | 実装計画作成 |
+| Fix Spec の場合 | `/spec-mesh plan` | 修正計画作成 |

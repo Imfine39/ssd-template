@@ -158,20 +158,20 @@ Display:
 === Design 完了 ===
 
 Screen Spec: .specify/specs/{project}/overview/screen/spec.md
-  - Screens: [N] 画面定義
+  - Screens: {N} 画面定義
 
 Domain Spec: .specify/specs/{project}/overview/domain/spec.md
-  - Masters: [N] M-* 定義
-  - APIs: [N] API-* 定義
-  - Rules: [N] BR-*/VR-* 定義
+  - Masters: {N} M-* 定義
+  - APIs: {N} API-* 定義
+  - Rules: {N} BR-*/VR-* 定義
 
 Matrix: .specify/specs/{project}/overview/matrix/cross-reference.json
 
-Feature Issues: [N] 件作成
+Feature Issues: {N} 件作成
 Foundation Issue: #{issue_num}
 
 === 曖昧点 ===
-[NEEDS CLARIFICATION]: [N] 箇所
+[NEEDS CLARIFICATION]: {N} 箇所
 
 推奨: `/spec-mesh clarify` → `/spec-mesh issue` (Foundation)
 ```
@@ -200,10 +200,16 @@ node .claude/skills/spec-mesh/scripts/state.cjs repo --set-domain-status draft -
 
 ## Next Steps
 
-**[HUMAN_CHECKPOINT]** Screen Spec と Domain Spec の内容を確認してから次のステップに進んでください。
+**[HUMAN_CHECKPOINT]**
+- [ ] Screen Spec の画面定義が要件を網羅しているか
+- [ ] Domain Spec の M-*/API-* 定義が適切か
+- [ ] Cross-Reference Matrix の整合性を確認したか
+- [ ] [NEEDS CLARIFICATION] マーカーの箇所を確認したか
 
-| Action | Command | Description |
-|--------|---------|-------------|
-| Clarify | `/spec-mesh clarify` | Domain の曖昧点解消 |
-| Foundation | `/spec-mesh issue` | Foundation Issue から開始 |
-| More Features | `/spec-mesh featureproposal` | 追加 Feature 提案 |
+承認後、次のステップへ進んでください。
+
+| Condition | Command | Description |
+|-----------|---------|-------------|
+| 曖昧点がある場合 | `/spec-mesh clarify` | Domain の曖昧点解消 |
+| Foundation を開始する場合 | `/spec-mesh issue` | Foundation Issue から開始 |
+| 追加機能を提案する場合 | `/spec-mesh featureproposal` | 追加 Feature 提案 |

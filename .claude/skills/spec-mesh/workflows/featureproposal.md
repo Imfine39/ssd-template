@@ -143,7 +143,9 @@ Add proposed Features to Domain Spec:
 
 ## Next Steps
 
-| Action | Command |
-|--------|---------|
-| Start Feature | `/spec-mesh issue` |
-| Add details | `/spec-mesh add` |
+**[HUMAN_CHECKPOINT]** 提案された Feature を確認してから次のステップに進んでください。
+
+| Condition | Command | Description |
+|-----------|---------|-------------|
+| Issue から開始する場合 | `/spec-mesh issue` | Feature 開発を開始 |
+| 詳細を追加する場合 | `/spec-mesh add` | 新機能の詳細を追加 |

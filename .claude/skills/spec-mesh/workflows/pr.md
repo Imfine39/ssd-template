@@ -75,6 +75,13 @@ Implements {Spec IDs}
 
 ### Step 4: Push and Create PR
 
+**[HUMAN_CHECKPOINT]** (Irreversible Action)
+- [ ] 変更内容が意図したものか
+- [ ] 全てのチェックが pass しているか
+- [ ] コミットメッセージが適切か
+
+承認後、push と PR 作成を実行します。
+
 ```bash
 git push -u origin {branch_name}
 ```
@@ -139,6 +146,17 @@ node .claude/skills/spec-mesh/scripts/state.cjs branch --set-step pr
 - [ ] commit メッセージに Issue 番号と Spec ID を含めたか
 - [ ] PR を作成したか
 - [ ] Post-merge checklist を提示したか
+
+---
+
+## Next Steps
+
+PR 作成完了後、レビューを待ってください。
+
+| Condition | Command | Description |
+|-----------|---------|-------------|
+| PR マージ後 | (Post-Merge Actions 参照) | Screen Spec / Feature Index の Status 更新 |
+| 追加修正が必要な場合 | `/spec-mesh implement` | 実装を修正 |
 
 ---
 

@@ -124,6 +124,8 @@ node .claude/skills/spec-mesh/scripts/state.cjs branch --set-step tasks --set-ta
 
 ## Next Steps
 
-| Action | Command | Description |
-|--------|---------|-------------|
-| Implement | `/spec-mesh implement` | 実装開始 |
+**[HUMAN_CHECKPOINT]** タスク分割の内容を確認してから実装を開始してください。
+
+| Condition | Command | Description |
+|-----------|---------|-------------|
+| タスク確認後 | `/spec-mesh implement` | 実装開始 |

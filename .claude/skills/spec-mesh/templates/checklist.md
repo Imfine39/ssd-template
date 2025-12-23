@@ -26,8 +26,8 @@
 Spec Type: [Vision | Domain | Feature]
 Spec Title: [SPEC_TITLE]
 Focus: [General | UX | API | Security | Performance | Data]
-Generated: [DATE]
-Spec Path: [PATH_TO_SPEC]
+Generated: {date}
+Spec Path: {path}
 
 ---
 
@@ -45,14 +45,14 @@ This checklist validates the **quality of requirements writing**, not implementa
 
 | Dimension | Items | Issues | Notes |
 |-----------|-------|--------|-------|
-| Completeness | [X] | [Y] | |
-| Clarity | [X] | [Y] | |
-| Consistency | [X] | [Y] | |
-| Measurability | [X] | [Y] | |
-| Coverage | [X] | [Y] | |
+| Completeness | {X} | {Y} | |
+| Clarity | {X} | {Y} | |
+| Consistency | {X} | {Y} | |
+| Measurability | {X} | {Y} | |
+| Coverage | {X} | {Y} | |
 
-**Total Items:** [COUNT]
-**Issues Found:** [COUNT]
+**Total Items:** {count}
+**Issues Found:** {count}
 
 ---
 
@@ -160,9 +160,9 @@ Record how issues were addressed:
 
 | Item ID | Resolution | Date | Notes |
 |---------|------------|------|-------|
-| CHK-XXX | Addressed via clarify | [DATE] | [Brief note] |
-| CHK-XXX | Accepted as-is | [DATE] | [Justification] |
-| CHK-XXX | Deferred to implementation | [DATE] | [Reason] |
+| CHK-XXX | Addressed via clarify | {date} | {Brief note} |
+| CHK-XXX | Accepted as-is | {date} | {Justification} |
+| CHK-XXX | Deferred to implementation | {date} | {Reason} |
 
 ---
 

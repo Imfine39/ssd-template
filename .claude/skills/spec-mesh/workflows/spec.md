@@ -62,10 +62,12 @@ node .claude/skills/spec-mesh/scripts/state.cjs repo --set-{kind}-status scaffol
 
 ## Next Steps
 
-| Spec Kind | Next Command |
-|-----------|--------------|
-| vision | `/spec-mesh clarify`, `/spec-mesh design` |
-| domain | `/spec-mesh clarify`, `/spec-mesh issue` |
-| screen | `/spec-mesh clarify`, `/spec-mesh issue` |
-| feature | `/spec-mesh clarify`, `/spec-mesh plan` |
-| fix | `/spec-mesh clarify`, `/spec-mesh plan` |
+**[HUMAN_CHECKPOINT]** 作成した Spec の内容を確認してから次のステップに進んでください。
+
+| Condition | Command | Description |
+|-----------|---------|-------------|
+| Vision Spec の場合 | `/spec-mesh clarify` | 曖昧点解消 → `/spec-mesh design` |
+| Domain Spec の場合 | `/spec-mesh clarify` | 曖昧点解消 → `/spec-mesh issue` |
+| Screen Spec の場合 | `/spec-mesh clarify` | 曖昧点解消 → `/spec-mesh issue` |
+| Feature Spec の場合 | `/spec-mesh clarify` | 曖昧点解消 → `/spec-mesh plan` |
+| Fix Spec の場合 | `/spec-mesh clarify` | 曖昧点解消 → `/spec-mesh plan` |

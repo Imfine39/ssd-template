@@ -138,7 +138,9 @@ Section: {Clarifications|Implementation Notes}
 
 ## Next Steps
 
-| Action | Command | Description |
-|--------|---------|-------------|
-| Implement | `/spec-mesh implement` | 実装続行 |
-| PR | `/spec-mesh pr` | PR 作成（実装完了時） |
+**[HUMAN_CHECKPOINT]** フィードバック記録の内容を確認してから次のステップに進んでください。
+
+| Condition | Command | Description |
+|-----------|---------|-------------|
+| 実装を続行する場合 | `/spec-mesh implement` | 実装続行 |
+| 実装完了の場合 | `/spec-mesh pr` | PR 作成 |

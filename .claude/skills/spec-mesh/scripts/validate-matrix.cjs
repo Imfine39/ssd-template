@@ -4,6 +4,27 @@
 /**
  * Validate cross-reference.json against Screen Spec and Domain Spec
  *
+ * Error Handling:
+ *   Exit Code 0: Validation passed (all Spec items reflected in Matrix)
+ *   Exit Code 1: Validation failed (missing mappings found)
+ *     - Screens in Spec not in Matrix
+ *     - Features in Spec not in Matrix
+ *     - Masters in Spec not referenced in Matrix
+ *     - APIs in Spec not referenced in Matrix
+ *     - APIs without permissions in Matrix
+ *   Exit Code 2: File/Parse error
+ *     - Required file not found (Screen/Domain Spec)
+ *     - Matrix JSON file not found
+ *     - JSON parse error
+ *
+ * Common Errors:
+ *   - "ERROR: File not found: X" - Ensure Screen/Domain spec exists at expected path
+ *   - "ERROR: Failed to parse Matrix JSON" - Fix JSON syntax in cross-reference.json
+ *   - "Matrix file not found" - Run /spec-mesh design or create matrix manually
+ *   - "Missing Screens in Matrix" - Add screen entries to cross-reference.json
+ *   - "Missing Features in Matrix" - Add feature entries to cross-reference.json
+ *   - "Masters/APIs in Spec but not referenced" - Update matrix to include these references
+ *
  * Complements spec-lint.cjs:
  *   - spec-lint.cjs: Checks that Matrix references exist in Specs (Matrix -> Spec)
  *   - validate-matrix.cjs: Checks that Specs are reflected in Matrix (Spec -> Matrix)

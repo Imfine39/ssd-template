@@ -158,9 +158,11 @@ Next: /spec-mesh pr
 
 ## Next Steps
 
-| Status | Action |
-|--------|--------|
-| PASS | `/spec-mesh pr` |
-| WARN | Issue を確認後 `/spec-mesh pr` |
-| FAIL - Missing | 実装追加後 `/spec-mesh analyze` |
-| FAIL - Extra | Spec 追加 or コード削除後 `/spec-mesh analyze` |
+**[HUMAN_CHECKPOINT]** 分析結果を確認してから次のステップに進んでください。
+
+| Condition | Command | Description |
+|-----------|---------|-------------|
+| PASS の場合 | `/spec-mesh pr` | PR 作成 |
+| WARN の場合 | `/spec-mesh pr` | Issue 確認後 PR 作成 |
+| FAIL (未実装) の場合 | `/spec-mesh analyze` | 実装追加後に再分析 |
+| FAIL (Spec外実装) の場合 | `/spec-mesh analyze` | Spec 追加 or コード削除後に再分析 |

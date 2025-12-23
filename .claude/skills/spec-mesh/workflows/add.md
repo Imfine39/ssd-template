@@ -140,7 +140,7 @@ Branch: feature/{issue_num}-{slug}
 Spec: .specify/specs/{project}/features/{id}/spec.md
 
 === 曖昧点 ===
-[NEEDS CLARIFICATION]: [N] 箇所
+[NEEDS CLARIFICATION]: {N} 箇所
 - [List of ambiguous items]
 
 推奨: `/spec-mesh clarify` で曖昧点を解消してください。
@@ -163,9 +163,15 @@ Spec: .specify/specs/{project}/features/{id}/spec.md
 
 ## Next Steps
 
-**[HUMAN_CHECKPOINT]** Feature Spec の内容を確認してから次のステップに進んでください。
+**[HUMAN_CHECKPOINT]**
+- [ ] Feature Spec の User Stories が期待する動作を反映しているか
+- [ ] Functional Requirements が適切に定義されているか
+- [ ] M-*/API-* の参照/追加が正しいか
+- [ ] [NEEDS CLARIFICATION] マーカーの箇所を確認したか
 
-| Action | Command | Description |
-|--------|---------|-------------|
-| Clarify | `/spec-mesh clarify` | 曖昧点解消 |
-| Plan | `/spec-mesh plan` | 実装計画作成 |
+承認後、次のステップへ進んでください。
+
+| Condition | Command | Description |
+|-----------|---------|-------------|
+| 曖昧点がある場合 | `/spec-mesh clarify` | 曖昧点解消 |
+| 曖昧点が解消済み | `/spec-mesh plan` | 実装計画作成 |

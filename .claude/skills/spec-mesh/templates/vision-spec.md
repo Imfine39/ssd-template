@@ -1,9 +1,24 @@
 # Vision Specification: [PROJECT_NAME]
 
+<!--
+  Template: Vision Spec
+
+  ID Format: S-VISION-001 (one per project)
+  See: .claude/skills/spec-mesh/guides/id-naming.md
+
+  Status Values (from constitution.md - Status Values section):
+    Spec Status:
+    - Draft: Initial creation, not reviewed
+    - In Review: Under Multi-Review or stakeholder review
+    - Clarified: All [NEEDS CLARIFICATION] markers resolved
+    - Approved: Human approved, ready for implementation
+    - Implemented: Code complete
+-->
+
 Spec Type: Vision
 Spec ID: S-VISION-001
-Created: [DATE]
-Status: [Draft | In Review | Approved]
+Created: {date}
+Status: [Draft | In Review | Clarified | Approved | Implemented]
 Author: [OWNER]
 
 ---
@@ -193,7 +208,7 @@ Record of clarification questions and answers during the vision refinement proce
 
 | Date | Question | Answer | Impact |
 |------|----------|--------|--------|
-| [DATE] | [Question asked] | [Answer received] | [How it affected the spec] |
+| {date} | {Question asked} | {Answer received} | {How it affected the spec} |
 
 ---
 
@@ -220,6 +235,6 @@ This section preserves the original context for future reference.
 
 | Date | Change Type | Description | Author |
 |------|-------------|-------------|--------|
-| [DATE] | Created | Initial vision specification | [Author] |
+| {date} | Created | Initial vision specification | {Author} |
 
 Change types: Created, Updated, Clarified, Approved

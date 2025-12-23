@@ -4,6 +4,20 @@
 /**
  * Branch creation helper.
  *
+ * Error Handling:
+ *   Exit Code 0: Success (branch created/checked out, state updated)
+ *   Exit Code 1: Invalid arguments
+ *     - Missing required --slug parameter
+ *   (Git errors are inherited from git command failures)
+ *
+ * Common Errors:
+ *   - "ERROR: --slug is required" - Provide --slug parameter with branch name suffix
+ *   - "Warning: Could not update branch state" - State file issue, branch still created
+ *
+ * Notes:
+ *   - If branch exists, checks it out instead of failing
+ *   - Git command failures (e.g., not in repo) will show git's own error messages
+ *
  * Usage:
  *   node .claude/skills/spec-mesh/scripts/branch.cjs --type feature --slug user-auth --issue 123
  *

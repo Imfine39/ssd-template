@@ -143,7 +143,7 @@ Screen References:
 - {SCR-* list}
 
 === 曖昧点 ===
-[NEEDS CLARIFICATION]: [N] 箇所
+[NEEDS CLARIFICATION]: {N} 箇所
 
 推奨: `/spec-mesh clarify` で曖昧点を解消してください。
 ```
@@ -173,7 +173,7 @@ node .claude/skills/spec-mesh/scripts/state.cjs branch --set-step spec --set-fea
 
 **[HUMAN_CHECKPOINT]** Feature Spec の内容を確認してから次のステップに進んでください。
 
-| Action | Command | Description |
-|--------|---------|-------------|
-| Clarify | `/spec-mesh clarify` | 曖昧点解消 |
-| Plan | `/spec-mesh plan` | 実装計画作成 |
+| Condition | Command | Description |
+|-----------|---------|-------------|
+| 曖昧点がある場合 | `/spec-mesh clarify` | 曖昧点解消 |
+| 曖昧点が解消済み | `/spec-mesh plan` | 実装計画作成 |

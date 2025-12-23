@@ -3,7 +3,7 @@
 This constitution defines the foundational principles for Spec-Driven Development (SSD).
 All development decisions, code reviews, and architectural choices MUST align with these principles.
 
-Version: 2.0.0 | Ratified: 2025-12-22
+Version: 2.1.0 | Ratified: 2025-12-23
 
 ---
 
@@ -57,6 +57,64 @@ Version control MUST ensure traceability.
 - Issue-linked branches: `feature/{issue}-{slug}`, `fix/{issue}-{slug}`
 - PRs reference Issues and Spec IDs
 - Squash merge for clean history
+
+---
+
+## Status Values
+
+This section defines the canonical status values used across all specs.
+All templates MUST reference these definitions.
+
+### Spec Status
+
+Status values for Vision, Domain, Screen, Feature, and Fix specifications.
+
+| Status | Description |
+|--------|-------------|
+| `Draft` | Initial creation, not reviewed |
+| `In Review` | Under Multi-Review or stakeholder review |
+| `Clarified` | All [NEEDS CLARIFICATION] markers resolved |
+| `Approved` | Human approved, ready for implementation |
+| `Implemented` | Code complete |
+
+**Lifecycle:** Draft -> In Review -> Clarified -> Approved -> Implemented
+
+### Screen Status
+
+Status values for individual screens within Screen Spec (Section 2).
+
+| Status | Description |
+|--------|-------------|
+| `Planned` | In spec but not implemented |
+| `In Progress` | Currently being implemented |
+| `Implemented` | Code complete |
+| `Deprecated` | No longer used |
+
+**Lifecycle:** Planned -> In Progress -> Implemented (or Deprecated)
+
+### Test Status
+
+Status values for test cases in Test Scenario Spec.
+
+| Status | Description |
+|--------|-------------|
+| `Pending` | Not yet executed |
+| `Pass` | Test passed |
+| `Fail` | Test failed |
+| `Blocked` | Cannot run due to dependencies |
+| `Skipped` | Intentionally skipped |
+
+### Test Scenario Spec Status
+
+Status values for the overall Test Scenario Spec document.
+
+| Status | Description |
+|--------|-------------|
+| `Draft` | Initial creation |
+| `In Review` | Under stakeholder review |
+| `Ready` | Approved and ready for execution |
+| `Executing` | Test execution in progress |
+| `Completed` | All tests executed |
 
 ---
 
@@ -151,14 +209,121 @@ See `guides/id-naming.md` for complete definitions.
 
 ---
 
-## Human Checkpoints
+## HUMAN_CHECKPOINT Policy
 
-These points require explicit human approval:
+Human checkpoints are mandatory gates in the SSD workflow that require explicit human approval before proceeding. Never proceed past a checkpoint without confirmation.
 
-1. **Spec Approval**: Before Plan creation
-2. **Plan Approval**: Before Tasks creation (mandatory)
-3. **Feedback Recording**: Before updating spec with implementation discoveries
-4. **Case 3 Decision**: When existing M-*/API-* needs modification
+### Trigger Conditions
+
+| Checkpoint | When | What Human Verifies |
+|------------|------|---------------------|
+| **Spec Approval** | After Spec creation + Multi-Review + Lint | Content accuracy, scope correctness, business alignment |
+| **Plan Approval** | After Plan creation | Technical approach, work breakdown, risks acceptable |
+| **Feedback Recording** | Before updating Spec with discoveries | Feedback is accurate, appropriate to record |
+| **Case 3 Decision** | When M-*/API-* modification needed | Impact scope acceptable, proceed with change |
+| **Irreversible Actions** | Before Push, Merge, Delete operations | Action is intended and safe |
+
+### Standard Checkpoint Format
+
+When reaching a checkpoint, present it in this format:
+
+```markdown
+**[HUMAN_CHECKPOINT]**
+- 確認項目1: [具体的な内容]
+- 確認項目2: [具体的な内容]
+- 確認項目3: [具体的な内容]
+
+承認後、次のステップ（{next_step}）へ進んでください。
+```
+
+### Checkpoint Details
+
+#### 1. Spec Approval (After Vision/Design/Add/Fix)
+
+**Triggers:**
+- Vision Spec 作成後
+- Screen Spec + Domain Spec 作成後
+- Feature Spec 作成後
+- Fix Spec 作成後
+
+**Human Verifies:**
+- [ ] Spec の内容が入力/要件を正確に反映しているか
+- [ ] スコープが適切か（過大/過小でないか）
+- [ ] ビジネス要件と整合しているか
+- [ ] [NEEDS CLARIFICATION] の箇所を確認したか
+
+**Proceed When:** Human explicitly approves OR clarify resolves all issues
+
+#### 2. Plan Approval (Before Tasks)
+
+**Triggers:**
+- Plan 作成完了時
+- CLARIFY GATE 通過後
+
+**Human Verifies:**
+- [ ] 技術的アプローチが妥当か
+- [ ] Work Breakdown が適切か
+- [ ] リスクが許容範囲か
+- [ ] Open Questions に回答できるか
+
+**Proceed When:** Human explicitly approves the plan
+
+#### 3. Feedback Recording (During Implement)
+
+**Triggers:**
+- 実装中に Spec にない技術的制約を発見
+- 曖昧点を解決するための判断が必要
+- Spec からの逸脱が必要
+
+**Human Verifies:**
+- [ ] Feedback の内容が正確か
+- [ ] Spec に記録することが適切か
+- [ ] 他の Spec への影響を理解しているか
+
+**Proceed When:** Human explicitly approves feedback recording
+
+#### 4. Case 3 Decision (During Add/Change)
+
+**Triggers:**
+- 既存の M-*/API-*/BR-*/VR-* の変更が必要
+- Feature が共有リソースに影響
+
+**Human Verifies:**
+- [ ] 影響範囲を理解しているか
+- [ ] 影響を受ける Feature の一覧を確認したか
+- [ ] 変更のリスクを許容できるか
+
+**Proceed When:** Human explicitly approves the modification
+
+#### 5. Irreversible Actions (PR/Git Operations)
+
+**Triggers:**
+- git push
+- PR merge
+- Branch delete
+- データベースマイグレーション実行
+
+**Human Verifies:**
+- [ ] 変更内容が意図したものか
+- [ ] テストが全て pass しているか
+- [ ] 他に影響を与える変更がないか
+
+**Proceed When:** Human explicitly confirms the action
+
+### Behavior After Checkpoint
+
+1. **Wait for explicit approval** - Do not assume approval from silence
+2. **Provide next step guidance** - Tell human what command to run next
+3. **Record approval** - State management で checkpoint 通過を記録
+
+### Checkpoint Skip Conditions
+
+Checkpoints may ONLY be skipped when:
+- Human explicitly requests skip with justification
+- Emergency hotfix with documented reason
+- Trivial fix (typo, formatting) with human confirmation
+
+Document any skipped checkpoint in the PR description.
 
 ---
 

@@ -136,7 +136,7 @@ Root Cause: {原因の要約}
 Impact: {影響範囲}
 
 === 曖昧点 ===
-[NEEDS CLARIFICATION]: [N] 箇所
+[NEEDS CLARIFICATION]: {N} 箇所
 - [List of ambiguous items]
 
 === 次のステップ ===
@@ -161,10 +161,16 @@ Impact: {影響範囲}
 
 ## Next Steps
 
-**[HUMAN_CHECKPOINT]** Fix Spec の内容を確認してから次のステップに進んでください。
+**[HUMAN_CHECKPOINT]**
+- [ ] Root Cause Analysis が正確か
+- [ ] Proposed Fix が問題を解決するか
+- [ ] 影響範囲が適切に評価されているか
+- [ ] Verification Plan が十分か
 
-| Action | Command | Description |
-|--------|---------|-------------|
-| Clarify | `/spec-mesh clarify` | 詳細確認 |
-| Plan | `/spec-mesh plan` | 修正計画（標準フロー） |
-| Implement | `/spec-mesh implement` | 直接修正（Trivial fix） |
+承認後、次のステップへ進んでください。
+
+| Condition | Command | Description |
+|-----------|---------|-------------|
+| 詳細確認が必要な場合 | `/spec-mesh clarify` | 詳細確認 |
+| 標準フローで修正する場合 | `/spec-mesh plan` | 修正計画作成 |
+| Trivial fix の場合 | `/spec-mesh implement` | 直接修正 |

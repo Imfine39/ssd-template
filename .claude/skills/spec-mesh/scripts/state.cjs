@@ -4,6 +4,26 @@
 /**
  * State management script for SSD-Template.
  *
+ * Error Handling:
+ *   Exit Code 0: Success / Help shown
+ *   Exit Code 1: Invalid arguments or validation error
+ *     - Invalid status value (not in: none, scaffold, draft, clarified, approved)
+ *     - Invalid phase value (not in: initialization, vision, design, foundation, development)
+ *     - Invalid step value (not in: idle, spec, spec_review, plan, plan_review, tasks, implement, pr, suspended)
+ *     - Invalid type value (not in: feature, fix, spec-change, spec)
+ *     - Invalid task progress format (expected: N/M like "3/10")
+ *     - Unknown command
+ *     - Could not determine branch (no --name and git fails)
+ *
+ * Common Errors:
+ *   - "Invalid status: X" - Use one of: none, scaffold, draft, clarified, approved
+ *   - "Invalid phase: X" - Use one of: initialization, vision, design, foundation, development
+ *   - "Invalid step: X" - Use one of: idle, spec, spec_review, plan, plan_review, tasks, implement, pr, suspended
+ *   - "Invalid type: X" - Use one of: feature, fix, spec-change, spec
+ *   - "Invalid task progress format" - Use format like "3/10" (completed/total)
+ *   - "Could not determine branch" - Either run inside git repo or use --name flag
+ *   - "Warning: Could not read X" - State file corrupted, will use defaults
+ *
  * Manages two state files:
  * - repo-state.cjson: Project-level state (Vision/Domain status, phase, features)
  * - branch-state.cjson: Per-branch work state (step, progress, suspensions)

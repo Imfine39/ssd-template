@@ -45,13 +45,13 @@ Read tool: .specify/specs/{project}/overview/{spec_type}/spec.md
 - Which SCR-* to modify?
 - Impact on existing Features?
 
-### Step 4: Impact Analysis
+### Step 4: Impact Analysis (Case 3 Decision)
 
 1. **Find affected Features:**
    - Search for references to changed IDs
    - List all impacted Feature Specs
 
-2. **Display impact:**
+2. **Display impact and request approval:**
    ```
    === Impact Analysis ===
 
@@ -63,9 +63,14 @@ Read tool: .specify/specs/{project}/overview/{spec_type}/spec.md
    - API-USER-CREATE: 新規作成API (returns M-USER)
    - API-USER-UPDATE: 更新API (accepts M-USER)
    - SCR-002: ユーザー登録画面
-
-   この変更を続行しますか？ (y/N)
    ```
+
+**[HUMAN_CHECKPOINT]** (Case 3 Decision)
+- [ ] 影響を受ける Feature の一覧を確認したか
+- [ ] 変更による破壊的影響を理解しているか
+- [ ] 影響を受ける実装の更新計画があるか
+
+この変更を続行しますか？承認後、Step 5 へ進みます。
 
 ### Step 5: Create Change Spec
 
@@ -147,7 +152,14 @@ Matrix: 更新済み
 
 ## Next Steps
 
-| Scenario | Action |
-|----------|--------|
-| Spec-only change | `/spec-mesh pr` |
-| Implementation needed | Resume Feature work |
+**[HUMAN_CHECKPOINT]**
+- [ ] 変更内容が正しく反映されているか
+- [ ] 影響を受ける Feature Spec が更新されているか
+- [ ] Matrix の整合性が確認されているか
+
+承認後、次のステップへ進んでください。
+
+| Condition | Command | Description |
+|-----------|---------|-------------|
+| Spec のみの変更の場合 | `/spec-mesh pr` | PR 作成 |
+| 実装が必要な場合 | `/spec-mesh implement` | Feature 作業を再開 |

@@ -4,6 +4,16 @@
 /**
  * Generate cross-reference.md from cross-reference.json
  *
+ * Error Handling:
+ *   Exit Code 0: Success or help shown
+ *   Exit Code 1: File/Parse error
+ *     - Matrix JSON file not found
+ *     - JSON parse error
+ *
+ * Common Errors:
+ *   - "ERROR: Matrix file not found: X" - Create cross-reference.json first
+ *   - "ERROR: Failed to parse JSON" - Fix JSON syntax in cross-reference.json
+ *
  * Usage:
  *   node .claude/skills/spec-mesh/scripts/generate-matrix-view.cjs [options] [path-to-json]
  *

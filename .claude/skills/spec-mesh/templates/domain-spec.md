@@ -1,9 +1,24 @@
 # Domain Specification: [PROJECT_NAME]
 
+<!--
+  Template: Domain Spec
+
+  ID Format: S-DOMAIN-001 (one per project)
+  See: .claude/skills/spec-mesh/guides/id-naming.md
+
+  Status Values (from constitution.md - Status Values section):
+    Spec Status:
+    - Draft: Initial creation, not reviewed
+    - In Review: Under Multi-Review or stakeholder review
+    - Clarified: All [NEEDS CLARIFICATION] markers resolved
+    - Approved: Human approved, ready for implementation
+    - Implemented: Code complete
+-->
+
 Spec Type: Domain
 Spec ID: S-DOMAIN-001
-Created: [DATE]
-Status: [Draft | In Review | Approved | Implementing | Completed]
+Created: {date}
+Status: [Draft | In Review | Clarified | Approved | Implemented]
 Author: [OWNER]
 Related Vision: S-VISION-001
 Related Screen: S-SCREEN-001
@@ -237,9 +252,9 @@ All features that implement this domain. Updated as features are added.
 
 | Feature ID | Title | Path | Status | Related M-*/API-* |
 |------------|-------|------|--------|-------------------|
-| S-[XXX]-001 | [Title] | `.specify/specs/s-xxx-001/` | [Status] | [M-*, API-*] |
+| S-{XXX}-001 | {Title} | `.specify/specs/s-xxx-001/` | {Status} | {M-*, API-*} |
 
-**Status values:** Draft | In Review | Approved | Implementing | Completed | Deprecated
+**Status values (see constitution.md):** Draft | In Review | Clarified | Approved | Implemented
 
 ---
 
@@ -258,7 +273,7 @@ Record of clarification questions and answers during domain design.
 
 | Date | Question | Answer | Impact |
 |------|----------|--------|--------|
-| [DATE] | [Question] | [Answer] | [How it affected the spec] |
+| {date} | {Question} | {Answer} | {How it affected the spec} |
 
 ---
 
@@ -266,7 +281,7 @@ Record of clarification questions and answers during domain design.
 
 | Date | Change Type | Description | Issue |
 |------|-------------|-------------|-------|
-| [DATE] | Created | Initial domain specification | #XXX |
+| {date} | Created | Initial domain specification | #XXX |
 
 Change types: Created, Updated, Extended, Deprecated, Superseded
 

@@ -118,7 +118,7 @@ Comprehensive investigation of all workflows, templates, agents, guides, and scr
 
 - Next Steps table format inconsistent across workflows
 - Missing error handling documentation for scripts
-- Placeholder syntax inconsistent (`[PLACEHOLDER]` vs `[PATH]` vs `[DATE]`)
+- ~~Placeholder syntax inconsistent (`[PLACEHOLDER]` vs `[PATH]` vs `[DATE]`)~~ **FIXED: Standardized to `{placeholder}` format**
 - HUMAN_CHECKPOINT trigger conditions not defined
 - Various documentation gaps and redundancies
 
