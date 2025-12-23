@@ -11,10 +11,12 @@
       "WebFetch",
       "mcp__serena__*",
       "mcp__context7__*",
-      "SlashCommand(/speckit.vision)"
+      "Skill(test-skill)",
+      "Skill(spec-mesh)",
+      "Skill(spec-mesh:*)"
     ],
     "deny": [
-      "Bash(rm -rf:*)",
+    
       "Bash(sudo:*)",
       "Bash(git push --force:*)"
     ]
@@ -40,7 +42,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node .specify/scripts/state.cjs query --all 2>/dev/null || echo \"[SSD State] Not initialized\""
+            "command": "node .claude/skills/spec-mesh/scripts/state.cjs query --all 2>/dev/null || echo \"[SSD State] Not initialized\""
           }
         ]
       }

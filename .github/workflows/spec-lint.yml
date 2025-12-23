@@ -23,4 +23,4 @@ jobs:
           node-version: 20
 
       - name: Run spec linter
-        run: node .specify/scripts/spec-lint.cjs
+        run: node .claude/skills/spec-mesh/scripts/spec-lint.cjs

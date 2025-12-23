@@ -1,4 +1,4 @@
-# SSD-Template
+# SSD-MESH 
 
 **Spec-Driven Development Framework for AI-Assisted Projects**
 
@@ -10,7 +10,7 @@ AI コーディングアシスタント（Claude Code など）と人間の協�
 ## Features
 
 - **4層 Spec 構造** - Vision → Screen/Domain → Feature の階層的な仕様管理
-- **17+ コマンド** - `/speckit.*` による一貫したワークフロー
+- **17+ ワークフロー** - `/spec-mesh *` による一貫したワークフロー
 - **Clarify ループ** - 曖昧さを排除する対話的な仕様策定
 - **状態管理** - プロジェクトとブランチの状態追跡
 - **警告ベースアプローチ** - 強制ブロックせず人間の判断を尊重
@@ -24,10 +24,10 @@ AI コーディングアシスタント（Claude Code など）と人間の協�
 gh auth login
 
 # 2. 状態初期化
-node .specify/scripts/state.cjs init
+node .claude/skills/spec-mesh/scripts/state.cjs init
 
 # 3. 新規プロジェクト開始
-/speckit.vision あなたのプロジェクト説明
+/spec-mesh vision あなたのプロジェクト説明
 ```
 
 ---
@@ -43,49 +43,49 @@ node .specify/scripts/state.cjs init
 | [Core Concepts](docs/Core-Concepts.md)                | 3層構造、Clarify ループ、状態管理 |
 | [Workflow: New Project](docs/Workflow-New-Project.md) | 新規プロジェクト立ち上げフロー    |
 | [Workflow: Add Feature](docs/Workflow-Add-Feature.md) | 機能追加・バグ修正フロー          |
-| [Commands Reference](docs/Commands-Reference.md)      | 全コマンドのリファレンス          |
+| [Workflows Reference](docs/Workflows-Reference.md)    | 全ワークフローのリファレンス      |
 | [Templates Reference](docs/Templates-Reference.md)    | Spec テンプレートの説明           |
 | [Scripts Reference](docs/Scripts-Reference.md)        | Node.js スクリプトの使用方法      |
 | [Troubleshooting](docs/Troubleshooting.md)            | よくある問題と解決方法            |
 
 ---
 
-## Command Overview
+## Workflow Overview
 
 ### Project Initialization
 
-| Command           | Purpose                                              |
-| ----------------- | ---------------------------------------------------- |
-| `/speckit.vision` | Vision Spec 作成（目的 + ジャーニー + Screen Hints） |
-| `/speckit.design` | **Screen + Domain Spec 同時作成** + Feature Issues   |
+| Workflow            | Purpose                                              |
+| ------------------- | ---------------------------------------------------- |
+| `/spec-mesh vision` | Vision Spec 作成（目的 + ジャーニー + Screen Hints） |
+| `/spec-mesh design` | **Screen + Domain Spec 同時作成** + Feature Issues   |
 
 ### Development Entry Points
 
-| Command                    | Purpose                      |
-| -------------------------- | ---------------------------- |
-| `/speckit.issue`           | 既存 Issue から開発開始      |
-| `/speckit.add`             | 新機能追加（Issue 自動作成） |
-| `/speckit.fix`             | バグ修正（Issue 自動作成）   |
-| `/speckit.featureproposal` | AI に Feature を提案させる   |
-| `/speckit.change`          | Vision/Domain Spec 変更      |
+| Workflow                     | Purpose                      |
+| ---------------------------- | ---------------------------- |
+| `/spec-mesh issue`           | 既存 Issue から開発開始      |
+| `/spec-mesh add`             | 新機能追加（Issue 自動作成） |
+| `/spec-mesh fix`             | バグ修正（Issue 自動作成）   |
+| `/spec-mesh featureproposal` | AI に Feature を提案させる   |
+| `/spec-mesh change`          | Vision/Domain Spec 変更      |
 
 ### Development Flow
 
-| Command              | Purpose      |
-| -------------------- | ------------ |
-| `/speckit.plan`      | 実装計画作成 |
-| `/speckit.tasks`     | タスク分割   |
-| `/speckit.implement` | 実装         |
-| `/speckit.pr`        | PR 作成      |
+| Workflow               | Purpose      |
+| ---------------------- | ------------ |
+| `/spec-mesh plan`      | 実装計画作成 |
+| `/spec-mesh tasks`     | タスク分割   |
+| `/spec-mesh implement` | 実装         |
+| `/spec-mesh pr`        | PR 作成      |
 
 ### Utilities
 
-| Command              | Purpose                  |
-| -------------------- | ------------------------ |
-| `/speckit.clarify`   | 曖昧点の解消             |
-| `/speckit.lint`      | Spec 整合性チェック      |
-| `/speckit.analyze`   | 実装と Spec の整合性分析 |
-| `/speckit.checklist` | 品質チェックリスト生成   |
+| Workflow               | Purpose                  |
+| ---------------------- | ------------------------ |
+| `/spec-mesh clarify`   | 曖昧点の解消             |
+| `/spec-mesh lint`      | Spec 整合性チェック      |
+| `/spec-mesh analyze`   | 実装と Spec の整合性分析 |
+| `/spec-mesh checklist` | 品質チェックリスト生成   |
 
 ---
 
@@ -93,13 +93,13 @@ node .specify/scripts/state.cjs init
 
 ```
 New Project:
-  /speckit.vision → /speckit.design → /speckit.issue → plan → tasks → implement → pr
+  /spec-mesh vision → /spec-mesh design → /spec-mesh issue → plan → tasks → implement → pr
 
 Add Feature:
-  /speckit.add → plan → tasks → implement → pr
+  /spec-mesh add → plan → tasks → implement → pr
 
 Fix Bug:
-  /speckit.fix → implement → pr
+  /spec-mesh fix → implement → pr
 ```
 
 ---
@@ -189,7 +189,6 @@ npm install
 | ---------- | ------------------------------ |
 | serena     | プロジェクト探索・ファイル編集 |
 | context7   | ライブラリドキュメント検索     |
-| playwright | E2E テスト自動化               |
 
 ---
 
@@ -198,43 +197,49 @@ npm install
 ```
 .
 ├── .claude/
-│   ├── commands/           # speckit.* コマンド (17+)
-│   └── settings.local.json # Hooks 設定（Lint 自動実行）
+│   ├── skills/
+│   │   └── spec-mesh/         # spec-mesh Skill
+│   │       ├── SKILL.md       # Skill 定義
+│   │       ├── constitution.md # Engineering Constitution
+│   │       ├── workflows/     # ワークフロー (17+)
+│   │       ├── templates/     # Spec テンプレート
+│   │       ├── guides/        # ガイドドキュメント
+│   │       └── scripts/       # Node.js スクリプト
+│   ├── agents/                # Agent 定義 (3)
+│   └── settings.local.json    # Hooks 設定（Lint 自動実行）
 ├── .github/
 │   └── workflows/
-│       ├── spec-lint.yml   # Spec 整合性チェック CI
-│       └── code-quality.yml # コード品質チェック CI
+│       ├── spec-lint.yml      # Spec 整合性チェック CI
+│       └── code-quality.yml   # コード品質チェック CI
 ├── .specify/
-│   ├── memory/constitution.md   # Engineering Constitution
-│   ├── input/              # Quick Input ファイル（ユーザー入力用）
-│   ├── templates/          # Spec + Quick Input テンプレート (9)
-│   ├── scripts/            # Node.js スクリプト (7)
-│   ├── specs/              # 仕様書（自動生成）
-│   └── state/              # 状態ファイル
-├── src/                    # ソースコード
-├── docs/                   # ドキュメント
-├── .dependency-cruiser.cjs # 依存関係ルール設定
-├── eslint.config.js        # ESLint 設定（Flat Config）
-├── knip.json               # 未使用コード検出設定
-├── tsconfig.json           # TypeScript 設定
-├── package.json            # npm scripts & 依存関係
-└── CLAUDE.md               # AI エージェント用ガイド
+│   ├── memory/                # 状態記憶（リダイレクト）
+│   ├── input/                 # Quick Input ファイル（ユーザー入力用）
+│   ├── specs/                 # 仕様書（自動生成）
+│   └── state/                 # 状態ファイル
+├── src/                       # ソースコード
+├── docs/                      # ドキュメント
+├── .dependency-cruiser.cjs    # 依存関係ルール設定
+├── eslint.config.js           # ESLint 設定（Flat Config）
+├── knip.json                  # 未使用コード検出設定
+├── tsconfig.json              # TypeScript 設定
+├── package.json               # npm scripts & 依存関係
+└── CLAUDE.md                  # AI エージェント用ガイド
 ```
 
 ---
 
 ## Key Files
 
-| File                              | Purpose                                                |
-| --------------------------------- | ------------------------------------------------------ |
-| `CLAUDE.md`                       | AI エージェントの行動指針                              |
-| `.specify/memory/constitution.md` | Engineering Constitution（最上位ルール）               |
-| `.claude/settings.local.json`     | Hooks 設定（SessionStart + Lint 自動実行）             |
-| `.specify/input/*.md`             | Quick Input ファイル（コマンド実行前にユーザーが記入） |
-| `.dependency-cruiser.cjs`         | 依存関係ルール（循環依存禁止など）                     |
-| `eslint.config.js`                | ESLint Flat Config（TypeScript 対応）                  |
-| `knip.json`                       | 未使用コード・依存検出設定                             |
-| `tsconfig.json`                   | TypeScript strict 設定                                 |
+| File                                      | Purpose                                                |
+| ----------------------------------------- | ------------------------------------------------------ |
+| `CLAUDE.md`                               | AI エージェントの行動指針                              |
+| `.claude/skills/spec-mesh/constitution.md`| Engineering Constitution（最上位ルール）               |
+| `.claude/settings.local.json`             | Hooks 設定（SessionStart + Lint 自動実行）             |
+| `.specify/input/*.md`                     | Quick Input ファイル（ワークフロー実行前にユーザーが記入） |
+| `.dependency-cruiser.cjs`                 | 依存関係ルール（循環依存禁止など）                     |
+| `eslint.config.js`                        | ESLint Flat Config（TypeScript 対応）                  |
+| `knip.json`                               | 未使用コード・依存検出設定                             |
+| `tsconfig.json`                           | TypeScript strict 設定                                 |
 
 ---
 

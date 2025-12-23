@@ -1,0 +1,41 @@
+{
+  "version": "1.1.0",
+  "project": {
+    "name": "",
+    "createdAt": "2025-12-23T00:48:03.789Z"
+  },
+  "specs": {
+    "vision": {
+      "path": ".specify/specs/vision/spec.md",
+      "status": "clarified",
+      "lastModified": "2025-12-23T00:56:20.123Z",
+      "clarifyComplete": false
+    },
+    "domain": {
+      "path": ".specify/specs/domain/spec.md",
+      "status": "none",
+      "lastModified": null,
+      "clarifyComplete": false,
+      "definitions": {
+        "masters": [],
+        "apis": [],
+        "rules": []
+      }
+    },
+    "screen": {
+      "path": ".specify/specs/screen/spec.md",
+      "status": "none",
+      "lastModified": null,
+      "screenCount": 0
+    }
+  },
+  "phase": "vision",
+  "features": {
+    "total": 0,
+    "byStatus": {
+      "backlog": 0,
+      "inProgress": 0,
+      "completed": 0
+    }
+  }
+}

@@ -1,509 +1,187 @@
 # CLAUDE Development Guide
 
-このリポジトリで開発を行う AI コーディングアシスタント（Claude Code など）の行動指針です。
-`.specify/memory/constitution.md` を最上位ルールとし、仕様駆動開発（Spec-Driven Development）
-と GitHub ガバナンスを守りながら安全に作業します。
+このリポジトリで開発を行う AI コーディングアシスタントの行動指針です。
 
 ---
 
-## 1. 役割と優先順位
+## 1. 優先順位
 
-- Engineering Constitution が最優先。その次に Vision/Domain/Screen/Feature の各 spec、plan、tasks。
-- すべての非トリビアルな変更はワークフローを守る。ショートカット禁止。
-- 仕様に矛盾・不足があれば、推測せず `/speckit.clarify` や Issue でエスカレーション。
-- **Spec-First**: 画面変更は Feature Spec 作成前に Screen Spec を更新する。実装後に Status を更新。
+1. **Engineering Constitution** (`.claude/skills/spec-mesh/constitution.md`) が最優先ルール
+2. その次に Vision / Domain / Screen / Feature の各 Spec
+3. 仕様に矛盾・不足があれば推測せず `/spec-mesh clarify` でエスカレーション
 
 ---
 
-## 2. 前提ツールと環境
+## 2. 環境とツール
 
-- 必須: Git / GitHub アカウント / GitHub CLI (`gh`)
-- ランタイム: Node.js / パッケージマネージャ（npm/pnpm/yarn。プロジェクト方針に合わせる）
-- MCP (Claude Code 例):
-  - `serena`: プロジェクト構造・ファイル操作
-  - `context7`: ライブラリ/フレームワークのドキュメント検索
-  - `playwright` (任意): ブラウザ自動化・E2E 補助
-- serena が使えない場合は onboard か activate を実施してください。
-- Python を使う作業では仮想環境を必ず有効化してから変更提案する（例: `.\venv\Scripts\activate`）。
+### 必須ツール
+
+| ツール | 用途 |
+|--------|------|
+| Git | バージョン管理 |
+| GitHub CLI (`gh`) | GitHub 操作 |
+| Node.js | ランタイム |
+| npm/pnpm | パッケージ管理 |
 
 ### コード品質ツール
 
-このテンプレートには以下のコード品質ツールが組み込まれています:
-
-| ツール             | 用途             | コマンド                |
-| ------------------ | ---------------- | ----------------------- |
-| ESLint             | コードチェック   | `npm run lint`          |
-| Prettier           | フォーマット     | `npm run format`        |
-| TypeScript         | 型チェック       | `npm run typecheck`     |
-| madge              | 循環依存検出     | `npm run deps:circular` |
-| dependency-cruiser | 依存関係ルール   | `npm run deps:check`    |
-| knip               | 未使用コード検出 | `npm run unused`        |
-
-**初回セットアップ:** `npm install` を実行してください。
-
-**全チェック一括実行:** `npm run quality`
-
-### Claude Hooks（自動チェック）
-
-`.claude/settings.local.json` により、ファイル編集時に自動で Lint が実行されます:
-
-```json
-{
-  "hooks": {
-    "PostToolUse": [
-      {
-        "matcher": "Edit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "npm run lint --silent -- --max-warnings 0"
-          }
-        ]
-      }
-    ]
-  }
-}
+```bash
+npm run lint          # ESLint
+npm run format        # Prettier
+npm run typecheck     # TypeScript
+npm run quality       # 全チェック一括
 ```
 
-**注意:** Lint エラーが出た場合は必ず修正してから次の作業に進むこと。
-
-### 依存関係ルール
-
-`.dependency-cruiser.cjs` で以下を強制:
-
-- **no-circular**: 循環依存禁止
-- **no-ui-to-data-layer**: UI → DB/API 直接アクセス禁止
-- **no-dev-deps-in-src**: 本番コードで devDependencies 使用禁止
+**初回セットアップ:** `npm install`
 
 ---
 
-## 3. ワークフロー
+## 3. Spec-Mesh Skills
 
-### 新規プロジェクト立ち上げフロー
+すべての仕様駆動開発（SSD）ワークフローは `/spec-mesh` Skill で実行します。
 
-```
-Phase 1: /speckit.vision (統合 Quick Input)
-  → .specify/input/vision-input.md に入力（Part A: ビジョン、Part B: 画面、Part C: デザイン、Part D: ビジネスルール）
-  → Vision Spec 作成（目的、ジャーニー、スコープ、Screen Hints）
-  → /speckit.clarify で曖昧点解消（4問ずつバッチ質問）
-  → 人間: Vision をレビュー・承認
+### 呼び出し方
 
-Phase 2: /speckit.design (Screen + Domain + Matrix 同時作成)
-  → Vision Spec の Screen Hints を使用（空なら入力を促す）
-  → Feature 候補提案 → 人間が採用を選択
-  → Feature Issues 一括作成
-  → **Screen Spec + Domain Spec + Cross-Reference Matrix を同時作成**
-    - Screen Index に画面一覧と Journey 参照
-    - Domain Spec に M-*/API-* 定義
-    - Matrix (cross-reference.json) で全対応関係を一元管理
-  → /speckit.clarify で曖昧点解消
-  → Foundation Issue (S-FOUNDATION-001) 自動作成
-  → 人間: Screen + Domain Spec をレビュー・承認
-
-Phase 3: /speckit.issue (Foundation Issue を選択)
-  → S-FOUNDATION-001 を選択
-  → Foundation Feature Spec 作成
-  → /speckit.clarify で曖昧点解消
-  → 人間: Spec をレビュー・承認
-
-Phase 4: plan → tasks → implement → pr
-  → 基盤実装（認証、DB、基本構造）
-  → 人間: PR レビュー・マージ
-
-Phase 5以降: Feature 開発（繰り返し）
-  /speckit.issue → clarify → plan → tasks → implement → pr
-```
-
-### 既存プロジェクトへの機能追加フロー
+**重要:** 最初から args 付きで呼び出してください。
 
 ```
-/speckit.add
-  → .specify/input/add-input.md に入力（Quick Input）
-  → Issue 作成 → Branch 作成
-  → [Spec-First] 画面変更が必要な場合、Screen Spec を先に更新（Status: Planned）
-  → Feature Spec 作成（Screen Spec を参照）
-  → /speckit.clarify で曖昧点解消
-  → 人間: Spec をレビュー・承認
-  → plan → tasks → implement → pr
-  → [PR マージ後] Screen Spec の Status を Implemented に更新
+/spec-mesh vision      # Vision Spec 作成
+/spec-mesh design      # Screen + Domain + Matrix 作成
+/spec-mesh add         # 新機能追加
+/spec-mesh fix         # バグ修正
+/spec-mesh clarify     # 曖昧点解消
+/spec-mesh plan        # 実装計画作成
+/spec-mesh implement   # 実装実行
+/spec-mesh pr          # PR 作成
+```
 
-/speckit.fix (バグ修正)
-  → .specify/input/fix-input.md に入力（または --quick でスキップ）
-  → Issue 作成 → Branch 作成
-  → 原因調査（Serena で影響範囲特定）
-  → **Fix Spec 作成**（.specify/specs/{project}/fixes/f-xxx-001/）
-  → /speckit.clarify で曖昧点解消
-  → 人間: Fix Spec をレビュー・承認
-  → plan → tasks → implement → pr
+### 品質管理フロー
+
+```
+Spec 作成 → Multi-Review (3観点並列) → Lint → [HUMAN_CHECKPOINT]
+                  ↓
+            問題あり → Clarify (ユーザー対話)
 ```
 
 ### コマンド一覧
 
-**プロジェクト初期化 (2個)**
+**プロジェクト初期化**
 | コマンド | 用途 |
-|---------|------|
-| `/speckit.vision` | Vision Spec 作成（目的 + ジャーニー + Screen Hints + ビジネスルール）- 統合 Quick Input 対応 |
-| `/speckit.design` | **Screen + Domain + Matrix 同時作成** + Feature Issues + Foundation Issue |
+|----------|------|
+| `/spec-mesh vision` | Vision Spec 作成 |
+| `/spec-mesh design` | Screen + Domain + Matrix 作成 |
 
-**開発エントリーポイント (5個)**
+**開発エントリーポイント**
 | コマンド | 用途 |
-|---------|------|
-| `/speckit.issue` | 既存 Issue 選択 → Screen Spec 更新（Spec-First）→ Feature Spec 作成 → 開発開始 |
-| `/speckit.add` | 新機能追加（Issue 自動作成）→ Screen Spec 更新（Spec-First）→ Feature Spec 作成 |
-| `/speckit.fix` | バグ修正（Issue 自動作成）→ Screen 影響検出 |
-| `/speckit.featureproposal` | 追加 Feature を AI に提案させる |
-| `/speckit.change` | Vision/Domain/Screen Spec 変更 |
+|----------|------|
+| `/spec-mesh issue` | 既存 Issue から開発開始 |
+| `/spec-mesh add` | 新機能追加 |
+| `/spec-mesh fix` | バグ修正 |
+| `/spec-mesh change` | Spec 変更（Vision/Domain/Screen） |
+| `/spec-mesh featureproposal` | Feature 提案 |
 
-**開発フローコマンド (4個)**
+**開発フロー**
 | コマンド | 用途 |
-|---------|------|
-| `/speckit.plan` | Plan 作成（人間確認で停止） |
-| `/speckit.tasks` | Tasks 作成 |
-| `/speckit.implement` | 実装 |
-| `/speckit.pr` | PR 作成 |
+|----------|------|
+| `/spec-mesh plan` | 実装計画作成 |
+| `/spec-mesh tasks` | タスク分割 |
+| `/spec-mesh implement` | 実装実行 |
+| `/spec-mesh pr` | PR 作成 |
 
-**ユーティリティ (5個)**
+**品質管理**
 | コマンド | 用途 |
-|---------|------|
-| `/speckit.analyze` | 実装と Spec の整合性分析（PR 前の安心確認） |
-| `/speckit.feedback` | Spec へのフィードバック記録 |
-| `/speckit.clarify` | 要件の曖昧点を 4 問ずつバッチ質問 → 即時 Spec 更新 |
-| `/speckit.checklist` | 要件品質チェックリスト生成（Unit Tests for English） |
-| `/speckit.lint` | Spec 整合性チェック（Matrix 検証含む） |
+|----------|------|
+| `/spec-mesh review` | Multi-Review（3観点並列） |
+| `/spec-mesh clarify` | 曖昧点解消（4問バッチ） |
+| `/spec-mesh lint` | 整合性チェック |
+| `/spec-mesh analyze` | 実装 vs Spec 分析 |
+| `/spec-mesh checklist` | 品質スコア測定 |
+| `/spec-mesh feedback` | フィードバック記録 |
 
-**内部コマンド (1個)**
+**テスト**
 | コマンド | 用途 |
-|---------|------|
-| `/speckit.spec` | Spec 作成/更新（内部使用・上級者向け。通常は上記コマンドを使用） |
+|----------|------|
+| `/spec-mesh test-scenario` | Test Scenario Spec 作成 |
+| `/spec-mesh e2e` | E2E テスト実行（Chrome 拡張） |
+
+### 典型的なワークフロー
+
+**新規プロジェクト:**
+```
+/spec-mesh vision → (Multi-Review自動) → clarify → design → (Multi-Review自動) → clarify
+→ /spec-mesh issue (Foundation) → plan → tasks → implement → pr
+```
+
+**機能追加:**
+```
+/spec-mesh add → (Multi-Review自動) → clarify
+→ test-scenario → plan → tasks → implement → e2e → pr
+```
+
+**バグ修正:**
+```
+/spec-mesh fix → (Multi-Review自動) → plan → tasks → implement → e2e → pr
+```
+
+**テストフロー:**
+```
+Feature Spec 承認後 → /spec-mesh test-scenario → テストデータ定義
+→ 実装完了後 → /spec-mesh e2e → Pass/Fail レポート
+```
 
 ---
 
-## 4. Spec ドキュメント構成
+## 4. Git ワークフロー
 
-### ディレクトリ構造
+### ブランチ命名
 
-```
-.specify/specs/{project}/
-├── overview/              # プロジェクト全体の定義
-│   ├── vision/            # Vision Spec（目的、ジャーニー、Screen Hints）
-│   ├── domain/            # Domain Spec（M-*, API-*, Rules）
-│   ├── screen/            # Screen Spec（画面一覧、遷移図）
-│   └── matrix/            # Cross-Reference Matrix
-│
-├── features/              # Feature Specs (S-XXX-001)
-│   ├── s-auth-001/
-│   └── s-lead-001/
-│
-└── fixes/                 # Fix Specs (F-XXX-001) - バグ調査報告書
-    └── f-auth-001/
-```
+| タイプ | パターン |
+|--------|----------|
+| Spec変更 | `spec/<issue>-<slug>` |
+| 機能追加 | `feature/<issue>-<slug>` |
+| バグ修正 | `fix/<issue>-<slug>` |
+| 緊急対応 | `hotfix/<issue>-<slug>` |
 
-### 5層構造
+### ルール
 
-- **Vision Spec** (`overview/vision/`): プロジェクトの目的、ジャーニー、Screen Hints
-- **Screen Spec** (`overview/screen/`): 画面一覧、遷移図、ワイヤーフレーム
-- **Domain Spec** (`overview/domain/`): M-\*, API-\*, BR-\*/VR-\*/CR-\*
-- **Feature Spec** (`features/s-xxx-001/`): 機能の詳細仕様（WHAT）
-- **Fix Spec** (`fixes/f-xxx-001/`): バグ調査報告書（原因分析、影響範囲）
+- `main` への直接 push 禁止
+- 常に Issue 連動ブランチで作業
+- PR 作成は `/spec-mesh pr` を使用
 
-```
-Vision (WHY + Screen Hints)
-    ↓
-/speckit.design で同時作成
-    ↓
-Screen ─┬─ Domain
-        ↓
-      Matrix (cross-reference.json) で一元管理
-        ↓
-    ┌───┴───┐
-Feature   Fix
- (WHAT)  (WHAT)
-    ↓      ↓
-   Plan   Plan
-   (HOW)  (HOW)
-```
+---
 
-### Cross-Reference Matrix
-
-**Screen ↔ Domain ↔ Feature の対応関係を一元管理するシステム。**
-
-**ファイル構成:**
-```
-.specify/specs/{project}/overview/matrix/
-├── cross-reference.json  # 機械可読な対応関係（Single Source of Truth）
-└── cross-reference.md    # 人間可読なビュー（自動生成）
-```
-
-**Matrix が管理する情報:**
-- Screen → M-*/API-* マッピング（各画面が使用するデータとAPI）
-- Feature → SCR-*/M-*/API-* マッピング（各機能の依存関係）
-- Permissions（各APIのロール別アクセス権限）
-
-**運用ルール:**
-- `/speckit.design` で初期作成
-- Feature 追加時は Matrix も更新（`/speckit.add`, `/speckit.issue`）
-- `node .specify/scripts/generate-matrix-view.cjs` で MD ビュー再生成
-- `/speckit.lint` で整合性チェック（Matrix ↔ Spec の不一致を検出）
-
-### Screen Spec と Spec-First アプローチ
-
-**Screen Spec は画面設計の唯一の真実（Single Source of Truth）。**
-
-**Status 管理:**
-| Status | 意味 |
-|--------|------|
-| `Planned` | 仕様定義済み、未実装（ワイヤーフレームは計画状態） |
-| `Implemented` | 実装完了、本番稼働中 |
-
-**Spec-First ワークフロー:**
-
-1. 画面変更が必要な Feature を特定
-2. **Feature Spec 作成前に** Screen Spec を更新（新規画面追加 or Modification Log に記録）
-3. Screen Spec の Status を `Planned` に設定
-4. Feature Spec を作成し、SCR-\* を参照
-5. 実装 → PR 作成 → マージ
-6. **マージ後** Screen Spec の Status を `Implemented` に更新
-
-**Modification Log (Section 2.1):**
-既存画面への変更予定を記録。Feature 実装前に Screen Spec を更新し、PR マージ後に Status を更新。
-
-```markdown
-| Screen ID | Modification       | Feature ID | Status  | Issue |
-| --------- | ------------------ | ---------- | ------- | ----- |
-| SCR-001   | フィルター機能追加 | S-XXX-001  | Planned | #45   |
-```
-
-### Feature Index
-
-Domain Spec で全 Feature を表形式で管理:
-
-```markdown
-| Feature ID | Title    | Path                       | Status    | Related M-_/API-_   |
-| ---------- | -------- | -------------------------- | --------- | ------------------- |
-| S-AUTH-001 | 認証機能 | .specify/specs/s-auth-001/ | Completed | M-USER, API-AUTH-\* |
-```
-
-### scaffold スクリプト
+## 5. 状態管理
 
 ```bash
-node .specify/scripts/scaffold-spec.cjs --kind vision --id S-VISION-001 --title "..."
-node .specify/scripts/scaffold-spec.cjs --kind domain --id S-DOMAIN-001 --title "..." --vision S-VISION-001
-node .specify/scripts/scaffold-spec.cjs --kind screen --id S-SCREEN-001 --title "..." --vision S-VISION-001 --domain S-DOMAIN-001
-node .specify/scripts/scaffold-spec.cjs --kind feature --id S-XXX-001 --title "..." --domain S-DOMAIN-001
+node .claude/skills/spec-mesh/scripts/state.cjs query --all    # 全状態確認
+node .claude/skills/spec-mesh/scripts/state.cjs init           # 初期化
 ```
 
-### Quick Input システム
-
-ユーザーが事前に入力ファイルを埋めてからコマンドを実行することで、AI が的確な Spec を生成できる。
-
-**ファイル構成:**
-
-```
-.specify/
-├── templates/              # ベーステンプレート（読み取り専用）
-│   ├── vision-input.md     # 統合版（Vision + Screen + Design + Business Rules）
-│   ├── add-input.md
-│   └── fix-input.md
-│
-├── input/                  # ユーザー入力用（編集対象）
-│   ├── vision-input.md     # 統合 Quick Input（Part A + B + C + D）
-│   ├── add-input.md
-│   └── fix-input.md
-│
-└── scripts/
-    └── reset-input.cjs     # 入力ファイルリセット
-```
-
-**統合 Quick Input（vision-input.md）の構造:**
-
-```
-Part A: ビジョン（必須）
-  - プロジェクト名、課題、ユーザー、やりたいこと、やらないこと、制約
-
-Part B: 画面イメージ（任意だが推奨）
-  - 主要画面リスト、画面遷移、各画面の主な要素
-  → Vision Spec の Screen Hints セクションに保存
-  → /speckit.design で Screen + Domain 作成時に使用
-
-Part C: デザイン希望（任意）
-  - デザインスタイル、レスポンシブ対応、参考画像
-
-Part D: ビジネスルール（任意だが推奨）
-  - 業務ルール、バリデーションルール、計算ルール
-  → Domain Spec の Business Rules セクションに反映
-```
-
-**使い方:**
-
-1. `.specify/input/vision-input.md` を編集して情報を入力（Part A 必須、Part B/C/D 推奨）
-2. `/speckit.vision` を実行 → Vision Spec 作成（Screen Hints 含む）
-3. `/speckit.design` を実行 → Screen + Domain + Matrix 同時作成
-4. 完了後、入力内容は Spec の「Original Input」セクションに記録され、入力ファイルは自動リセット
-
-**fix の緊急対応:**
-
-```bash
-/speckit.fix --quick ログインできない
-```
-
-`--quick` オプションで入力ファイルをスキップして即座に開始可能。
-
-**リセットスクリプト:**
-
-```bash
-node .specify/scripts/reset-input.cjs vision   # vision のみリセット
-node .specify/scripts/reset-input.cjs all      # 全てリセット
-```
+セッション開始時に自動で状態がコンテキストに読み込まれます。
 
 ---
 
-## 5. Git / PR ワークフロー
+## 6. 参考資料
 
-- `main` への直接 push は禁止。常に Issue 連動ブランチで作業。
-- ブランチ命名: `spec/<issue>-...` / `feature/<issue>-...` / `fix/<issue>-...`
-- ブランチ作成: `node .specify/scripts/branch.cjs --type feature --slug <slug> --issue <num>`
-- PR 作成時に必ず記載:
-  - 関連 Issue (`Fixes #123`)
-  - 関連 Spec ID (`Implements S-001, UC-003` など)
-  - 実行したテストと結果
-  - **Screen Status 更新が必要な SCR-\* ID**（Spec-First）
-- PR 作成は `/speckit.pr` を使用（`spec-lint` 自動実行）。
+### Constitution
+- [constitution.md](.claude/skills/spec-mesh/constitution.md) - Engineering Constitution
 
-### PR マージ後の Screen Spec 更新
+### Skill ガイド
+- [id-naming.md](.claude/skills/spec-mesh/guides/id-naming.md) - ID命名規則
+- [parallel-development.md](.claude/skills/spec-mesh/guides/parallel-development.md) - 並行開発ガイド
+- [error-recovery.md](.claude/skills/spec-mesh/guides/error-recovery.md) - エラー回復ガイド
 
-**Spec-First アプローチでは、PR マージ後に Screen Spec の Status を更新する。**
-
-```bash
-# main ブランチに切り替え後
-# 1. Screen Spec Section 2 (Screen Index) の Status を更新
-# 2. Screen Spec Section 2.1 (Modification Log) の Status を更新
-# 3. Changelog に記録
-git add .specify/specs/screen/spec.md
-git commit -m "chore: Update Screen Spec Status to Implemented"
-git push
-```
+### テンプレート
+- `.claude/skills/spec-mesh/templates/` - 各種Specテンプレート
 
 ---
 
-## 6. テストと診断の原則
+## 7. 重要な原則
 
-- 目的は CI を「緑にする」ことではなく、仕様に沿った挙動を保証すること。
-- テスト失敗時は必ず原因を分類（spec / test / implementation / environment）。推測で修正しない。
-- テストを弱める・skip する・削除する場合は、Issue で理由と影響する Spec ID を記録し、
-  レビュー承認を得るまで実施しない。
+1. **Spec-First**: 画面変更は Screen Spec 更新後に Feature Spec
+2. **Multi-Review 必須**: Spec 作成後は必ず 3観点レビューを実行
+3. **推測禁止**: 不明点は `/spec-mesh clarify` で解消
+4. **小さな変更**: レビューしやすい差分を心がける
+5. **テスト必須**: 仕様に沿った挙動を保証
 
----
-
-## 7. 曖昧さ・未定義事項の扱い
-
-- 仕様が曖昧・矛盾している場合、勝手に実装しない。
-- `/speckit.clarify` で論点を整理し、必要に応じて新規 Issue を起票する。
-- **Clarify は 4 問ずつバッチ質問**し、推奨オプションを提示、回答ごとに即時 Spec 更新。
-- **Clarify は独立したコマンド**として分離されている（vision, design, add, fix の各コマンドには組み込まない）。
-- 各コマンド（vision, design, issue, add, fix）は Spec 作成後に曖昧点レポートを表示し、`/speckit.clarify` を推奨する。
-
----
-
-## 8. コードスタイルと変更粒度
-
-- 小さくレビューしやすい差分を好む。1 Issue / 1 Feature Spec / 1 ユースケース単位が原則。
-- 無関係なリファクタリングを同一 PR に混ぜない。必要なら別 Issue/PR を提案する。
-- ログやエラー処理は spec/plan の方針に従う。不要な debug 出力は削除。
-
----
-
-## 9. 状態管理
-
-プロジェクトとブランチの状態を追跡するための 2 層構造:
-
-### Repo State (`.specify/state/repo-state.json`)
-
-- Vision/Domain Spec の完成度（none/scaffold/draft/clarified/approved）
-- プロジェクトフェーズ（initialization/vision/design/foundation/development）
-- Feature 進捗カウント
-
-### Branch State (`.specify/state/branch-state.json`)
-
-- ブランチごとの作業ステップ（spec/plan/tasks/implement/pr）
-- タスク進捗（completed/total）
-- 中断情報（`/speckit.change` による中断時）
-
-### 状態管理コマンド
-
-```bash
-node .specify/scripts/state.cjs init                    # 初期化
-node .specify/scripts/state.cjs query --repo            # Repo 状態確認
-node .specify/scripts/state.cjs query --branch          # 現在のブランチ状態確認
-node .specify/scripts/state.cjs query --suspended       # 中断中のブランチ確認
-```
-
-### 警告ベースアプローチ
-
-- 各コマンドは前提条件をチェックし、満たさない場合は警告を表示
-- **人間の判断で警告を無視して続行可能**（強制ブロックはしない）
-
-### SessionStart Hook（自動状態読込）
-
-セッション開始時に自動でプロジェクト状態がコンテキストに読み込まれます。
-
-**設定ファイル:** `.claude/settings.local.json`
-
-```json
-{
-  "hooks": {
-    "SessionStart": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node .specify/scripts/state.cjs query --all 2>/dev/null || echo \"[SSD State] Not initialized\""
-          }
-        ]
-      }
-    ]
-  }
-}
-```
-
-**効果:**
-
-- 「どのブランチで作業中か」「どのステップか」を自動把握
-- 毎回の状態確認コマンド実行が不要
-- 継続作業がスムーズに
-
----
-
-## 10. Feature Spec 作成時の M-_/API-_ 対応
-
-Feature Spec 作成時（/speckit.issue, /speckit.add）に必要な M-_/API-_ を特定した際の分岐:
-
-| Case   | 状況                        | 対応                                |
-| ------ | --------------------------- | ----------------------------------- |
-| Case 1 | 既存の M-_/API-_ で足りる   | そのまま参照を追加                  |
-| Case 2 | 新規 M-_/API-_ が必要       | Feature Spec 作成中に Domain に追加 |
-| Case 3 | 既存 M-_/API-_ の変更が必要 | `/speckit.change` を実行            |
-
-**Case 3 の場合**: Feature 実装を中断し、`/speckit.change` で Spec 変更を先に完了させる。
-
----
-
-## 11. 補助ツールとガイド
-
-- **整合性チェック**:
-  - `node .specify/scripts/spec-lint.cjs`: Matrix → Spec の参照整合性（Matrix が参照するものが Spec に存在するか）
-  - `node .specify/scripts/validate-matrix.cjs`: Spec → Matrix の完全性（Spec の内容が Matrix に反映されているか）
-  - `/speckit.lint` は両方を実行
-- **Matrix ビュー生成**: `node .specify/scripts/generate-matrix-view.cjs`（cross-reference.md 自動生成）
-- **実装分析**: `/speckit.analyze` で PR 前の安心確認
-- **プロジェクト健全性**: `node .specify/scripts/spec-metrics.cjs` でスコアと問題点を確認
-- **状態確認**: `node .specify/scripts/state.cjs query --all` で全状態確認
-- **エラーリカバリー**: `.specify/guides/error-recovery.md`
-- **並行開発**: `.specify/guides/parallel-development.md`
-- **変更サイズ分類**: Trivial/Small/Medium/Large/Emergency に応じてフローが異なる（constitution.md 参照）
-
----
-
-## 12. このガイドの更新
-
-- AI 側の行動原則を変える場合は、必ず人間と合意し、PR を通して `CLAUDE.md` を更新する。
-- 大きな変更は Constitution と同様にレビューと承認を経て反映する。
+詳細は [Engineering Constitution](.claude/skills/spec-mesh/constitution.md) を参照してください。

@@ -56,7 +56,7 @@
 ## Part B: 画面イメージ（任意だが推奨）
 
 > **Note**: 画面リストが明確な場合は記入してください。
-> 空欄でも Vision Spec は作成できますが、後の `/speckit.design` で再度入力が必要になります。
+> 空欄でも Vision Spec は作成できますが、後の `/spec-mesh design` で再度入力が必要になります。
 
 ### B1. 画面リスト
 
@@ -119,5 +119,5 @@
 ## 入力完了後
 
 1. このファイルを保存
-2. `/speckit.vision` を実行
-3. AI が Vision Spec を生成し、画面情報があれば `/speckit.design` で活用されます
+2. `/spec-mesh vision` を実行
+3. AI が Vision Spec を生成し、画面情報があれば `/spec-mesh design` で活用されます

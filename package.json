@@ -16,7 +16,7 @@
     "unused:fix": "knip --fix",
     "quality": "npm run lint && npm run typecheck && npm run deps:circular && npm run unused",
     "quality:ci": "npm run lint -- --quiet && npm run typecheck && npm run deps:circular && npm run deps:check && npm run unused",
-    "spec:lint": "node .specify/scripts/spec-lint.cjs",
+    "spec:lint": "node .claude/skills/spec-mesh/scripts/spec-lint.cjs",
     "prepare": "husky || true"
   },
   "devDependencies": {
