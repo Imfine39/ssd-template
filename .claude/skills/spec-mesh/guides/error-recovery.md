@@ -3,9 +3,6 @@
 This guide provides procedures for recovering from common errors and exceptions
 in the spec-driven development workflow.
 
-**Related guide**: For parallel development scenarios (Domain conflicts, merge order,
-feature dependencies), see `parallel-development.md`.
-
 ---
 
 ## Scope
@@ -15,11 +12,9 @@ This guide covers:
 - Screen Spec issues
 - Emergency situations
 
-For team coordination issues during parallel development, see `parallel-development.md`:
-- Domain modification conflicts
-- Feature dependency management
-- Merge order coordination
-- Team communication patterns
+**Related guides:**
+- `parallel-development.md` - Domain conflicts, merge order, feature dependencies, team coordination
+- `scripts-errors.md` - Detailed script error messages, exit codes, and troubleshooting
 
 ---
 
@@ -227,20 +222,14 @@ constraints discovered during implementation.
    - Create a revert commit if the change is problematic.
    - Create Issue and proper branch for follow-up work.
 
-### 5.2 Spec Lint Fails in CI
+### 5.2 Script Errors (spec-lint, state, etc.)
 
-**Symptoms**: CI fails on spec-lint check.
+**Symptoms**: Scripts fail with error messages or unexpected exit codes.
 
-**Recovery steps**:
-
-1. **Run locally**: `node .claude/skills/spec-mesh/scripts/spec-lint.cjs`
-2. **Fix reported errors**:
-   - Missing Spec Type or ID → Add to spec header.
-   - Duplicate IDs → Rename one of the duplicates.
-   - Missing Domain → Create Domain spec first.
-   - Unknown master/API → Add to Domain or fix typo.
-   - Missing Feature index entry → Add to Domain table.
-3. **Commit fixes** and push.
+**Recovery**: See `scripts-errors.md` for:
+- Complete error message reference for each script
+- Exit code meanings
+- Step-by-step troubleshooting procedures
 
 ---
 
@@ -368,6 +357,7 @@ missing navigation paths.
 | Screen not in Screen Spec | Update Screen Spec first (Spec-First) |
 | Screen status still Planned | Update to Implemented after PR merge |
 | Screen conflict | Coordinate with other feature owner |
+| Script error | See `scripts-errors.md` for details |
 
 **Key principle**: Always fix problems at the correct level. Never patch a
 lower level to hide a problem at a higher level.

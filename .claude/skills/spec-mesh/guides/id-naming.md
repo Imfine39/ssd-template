@@ -5,6 +5,17 @@
 
 ---
 
+## Scope
+
+This guide is the **authoritative reference** for all ID naming conventions in spec-mesh.
+
+**Related guides:**
+- `error-recovery.md` - Recovery procedures when ID-related errors occur
+- `parallel-development.md` - Coordinating IDs across parallel development
+- `scripts-errors.md` - Script errors related to invalid or duplicate IDs
+
+---
+
 ## 1. Specification IDs (S-*)
 
 ### 1.1 Vision Spec

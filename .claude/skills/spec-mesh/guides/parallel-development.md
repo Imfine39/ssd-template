@@ -5,6 +5,21 @@ simultaneously within the spec-driven development workflow.
 
 ---
 
+## Scope
+
+This guide covers:
+- Feature dependencies and coordination
+- Domain modification protocol
+- Merge strategies and conflict resolution
+- Team communication patterns
+
+**Related guides:**
+- `error-recovery.md` - Individual workflow errors and recovery procedures
+- `scripts-errors.md` - Script error messages and troubleshooting
+- `id-naming.md` - ID conventions for specs, masters, APIs, etc.
+
+---
+
 ## 1. Overview
 
 When multiple features are developed in parallel, several challenges arise:

@@ -4,6 +4,19 @@ This guide documents common errors across all spec-mesh scripts and how to troub
 
 ---
 
+## Scope
+
+This guide covers:
+- Script-specific error messages and exit codes
+- Troubleshooting procedures for each script
+- Complete reset and recovery workflows
+
+**Related guides:**
+- `error-recovery.md` - Workflow-level errors (spec, plan, implementation, PR)
+- `parallel-development.md` - Team coordination issues during parallel development
+
+---
+
 ## Exit Code Summary
 
 All scripts use consistent exit codes:

@@ -1,11 +1,34 @@
----
-description: "Task list template for feature implementation"
----
-
 # Tasks: [FEATURE NAME]
 
-Input: `spec.md` (Feature spec) and Domain spec (for shared masters/APIs).  
-Prerequisites: `plan.md` must be created and reviewed.
+<!--
+  Template: Task Breakdown
+
+  Purpose: Break implementation plan into atomic, trackable tasks.
+  Used by: /spec-mesh tasks workflow
+
+  Task ID Format: T-{NNN} (e.g., T-001, T-002)
+  See: .claude/skills/spec-mesh/guides/id-naming.md for ID formats
+  See: .claude/skills/spec-mesh/constitution.md for workflow rules
+
+  Prerequisites:
+    - Implementation Plan must exist and be approved
+    - Feature Spec must be approved
+    - CLARIFY GATE must be passed ([NEEDS CLARIFICATION] = 0)
+
+  Task Guidelines:
+    - Each task: 1-2 hours of work
+    - Include file path for clarity
+    - Link to UC/FR IDs for traceability
+-->
+
+Feature Spec: S-{AREA}-{NNN}
+Plan: PLAN-{AREA}-{NNN}
+Created: {date}
+Total Tasks: [COUNT]
+Estimated Hours: [HOURS]
+
+Input: Feature Spec and Domain Spec for shared masters/APIs.
+Prerequisites: `plan.md` must be created and approved.
 
 Notes:
 
