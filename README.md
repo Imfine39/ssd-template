@@ -1,249 +1,284 @@
-# SSD-MESH 
+# SSD-MESH
 
-**Spec-Driven Development Framework for AI-Assisted Projects**
+**Spec-Driven Development Framework for Claude Code**
 
-つよつよAIエンジニアニックの最強SDDフレームワーク
-AI コーディングアシスタント（Claude Code など）と人間の協業による仕様駆動開発フレームワークです。
+AI コーディングアシスタント（Claude Code）と人間の協業による仕様駆動開発フレームワークです。
+
+---
+
+## Overview
+
+SSD-MESH は、Claude Code のスキルとして動作する開発フレームワークです。
+人間が自然言語で依頼し、Claude が適切なワークフローを実行します。
+
+```
+人間: 「新しいプロジェクトを始めたい」
+  ↓
+Claude: spec-mesh vision スキルを実行
+  ↓
+Vision Spec 生成 → Design → 実装
+```
 
 ---
 
 ## Features
 
 - **4層 Spec 構造** - Vision → Screen/Domain → Feature の階層的な仕様管理
-- **17+ ワークフロー** - `/spec-mesh *` による一貫したワークフロー
+- **21 ワークフロー** - 一貫した開発フロー
+- **Multi-Review** - 3観点並列レビューによる品質担保
 - **Clarify ループ** - 曖昧さを排除する対話的な仕様策定
 - **状態管理** - プロジェクトとブランチの状態追跡
-- **警告ベースアプローチ** - 強制ブロックせず人間の判断を尊重
-
----
-
-## Quick Start
-
-```bash
-# 1. GitHub CLI 認証
-gh auth login
-
-# 2. 状態初期化
-node .claude/skills/spec-mesh/scripts/state.cjs init
-
-# 3. 新規プロジェクト開始
-/spec-mesh vision あなたのプロジェクト説明
-```
 
 ---
 
 ## Documentation
 
-詳細なドキュメントは [docs/](docs/) を参照してください：
-
-| Page                                                  | Description                       |
-| ----------------------------------------------------- | --------------------------------- |
-| [Home](docs/Home.md)                                  | ドキュメントホーム                |
-| [Getting Started](docs/Getting-Started.md)            | インストールと最初のステップ      |
-| [Core Concepts](docs/Core-Concepts.md)                | 3層構造、Clarify ループ、状態管理 |
-| [Workflow: New Project](docs/Workflow-New-Project.md) | 新規プロジェクト立ち上げフロー    |
-| [Workflow: Add Feature](docs/Workflow-Add-Feature.md) | 機能追加・バグ修正フロー          |
-| [Workflows Reference](docs/Workflows-Reference.md)    | 全ワークフローのリファレンス      |
-| [Templates Reference](docs/Templates-Reference.md)    | Spec テンプレートの説明           |
-| [Scripts Reference](docs/Scripts-Reference.md)        | Node.js スクリプトの使用方法      |
-| [Troubleshooting](docs/Troubleshooting.md)            | よくある問題と解決方法            |
+| Document | Description |
+|----------|-------------|
+| [Getting Started](docs/Getting-Started.md) | セットアップガイド（MCP、Chrome 拡張） |
+| [Development Flow](docs/Development-Flow.md) | 理想的な開発フロー |
+| [Workflows Reference](docs/Workflows-Reference.md) | 全ワークフロー詳細 |
 
 ---
 
-## Workflow Overview
+## Quick Start
 
-### Project Initialization
+### 1. セットアップ
 
-| Workflow            | Purpose                                              |
-| ------------------- | ---------------------------------------------------- |
-| `/spec-mesh vision` | Vision Spec 作成（目的 + ジャーニー + Screen Hints） |
-| `/spec-mesh design` | **Screen + Domain Spec 同時作成** + Feature Issues   |
-
-### Development Entry Points
-
-| Workflow                     | Purpose                      |
-| ---------------------------- | ---------------------------- |
-| `/spec-mesh issue`           | 既存 Issue から開発開始      |
-| `/spec-mesh add`             | 新機能追加（Issue 自動作成） |
-| `/spec-mesh fix`             | バグ修正（Issue 自動作成）   |
-| `/spec-mesh featureproposal` | AI に Feature を提案させる   |
-| `/spec-mesh change`          | Vision/Domain Spec 変更      |
-
-### Development Flow
-
-| Workflow               | Purpose      |
-| ---------------------- | ------------ |
-| `/spec-mesh plan`      | 実装計画作成 |
-| `/spec-mesh tasks`     | タスク分割   |
-| `/spec-mesh implement` | 実装         |
-| `/spec-mesh pr`        | PR 作成      |
-
-### Utilities
-
-| Workflow               | Purpose                  |
-| ---------------------- | ------------------------ |
-| `/spec-mesh clarify`   | 曖昧点の解消             |
-| `/spec-mesh lint`      | Spec 整合性チェック      |
-| `/spec-mesh analyze`   | 実装と Spec の整合性分析 |
-| `/spec-mesh checklist` | 品質チェックリスト生成   |
-
----
-
-## Typical Workflow
-
-```
-New Project:
-  /spec-mesh vision → /spec-mesh design → /spec-mesh issue → plan → tasks → implement → pr
-
-Add Feature:
-  /spec-mesh add → plan → tasks → implement → pr
-
-Fix Bug:
-  /spec-mesh fix → implement → pr
-```
-
----
-
-## Code Quality Tools
-
-このテンプレートには、コード品質を自動で維持するためのツール群が組み込まれています。
-
-### セットアップ
+詳細は [Getting Started](docs/Getting-Started.md) を参照。
 
 ```bash
+# 依存関係インストール
 npm install
+
+# GitHub CLI 認証
+gh auth login
+
+# 状態初期化
+node .claude/skills/spec-mesh/scripts/state.cjs init
 ```
 
-### npm scripts
+### 2. 使い方
 
-| コマンド                | 説明                                         |
-| ----------------------- | -------------------------------------------- |
-| `npm run lint`          | ESLint によるコードチェック                  |
-| `npm run lint:fix`      | ESLint 自動修正                              |
-| `npm run typecheck`     | TypeScript 型チェック                        |
-| `npm run format`        | Prettier によるフォーマット                  |
-| `npm run deps:circular` | 循環依存の検出（madge）                      |
-| `npm run deps:check`    | 依存関係ルールチェック（dependency-cruiser） |
-| `npm run unused`        | 未使用コード・依存の検出（knip）             |
-| `npm run quality`       | 全チェック一括実行                           |
+Claude Code に自然言語で依頼するだけです：
 
-### Claude Hooks による自動チェック
+| やりたいこと | Claude への依頼例 |
+|-------------|------------------|
+| 新規プロジェクト開始 | 「新しいプロジェクトを始めたい」「Vision を作成して」 |
+| 画面・ドメイン設計 | 「Design を作成して」「画面設計をして」 |
+| 機能追加 | 「〇〇機能を追加したい」 |
+| バグ修正 | 「このバグを修正して」 |
+| 実装計画 | 「実装計画を作成して」 |
+| PR 作成 | 「PR を作成して」 |
 
-`.claude/settings.local.json` に設定されたフックにより、Claude Code がファイルを編集するたびに自動で Lint が実行されます。
+### 3. Quick Input（事前入力）
 
-```json
-{
-  "hooks": {
-    "PostToolUse": [
-      {
-        "matcher": "Edit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "npm run lint --silent -- --max-warnings 0"
-          }
-        ]
-      }
-    ]
-  }
-}
+より精度の高い Spec を生成するために、事前に入力ファイルを記入できます：
+
+```bash
+# テンプレートを作業用ディレクトリにコピー
+node .claude/skills/spec-mesh/scripts/reset-input.cjs vision
+
+# .specify/input/vision-input.md を編集
+# その後 Claude に「Vision を作成して」と依頼
 ```
-
-### 依存関係ルール（dependency-cruiser）
-
-`.dependency-cruiser.cjs` で以下のルールを強制:
-
-- **no-circular**: 循環依存の禁止
-- **no-orphans**: 孤立ファイル（未参照）の警告
-- **no-deprecated-npm**: 非推奨パッケージの禁止
-- **no-dev-deps-in-src**: 本番コードでの devDependencies 使用禁止
-- **no-ui-to-data-layer**: UI 層から DB/API 層への直接アクセス禁止
-
-### 未使用コード検出（knip）
-
-`knip.json` で設定。以下を検出:
-
-- 未使用のファイル
-- 未使用の依存関係（npm パッケージ）
-- 未使用のエクスポート
-
-### CI ワークフロー
-
-`.github/workflows/code-quality.yml` で PR 時に自動チェック:
-
-1. **lint**: ESLint + TypeScript + Prettier
-2. **dependencies**: 循環依存 + dependency-cruiser + knip
 
 ---
 
-## Prerequisites
+## Spec Structure
 
-- Git
-- Node.js 20+ (LTS)
-- GitHub CLI (`gh`)
-- AI Assistant (Claude Code, Cursor, etc.)
+```
+Vision Spec          プロジェクトの目的・ユーザージャーニー
+    ↓
+Screen Spec ←→ Domain Spec    画面設計 ↔ データ・API・ルール
+    ↓
+Feature Spec         個別機能の詳細仕様
+    ↓
+Test Scenario Spec   テストケース定義
+```
 
-### Recommended MCP Servers (Claude Code)
+---
 
-| MCP        | Purpose                        |
-| ---------- | ------------------------------ |
-| serena     | プロジェクト探索・ファイル編集 |
-| context7   | ライブラリドキュメント検索     |
+## Development Flow
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ 1. Entry Point (vision/add/fix/issue)                       │
+│    ↓                                                        │
+│ 2. 入力検証 → 不足があれば追加入力を要求                    │
+│    ↓                                                        │
+│ 3. Spec 作成                                                │
+│    ↓                                                        │
+│ 4. Multi-Review (3観点並列) → AI修正可能な問題を自動修正   │
+│    ↓                                                        │
+│ 5. Lint 実行                                                │
+│    ↓                                                        │
+│ 6. [HUMAN_CHECKPOINT] ← Spec 内容を人間が確認               │
+│    ↓                                                        │
+│    [NEEDS CLARIFICATION] あり?                              │
+│    ├─ YES → Clarify → Step 4 へ戻る                        │
+│    └─ NO → Plan → Tasks → Implement → PR                   │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Typical Workflows
+
+### 新規プロジェクト
+
+```
+Vision 作成 → Design（Screen + Domain）→ Foundation Issue → 実装
+```
+
+### 機能追加
+
+```
+「〇〇機能を追加」→ Feature Spec → Plan → Tasks → Implement → PR
+```
+
+### バグ修正
+
+```
+「このバグを修正」→ Fix Spec → Implement → PR
+```
 
 ---
 
 ## Directory Structure
 
 ```
-.
-├── .claude/
-│   ├── skills/
-│   │   └── spec-mesh/         # spec-mesh Skill
-│   │       ├── SKILL.md       # Skill 定義
-│   │       ├── constitution.md # Engineering Constitution
-│   │       ├── workflows/     # ワークフロー (17+)
-│   │       ├── templates/     # Spec テンプレート
-│   │       ├── guides/        # ガイドドキュメント
-│   │       └── scripts/       # Node.js スクリプト
-│   ├── agents/                # Agent 定義 (3)
-│   └── settings.local.json    # Hooks 設定（Lint 自動実行）
-├── .github/
-│   └── workflows/
-│       ├── spec-lint.yml      # Spec 整合性チェック CI
-│       └── code-quality.yml   # コード品質チェック CI
-├── .specify/
-│   ├── memory/                # 状態記憶（リダイレクト）
-│   ├── input/                 # Quick Input ファイル（ユーザー入力用）
-│   ├── specs/                 # 仕様書（自動生成）
-│   └── state/                 # 状態ファイル
-├── src/                       # ソースコード
-├── docs/                      # ドキュメント
-├── .dependency-cruiser.cjs    # 依存関係ルール設定
-├── eslint.config.js           # ESLint 設定（Flat Config）
-├── knip.json                  # 未使用コード検出設定
-├── tsconfig.json              # TypeScript 設定
-├── package.json               # npm scripts & 依存関係
-└── CLAUDE.md                  # AI エージェント用ガイド
+.claude/
+├── skills/
+│   └── spec-mesh/
+│       ├── SKILL.md              # スキル定義（Claude が読む）
+│       ├── constitution.md       # Engineering Constitution（最上位ルール）
+│       ├── workflows/            # 各ワークフロー定義
+│       ├── templates/            # Spec テンプレート
+│       │   └── inputs/           # Quick Input テンプレート
+│       ├── guides/               # ガイドドキュメント
+│       └── scripts/              # Node.js ユーティリティ
+├── agents/                       # Agent 定義
+└── settings.json                 # Claude Code 設定
+
+.specify/
+├── input/                        # Quick Input 作業用ファイル
+├── specs/                        # 生成された Spec
+├── state/                        # プロジェクト状態
+├── matrix/                       # Cross-Reference Matrix
+└── memory/                       # 永続化情報
 ```
 
 ---
 
-## Key Files
+## Available Workflows
 
-| File                                      | Purpose                                                |
-| ----------------------------------------- | ------------------------------------------------------ |
-| `CLAUDE.md`                               | AI エージェントの行動指針                              |
-| `.claude/skills/spec-mesh/constitution.md`| Engineering Constitution（最上位ルール）               |
-| `.claude/settings.local.json`             | Hooks 設定（SessionStart + Lint 自動実行）             |
-| `.specify/input/*.md`                     | Quick Input ファイル（ワークフロー実行前にユーザーが記入） |
-| `.dependency-cruiser.cjs`                 | 依存関係ルール（循環依存禁止など）                     |
-| `eslint.config.js`                        | ESLint Flat Config（TypeScript 対応）                  |
-| `knip.json`                               | 未使用コード・依存検出設定                             |
-| `tsconfig.json`                           | TypeScript strict 設定                                 |
+Claude が内部で使用するワークフロー一覧です。
+人間は自然言語で依頼するだけで、Claude が適切なワークフローを選択します。
+
+### プロジェクト初期化
+
+| Workflow | Description |
+|----------|-------------|
+| vision | Vision Spec 作成（プロジェクトの目的・ジャーニー） |
+| design | Screen + Domain + Matrix 同時作成 |
+
+### 開発エントリーポイント
+
+| Workflow | Description |
+|----------|-------------|
+| add | 新機能追加（Issue → Spec → 開発） |
+| fix | バグ修正（調査 → Fix Spec → 修正） |
+| issue | 既存 Issue から開発開始 |
+| change | Spec 変更（Vision/Domain/Screen） |
+
+### 開発フロー
+
+| Workflow | Description |
+|----------|-------------|
+| plan | 実装計画作成 |
+| tasks | タスク分割 |
+| implement | 実装実行 |
+| pr | PR 作成 |
+
+### 品質管理
+
+| Workflow | Description |
+|----------|-------------|
+| review | Multi-Review（3観点並列レビュー） |
+| clarify | 曖昧点解消（対話的） |
+| lint | Spec 整合性チェック |
+| analyze | 実装 vs Spec 分析 |
+| checklist | 品質チェックリスト生成 |
+| feedback | Spec へのフィードバック記録 |
+
+### テスト
+
+| Workflow | Description |
+|----------|-------------|
+| test-scenario | Test Scenario Spec 作成 |
+| e2e | E2E テスト実行（Chrome 拡張連携） |
+
+### その他
+
+| Workflow | Description |
+|----------|-------------|
+| featureproposal | AI による Feature 提案 |
+| spec | Spec 直接操作（上級者向け） |
+
+---
+
+## Core Principles
+
+1. **Spec-First** - すべての変更は仕様から始まる
+2. **Multi-Review 必須** - Spec 作成後は必ず3観点レビュー
+3. **HUMAN_CHECKPOINT** - 重要な判断は人間が確認
+4. **推測禁止** - 不明点は Clarify で解消
+
+詳細は [Engineering Constitution](.claude/skills/spec-mesh/constitution.md) を参照。
+
+---
+
+## Scripts
+
+```bash
+# 状態管理
+node .claude/skills/spec-mesh/scripts/state.cjs query --all
+node .claude/skills/spec-mesh/scripts/state.cjs init
+
+# Quick Input
+node .claude/skills/spec-mesh/scripts/reset-input.cjs vision|add|fix
+node .claude/skills/spec-mesh/scripts/preserve-input.cjs <type> --project <name>
+
+# Lint・検証
+node .claude/skills/spec-mesh/scripts/spec-lint.cjs
+node .claude/skills/spec-mesh/scripts/validate-matrix.cjs
+node .claude/skills/spec-mesh/scripts/spec-metrics.cjs
+
+# Spec・Matrix 生成
+node .claude/skills/spec-mesh/scripts/scaffold-spec.cjs --kind <type> --id <id> --title <title>
+node .claude/skills/spec-mesh/scripts/generate-matrix-view.cjs
+
+# Git・PR
+node .claude/skills/spec-mesh/scripts/branch.cjs --type <type> --slug <slug> --issue <num>
+node .claude/skills/spec-mesh/scripts/pr.cjs
+```
+
+---
+
+## Reference
+
+| Document | Description |
+|----------|-------------|
+| [SKILL.md](.claude/skills/spec-mesh/SKILL.md) | スキル定義（Claude 向け） |
+| [constitution.md](.claude/skills/spec-mesh/constitution.md) | Engineering Constitution |
+| [id-naming.md](.claude/skills/spec-mesh/guides/id-naming.md) | ID 命名規則 |
+| [error-recovery.md](.claude/skills/spec-mesh/guides/error-recovery.md) | エラー回復ガイド |
+| [parallel-development.md](.claude/skills/spec-mesh/guides/parallel-development.md) | 並行開発ガイド |
+| [scripts-errors.md](.claude/skills/spec-mesh/guides/scripts-errors.md) | スクリプトエラーガイド |
 
 ---
 
 ## License
 
-このテンプレートは組織内での利用を前提としています。
-使う時はニックへの感謝と見つけたFBをお願いします。
+MIT

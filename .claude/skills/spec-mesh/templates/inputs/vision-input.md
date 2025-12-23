@@ -124,7 +124,7 @@
 
 <!--
 参考にしたい画像があればパスまたはURLを記載:
-- .specify/images/ref-dashboard.png
+- .specify/assets/ref-dashboard.png
 - https://figma.com/file/xxxxx
 -->
 
@@ -179,6 +179,7 @@
 ## 入力完了後
 
 1. このファイルを保存
-2. `/spec-mesh vision` を実行
-3. AI が Vision Spec を生成し、画面情報があれば `/spec-mesh design` で活用されます
+2. Claude Code に「Vision Spec を作成して」と依頼
+3. Claude が内容を読み取り、Vision Spec を生成します
+4. 画面情報（Part B）があれば、続けて Design フェーズでも活用されます
 

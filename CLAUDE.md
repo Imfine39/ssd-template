@@ -1,187 +1,199 @@
-# CLAUDE Development Guide
+# Claude Code Development Guide
 
-このリポジトリで開発を行う AI コーディングアシスタントの行動指針です。
-
----
-
-## 1. 優先順位
-
-1. **Engineering Constitution** (`.claude/skills/spec-mesh/constitution.md`) が最優先ルール
-2. その次に Vision / Domain / Screen / Feature の各 Spec
-3. 仕様に矛盾・不足があれば推測せず `/spec-mesh clarify` でエスカレーション
+このリポジトリで動作する Claude Code の行動指針です。
 
 ---
 
-## 2. 環境とツール
+## Priority Rules
 
-### 必須ツール
-
-| ツール | 用途 |
-|--------|------|
-| Git | バージョン管理 |
-| GitHub CLI (`gh`) | GitHub 操作 |
-| Node.js | ランタイム |
-| npm/pnpm | パッケージ管理 |
-
-### コード品質ツール
-
-```bash
-npm run lint          # ESLint
-npm run format        # Prettier
-npm run typecheck     # TypeScript
-npm run quality       # 全チェック一括
-```
-
-**初回セットアップ:** `npm install`
+| 優先度 | ルール |
+|--------|--------|
+| 1 | [Engineering Constitution](.claude/skills/spec-mesh/constitution.md) |
+| 2 | Vision / Domain / Screen / Feature Spec |
+| 3 | 不明点は Clarify でエスカレーション（推測禁止） |
 
 ---
 
-## 3. Spec-Mesh Skills
+## Workflow Routing
 
-すべての仕様駆動開発（SSD）ワークフローは `/spec-mesh` Skill で実行します。
+ユーザーの依頼に応じて、適切なワークフローを選択して実行してください。
 
-### 呼び出し方
+### 依頼 → ワークフロー対応表
 
-**重要:** 最初から args 付きで呼び出してください。
-
-```
-/spec-mesh vision      # Vision Spec 作成
-/spec-mesh design      # Screen + Domain + Matrix 作成
-/spec-mesh add         # 新機能追加
-/spec-mesh fix         # バグ修正
-/spec-mesh clarify     # 曖昧点解消
-/spec-mesh plan        # 実装計画作成
-/spec-mesh implement   # 実装実行
-/spec-mesh pr          # PR 作成
-```
-
-### 品質管理フロー
-
-```
-Spec 作成 → Multi-Review (3観点並列) → Lint → [HUMAN_CHECKPOINT]
-                  ↓
-            問題あり → Clarify (ユーザー対話)
-```
-
-### コマンド一覧
-
-**プロジェクト初期化**
-| コマンド | 用途 |
-|----------|------|
-| `/spec-mesh vision` | Vision Spec 作成 |
-| `/spec-mesh design` | Screen + Domain + Matrix 作成 |
-
-**開発エントリーポイント**
-| コマンド | 用途 |
-|----------|------|
-| `/spec-mesh issue` | 既存 Issue から開発開始 |
-| `/spec-mesh add` | 新機能追加 |
-| `/spec-mesh fix` | バグ修正 |
-| `/spec-mesh change` | Spec 変更（Vision/Domain/Screen） |
-| `/spec-mesh featureproposal` | Feature 提案 |
-
-**開発フロー**
-| コマンド | 用途 |
-|----------|------|
-| `/spec-mesh plan` | 実装計画作成 |
-| `/spec-mesh tasks` | タスク分割 |
-| `/spec-mesh implement` | 実装実行 |
-| `/spec-mesh pr` | PR 作成 |
-
-**品質管理**
-| コマンド | 用途 |
-|----------|------|
-| `/spec-mesh review` | Multi-Review（3観点並列） |
-| `/spec-mesh clarify` | 曖昧点解消（4問バッチ） |
-| `/spec-mesh lint` | 整合性チェック |
-| `/spec-mesh analyze` | 実装 vs Spec 分析 |
-| `/spec-mesh checklist` | 品質スコア測定 |
-| `/spec-mesh feedback` | フィードバック記録 |
-
-**テスト**
-| コマンド | 用途 |
-|----------|------|
-| `/spec-mesh test-scenario` | Test Scenario Spec 作成 |
-| `/spec-mesh e2e` | E2E テスト実行（Chrome 拡張） |
-
-### 典型的なワークフロー
-
-**新規プロジェクト:**
-```
-/spec-mesh vision → (Multi-Review自動) → clarify → design → (Multi-Review自動) → clarify
-→ /spec-mesh issue (Foundation) → plan → tasks → implement → pr
-```
-
-**機能追加:**
-```
-/spec-mesh add → (Multi-Review自動) → clarify
-→ test-scenario → plan → tasks → implement → e2e → pr
-```
-
-**バグ修正:**
-```
-/spec-mesh fix → (Multi-Review自動) → plan → tasks → implement → e2e → pr
-```
-
-**テストフロー:**
-```
-Feature Spec 承認後 → /spec-mesh test-scenario → テストデータ定義
-→ 実装完了後 → /spec-mesh e2e → Pass/Fail レポート
-```
+| ユーザーの依頼 | 実行 |
+|---------------|------|
+| 「プロジェクトを始めたい」「Vision を作成」 | `/spec-mesh vision` |
+| 「画面設計」「Design を作成」 | `/spec-mesh design` |
+| 「機能を追加」「〇〇機能を作りたい」 | `/spec-mesh add` |
+| 「バグを修正」「エラーを直して」 | `/spec-mesh fix` |
+| 「Issue #N から開始」 | `/spec-mesh issue` |
+| 「Spec を変更」「M-* を修正」 | `/spec-mesh change` |
+| 「実装計画」「Plan を作成」 | `/spec-mesh plan` |
+| 「タスク分割」 | `/spec-mesh tasks` |
+| 「実装して」 | `/spec-mesh implement` |
+| 「PR を作成」 | `/spec-mesh pr` |
+| 「テストシナリオを作成」 | `/spec-mesh test-scenario` |
+| 「E2E テスト実行」 | `/spec-mesh e2e` |
+| 「品質チェック」「レビュー」 | `/spec-mesh review` |
+| 「曖昧点を解消」 | `/spec-mesh clarify` |
+| 「Lint 実行」 | `/spec-mesh lint` |
+| 「実装と Spec を比較」 | `/spec-mesh analyze` |
+| 「品質スコアを測定」 | `/spec-mesh checklist` |
+| 「フィードバックを記録」 | `/spec-mesh feedback` |
+| 「Feature を提案して」 | `/spec-mesh featureproposal` |
+| 「Spec を直接編集」 | `/spec-mesh spec` |
 
 ---
 
-## 4. Git ワークフロー
+## Core Flow
 
-### ブランチ命名
+```
+Entry (vision/add/fix/issue)
+    ↓
+入力検証（必須項目確認）
+    ↓
+Spec 作成
+    ↓
+Multi-Review（3観点並列） → AI修正
+    ↓
+Lint
+    ↓
+[HUMAN_CHECKPOINT]
+    ↓
+[NEEDS CLARIFICATION] あり? → YES: Clarify → Multi-Review へ戻る
+    ↓ NO
+★ CLARIFY GATE 通過 ★
+    ↓
+Plan → [HUMAN_CHECKPOINT]
+    ↓
+Tasks → Implement → E2E → PR
+```
 
-| タイプ | パターン |
-|--------|----------|
-| Spec変更 | `spec/<issue>-<slug>` |
+### CLARIFY GATE
+
+- **Plan に進む前提条件:** `[NEEDS CLARIFICATION]` = 0
+- 曖昧点が残った状態での実装は禁止
+
+---
+
+## Quick Input Files
+
+ユーザーが事前に記入している場合があります：
+
+| ファイル | タイミング |
+|----------|-----------|
+| `.specify/input/vision-input.md` | vision ワークフロー |
+| `.specify/input/add-input.md` | add ワークフロー |
+| `.specify/input/fix-input.md` | fix ワークフロー |
+
+**存在すれば読み込んで活用してください。**
+
+---
+
+## MCP Tools
+
+### Context7（ライブラリドキュメント）
+
+```
+resolve-library-id → get-library-docs
+```
+
+- 実装時に最新のライブラリドキュメントを参照
+
+### Serena（LSP 連携）
+
+```
+goToDefinition, findReferences, hover, documentSymbol
+```
+
+- コード解析、定義ジャンプ、リファレンス検索
+
+### Claude in Chrome（E2E テスト）
+
+```
+tabs_context_mcp → tabs_create_mcp → navigate → find → form_input → computer
+```
+
+- ブラウザ操作、スクリーンショット、GIF 記録
+
+---
+
+## Quality Checkpoints
+
+### [HUMAN_CHECKPOINT] タイミング
+
+| タイミング | 確認内容 |
+|-----------|---------|
+| Vision Spec 作成後 | 目的・ゴールの妥当性 |
+| Design 完了後 | 画面・Domain 設計の妥当性 |
+| Feature Spec 作成後 | 要件の妥当性、CLARIFY GATE |
+| Plan 作成後 | 実装計画の承認 |
+| E2E テスト後 | テスト結果の確認 |
+
+### Multi-Review 観点
+
+| Reviewer | 観点 |
+|----------|------|
+| A | 構造・形式（Template 準拠、ID 命名） |
+| B | 内容・整合性（矛盾、用語統一） |
+| C | 完全性・網羅性（スコープ欠落） |
+
+---
+
+## Git Rules
+
+| タイプ | ブランチ |
+|--------|---------|
+| Spec 変更 | `spec/<issue>-<slug>` |
 | 機能追加 | `feature/<issue>-<slug>` |
 | バグ修正 | `fix/<issue>-<slug>` |
-| 緊急対応 | `hotfix/<issue>-<slug>` |
-
-### ルール
 
 - `main` への直接 push 禁止
 - 常に Issue 連動ブランチで作業
-- PR 作成は `/spec-mesh pr` を使用
 
 ---
 
-## 5. 状態管理
+## Scripts
 
 ```bash
-node .claude/skills/spec-mesh/scripts/state.cjs query --all    # 全状態確認
-node .claude/skills/spec-mesh/scripts/state.cjs init           # 初期化
+# 状態管理
+node .claude/skills/spec-mesh/scripts/state.cjs query --all
+node .claude/skills/spec-mesh/scripts/state.cjs init
+
+# Quick Input
+node .claude/skills/spec-mesh/scripts/reset-input.cjs vision|add|fix
+node .claude/skills/spec-mesh/scripts/preserve-input.cjs <type> --project <name>
+
+# Lint・検証
+node .claude/skills/spec-mesh/scripts/spec-lint.cjs
+node .claude/skills/spec-mesh/scripts/validate-matrix.cjs
+node .claude/skills/spec-mesh/scripts/spec-metrics.cjs
+
+# Spec・Matrix 生成
+node .claude/skills/spec-mesh/scripts/scaffold-spec.cjs --kind <type> --id <id> --title <title>
+node .claude/skills/spec-mesh/scripts/generate-matrix-view.cjs
+
+# Git・PR
+node .claude/skills/spec-mesh/scripts/branch.cjs --type <type> --slug <slug> --issue <num>
+node .claude/skills/spec-mesh/scripts/pr.cjs
 ```
 
-セッション開始時に自動で状態がコンテキストに読み込まれます。
+---
+
+## Principles
+
+1. **Spec-First** - すべての変更は仕様から
+2. **Multi-Review 必須** - Spec 作成後は必ず 3 観点レビュー
+3. **推測禁止** - 不明点は Clarify で解消
+4. **HUMAN_CHECKPOINT** - 重要な判断は人間確認
+5. **小さな変更** - レビューしやすい単位で
 
 ---
 
-## 6. 参考資料
+## Reference
 
-### Constitution
-- [constitution.md](.claude/skills/spec-mesh/constitution.md) - Engineering Constitution
-
-### Skill ガイド
-- [id-naming.md](.claude/skills/spec-mesh/guides/id-naming.md) - ID命名規則
-- [parallel-development.md](.claude/skills/spec-mesh/guides/parallel-development.md) - 並行開発ガイド
-- [error-recovery.md](.claude/skills/spec-mesh/guides/error-recovery.md) - エラー回復ガイド
-
-### テンプレート
-- `.claude/skills/spec-mesh/templates/` - 各種Specテンプレート
-
----
-
-## 7. 重要な原則
-
-1. **Spec-First**: 画面変更は Screen Spec 更新後に Feature Spec
-2. **Multi-Review 必須**: Spec 作成後は必ず 3観点レビューを実行
-3. **推測禁止**: 不明点は `/spec-mesh clarify` で解消
-4. **小さな変更**: レビューしやすい差分を心がける
-5. **テスト必須**: 仕様に沿った挙動を保証
-
-詳細は [Engineering Constitution](.claude/skills/spec-mesh/constitution.md) を参照してください。
+| Document | Description |
+|----------|-------------|
+| [constitution.md](.claude/skills/spec-mesh/constitution.md) | Engineering Constitution |
+| [SKILL.md](.claude/skills/spec-mesh/SKILL.md) | Skill 定義・ルーティング |
+| [docs/](docs/) | 詳細ドキュメント |
