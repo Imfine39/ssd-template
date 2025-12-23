@@ -190,5 +190,5 @@ Human: PR レビュー・マージ → 次の Feature へ
 ## Related Pages
 
 - [[Workflow-Add-Feature]] - 機能追加フロー
-- [[Commands-Reference]] - 各ワークフローの詳細
+- [[Workflows-Reference]] - 各ワークフローの詳細
 - [[Core-Concepts]] - 4層構造の詳細

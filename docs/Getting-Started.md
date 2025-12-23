@@ -225,7 +225,7 @@ gh auth status
 
 - [[Core-Concepts]] - フレームワークの主要概念を理解
 - [[Workflow-New-Project]] - 新規プロジェクトの詳細フロー
-- [[Commands-Reference]] - 全ワークフローのリファレンス
+- [[Workflows-Reference]] - 全ワークフローのリファレンス
 
 ---
 

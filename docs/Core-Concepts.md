@@ -505,4 +505,4 @@ SKILL.md がルーティング: workflows/change.md を実行
 
 - [[Workflow-New-Project]] - 新規プロジェクトの具体的なフロー
 - [[Workflow-Add-Feature]] - 機能追加の具体的なフロー
-- [[Commands-Reference]] - 各ワークフローの詳細
+- [[Workflows-Reference]] - 各ワークフローの詳細

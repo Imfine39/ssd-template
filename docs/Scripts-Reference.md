@@ -450,6 +450,6 @@ node .claude/skills/spec-mesh/scripts/preserve-input.cjs vision --project sample
 
 ## Related Pages
 
-- [[Commands-Reference]] - スクリプトを使用するワークフロー
+- [[Workflows-Reference]] - スクリプトを使用するワークフロー
 - [[Core-Concepts]] - 状態管理の詳細
 - [[Troubleshooting]] - スクリプトのトラブルシューティング

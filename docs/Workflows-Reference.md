@@ -1,6 +1,9 @@
-# Commands Reference
+# Workflows Reference
 
-全 spec-mesh ワークフローのリファレンスです。
+spec-mesh Skill の全ワークフローリファレンスです。
+
+> **Note:** Claude Code v2.0.73 以降では、コマンド（Commands）ではなくスキル（Skills）+ ワークフロー（Workflows）アーキテクチャを採用しています。
+> 詳細は [[Core-Concepts#11. Skills Architecture]] を参照してください。
 
 ---
 

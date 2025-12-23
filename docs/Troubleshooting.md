@@ -363,4 +363,4 @@ cat .specify/state/branch-state.json
 
 - [[Getting-Started]] - 初期セットアップ
 - [[Scripts-Reference]] - スクリプトの詳細
-- [[Commands-Reference]] - コマンドの詳細
+- [[Workflows-Reference]] - ワークフローの詳細

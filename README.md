@@ -43,7 +43,7 @@ node .claude/skills/spec-mesh/scripts/state.cjs init
 | [Core Concepts](docs/Core-Concepts.md)                | 3層構造、Clarify ループ、状態管理 |
 | [Workflow: New Project](docs/Workflow-New-Project.md) | 新規プロジェクト立ち上げフロー    |
 | [Workflow: Add Feature](docs/Workflow-Add-Feature.md) | 機能追加・バグ修正フロー          |
-| [Commands Reference](docs/Commands-Reference.md)      | 全ワークフローのリファレンス      |
+| [Workflows Reference](docs/Workflows-Reference.md)    | 全ワークフローのリファレンス      |
 | [Templates Reference](docs/Templates-Reference.md)    | Spec テンプレートの説明           |
 | [Scripts Reference](docs/Scripts-Reference.md)        | Node.js スクリプトの使用方法      |
 | [Troubleshooting](docs/Troubleshooting.md)            | よくある問題と解決方法            |

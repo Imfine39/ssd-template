@@ -13,7 +13,7 @@ SSD-Template は、AI コーディングアシスタント（Claude Code など�
 | 初めての方           | [[Getting-Started]]      |
 | 新規プロジェクト開始 | [[Workflow-New-Project]] |
 | 機能追加・バグ修正   | [[Workflow-Add-Feature]] |
-| ワークフロー一覧     | [[Commands-Reference]]   |
+| ワークフロー一覧     | [[Workflows-Reference]]   |
 
 ---
 
@@ -45,7 +45,7 @@ SSD-Template は以下を提供します：
 
 ### Reference
 
-- [[Commands-Reference]] - 全ワークフローの詳細リファレンス
+- [[Workflows-Reference]] - 全ワークフローの詳細リファレンス
 - [[Templates-Reference]] - Spec テンプレートの説明
 - [[Scripts-Reference]] - Node.js スクリプトの使用方法
 

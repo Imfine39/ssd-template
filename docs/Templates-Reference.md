@@ -6,20 +6,22 @@ Spec テンプレートのリファレンスです。
 
 ## Overview
 
-| Template     | Location                                                     | Purpose                        |
-| ------------ | ------------------------------------------------------------ | ------------------------------ |
-| Vision Spec  | `.claude/skills/spec-mesh/templates/vision-spec-template.md` | プロジェクトの目的・ジャーニー |
-| Domain Spec  | `.claude/skills/spec-mesh/templates/domain-spec-template.md` | M-_/API-_/ルール定義           |
-| Feature Spec | `.claude/skills/spec-mesh/templates/feature-spec-template.md`| 個別機能の詳細仕様             |
-| Plan         | `.claude/skills/spec-mesh/templates/plan-template.md`        | 実装計画                       |
-| Tasks        | `.claude/skills/spec-mesh/templates/tasks-template.md`       | タスク分割                     |
-| Checklist    | `.claude/skills/spec-mesh/templates/checklist-template.md`   | 品質チェックリスト             |
+| Template     | Location                                                | Purpose                        |
+| ------------ | ------------------------------------------------------- | ------------------------------ |
+| Vision Spec  | `.claude/skills/spec-mesh/templates/vision-spec.md`     | プロジェクトの目的・ジャーニー |
+| Domain Spec  | `.claude/skills/spec-mesh/templates/domain-spec.md`     | M-_/API-_/ルール定義           |
+| Screen Spec  | `.claude/skills/spec-mesh/templates/screen-spec.md`     | 画面構成・UI設計               |
+| Feature Spec | `.claude/skills/spec-mesh/templates/feature-spec.md`    | 個別機能の詳細仕様             |
+| Fix Spec     | `.claude/skills/spec-mesh/templates/fix-spec.md`        | バグ修正仕様                   |
+| Plan         | `.claude/skills/spec-mesh/templates/plan.md`            | 実装計画                       |
+| Tasks        | `.claude/skills/spec-mesh/templates/tasks.md`           | タスク分割                     |
+| Checklist    | `.claude/skills/spec-mesh/templates/checklist.md`       | 品質チェックリスト             |
 
 ---
 
 ## Vision Spec Template
 
-**File:** `vision-spec-template.md`
+**File:** `vision-spec.md`
 
 **Purpose:** プロジェクトの「なぜ」を定義
 
@@ -52,7 +54,7 @@ Author: [OWNER]
 
 ## Domain Spec Template
 
-**File:** `domain-spec-template.md`
+**File:** `domain-spec.md`
 
 **Purpose:** 共有定義の Single Source of Truth
 
@@ -138,7 +140,7 @@ Related Vision: S-VISION-001
 
 ## Feature Spec Template
 
-**File:** `feature-spec-template.md`
+**File:** `feature-spec.md`
 
 **Purpose:** 個別機能の詳細仕様
 
@@ -209,7 +211,7 @@ Related Domain: S-DOMAIN-001
 
 ## Plan Template
 
-**File:** `plan-template.md`
+**File:** `plan.md`
 
 **Purpose:** 実装計画
 
@@ -229,7 +231,7 @@ Related Domain: S-DOMAIN-001
 
 ## Tasks Template
 
-**File:** `tasks-template.md`
+**File:** `tasks.md`
 
 **Purpose:** タスク分割
 
@@ -265,7 +267,7 @@ Related Domain: S-DOMAIN-001
 
 ## Checklist Template
 
-**File:** `checklist-template.md`
+**File:** `checklist.md`
 
 **Purpose:** 品質チェックリスト（Unit Tests for English）
 
@@ -316,5 +318,5 @@ Requirements を「英語のユニットテスト」として表現し、検証�
 ## Related Pages
 
 - [[Core-Concepts]] - 3層構造の詳細
-- [[Commands-Reference]] - テンプレートを使用するワークフロー
+- [[Workflows-Reference]] - テンプレートを使用するワークフロー
 - [[Scripts-Reference]] - scaffold-spec.cjs
