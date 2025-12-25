@@ -120,7 +120,7 @@ Tasks -> Implement -> [E2E Tests] -> PR
 - No Test Scenario Spec defined
 - Hotfix with expedited review
 
-See `/spec-mesh e2e` workflow for detailed procedures.
+See e2e ワークフロー for detailed procedures.
 
 ### 5. PR Creation
 
@@ -185,7 +185,7 @@ Open questions: {count}
 Risks: {count}
 
 Status: Awaiting human approval
-Next: Review plan, then /spec-mesh tasks
+Next: Review plan, then tasks ワークフロー
 ```
 
 ### Tasks Output
@@ -194,7 +194,7 @@ Tasks: {path}
 Total: {count} tasks
 Estimated: {hours} hours
 
-Ready for: /spec-mesh implement
+Ready for: implement ワークフロー
 ```
 
 ### Implement Output
@@ -203,7 +203,7 @@ Progress: {completed}/{total} tasks
 Tests: {passed}/{total}
 Feedback recorded: {yes/no}
 
-Ready for: /spec-mesh pr
+Ready for: pr ワークフロー
 ```
 
 ### PR Output

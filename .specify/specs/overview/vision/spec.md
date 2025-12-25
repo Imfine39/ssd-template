@@ -184,8 +184,8 @@ Items that may be considered for future phases:
 ## 5. Screen Hints
 
 > **Note**: This section captures screen-level information from the unified Quick Input.
-> These hints are used by `/spec-mesh design` to create Screen Spec and Domain Spec simultaneously.
-> If empty, `/spec-mesh design` will prompt for screen information.
+> These hints are used by design ワークフロー to create Screen Spec and Domain Spec simultaneously.
+> If empty, design ワークフロー will prompt for screen information.
 
 ### 5.1 Screen List (Provisional)
 
@@ -278,8 +278,8 @@ Record of clarification questions and answers during the vision refinement proce
 
 ## 10. Related Documents
 
-- Screen Spec: `.specify/specs/overview/screen/spec.md` (to be created by /spec-mesh design)
-- Domain Spec: `.specify/specs/overview/domain/spec.md` (to be created by /spec-mesh design)
+- Screen Spec: `.specify/specs/overview/screen/spec.md` (to be created by design ワークフロー)
+- Domain Spec: `.specify/specs/overview/domain/spec.md` (to be created by design ワークフロー)
 - Feature Specs: (to be created after Screen + Domain Specs)
 
 ---

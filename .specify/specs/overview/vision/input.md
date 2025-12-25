@@ -95,7 +95,7 @@
 ## Part B: 画面イメージ（任意だが推奨）
 
 > **Note**: 画面リストが明確な場合は記入してください。
-> 空欄でも Vision Spec は作成できますが、後の `/spec-mesh design` で再度入力が必要になります。
+> 空欄でも Vision Spec は作成できますが、後の design ワークフロー で再度入力が必要になります。
 
 ### B1. 画面リスト
 
@@ -205,5 +205,6 @@
 ## 入力完了後
 
 1. このファイルを保存
-2. `/spec-mesh vision` を実行
-3. AI が Vision Spec を生成し、画面情報があれば `/spec-mesh design` で活用されます
+2. Claude Code に「Vision Spec を作成して」と依頼
+3. Claude が内容を読み取り、Vision Spec を生成します
+4. 画面情報（Part B）があれば、続けて Design フェーズでも活用されます
