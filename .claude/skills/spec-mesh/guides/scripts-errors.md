@@ -281,10 +281,10 @@ Generates Markdown view from matrix JSON.
 **Recovery:**
 ```bash
 # Validate JSON syntax
-cat .specify/specs/sample/overview/matrix/cross-reference.json | python -m json.tool
+cat .specify/specs/overview/matrix/cross-reference.json | python -m json.tool
 
 # Or create minimal matrix
-echo '{"screens":{},"features":{},"permissions":{}}' > .specify/specs/sample/overview/matrix/cross-reference.json
+echo '{"screens":{},"features":{},"permissions":{}}' > .specify/specs/overview/matrix/cross-reference.json
 
 # Then generate view
 node .claude/skills/spec-mesh/scripts/generate-matrix-view.cjs

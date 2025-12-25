@@ -165,7 +165,7 @@ PR 作成完了後、レビューを待ってください。
 After PR is merged, the following updates are **required**:
 
 1. **Update Screen Spec status** (MANDATORY):
-   - Open `.specify/specs/{project}/overview/screen/spec.md`
+   - Open `.specify/specs/overview/screen/spec.md`
    - Find all SCR-* entries that were implemented in this PR
    - Change `Status: Planned` to `Status: Implemented`
    - This ensures the Screen Spec accurately reflects the current state

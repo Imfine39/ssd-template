@@ -167,9 +167,8 @@ Known navigation flows between screens.
 
 ### 6.1 Business Constraints
 
-- Timeline:
-- Budget:
 - Organizational:
+- Compliance requirements:
 
 ### 6.2 Technical Constraints
 
@@ -214,8 +213,8 @@ Record of clarification questions and answers during the vision refinement proce
 
 ## 10. Related Documents
 
-- Screen Spec: `.specify/specs/screen/spec.md` (to be created by /spec-mesh design)
-- Domain Spec: `.specify/specs/domain/spec.md` (to be created by /spec-mesh design)
+- Screen Spec: `.specify/specs/overview/screen/spec.md` (to be created by /spec-mesh design)
+- Domain Spec: `.specify/specs/overview/domain/spec.md` (to be created by /spec-mesh design)
 - Feature Specs: (to be created after Screen + Domain Specs)
 
 ---

@@ -26,7 +26,7 @@ Entry point for existing Issues. Lists Issues → User selects → Creates Branc
    - If Domain status not "clarified" → Warning
 
 2. **Verify Domain Spec:**
-   - Check `.specify/specs/{project}/overview/domain/spec.md`
+   - Check `.specify/specs/overview/domain/spec.md`
    - Must have M-* and API-* definitions
    - If scaffold only → Recommend `/spec-mesh design`
 
@@ -133,7 +133,7 @@ Display:
 
 Issue: #{issue_num} - {title}
 Branch: feature/{issue_num}-{slug}
-Spec: .specify/specs/{project}/features/{id}/spec.md
+Spec: .specify/specs/features/{id}/spec.md
 
 Domain Dependencies:
 - Masters: {M-* list}

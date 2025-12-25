@@ -23,12 +23,12 @@ Technical design phase. Creates Screen Spec + Domain Spec + Matrix simultaneousl
    - If Vision status not "approved/clarified" → Warning
 
 2. **Check Vision Spec exists:**
-   - Look for `.specify/specs/{project}/overview/vision/spec.md`
+   - Look for `.specify/specs/overview/vision/spec.md`
    - If not found → Recommend `/spec-mesh vision` first
 
 3. **Read Vision Spec (including Screen Hints):**
    ```
-   Read tool: .specify/specs/{project}/overview/vision/spec.md
+   Read tool: .specify/specs/overview/vision/spec.md
    ```
 
 ### Step 2: Screen Information Collection
@@ -91,7 +91,7 @@ Fill:
 
 ### Step 5: Create Cross-Reference Matrix
 
-Create `.specify/specs/{project}/overview/matrix/cross-reference.json`:
+Create `.specify/specs/overview/matrix/cross-reference.json`:
 ```json
 {
   "screens": {
@@ -139,9 +139,9 @@ node .claude/skills/spec-mesh/scripts/validate-matrix.cjs
 
 If Vision input file was used (contains Part B screen information):
 ```bash
-node .claude/skills/spec-mesh/scripts/preserve-input.cjs design --project {project}
+node .claude/skills/spec-mesh/scripts/preserve-input.cjs design
 ```
-- Saves to: `.specify/specs/{project}/overview/domain/input.md`
+- Saves to: `.specify/specs/overview/domain/input.md`
 
 ### Step 9: Create Foundation Issue
 
@@ -157,15 +157,15 @@ Display:
 ```
 === Design 完了 ===
 
-Screen Spec: .specify/specs/{project}/overview/screen/spec.md
+Screen Spec: .specify/specs/overview/screen/spec.md
   - Screens: {N} 画面定義
 
-Domain Spec: .specify/specs/{project}/overview/domain/spec.md
+Domain Spec: .specify/specs/overview/domain/spec.md
   - Masters: {N} M-* 定義
   - APIs: {N} API-* 定義
   - Rules: {N} BR-*/VR-* 定義
 
-Matrix: .specify/specs/{project}/overview/matrix/cross-reference.json
+Matrix: .specify/specs/overview/matrix/cross-reference.json
 
 Feature Issues: {N} 件作成
 Foundation Issue: #{issue_num}

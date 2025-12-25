@@ -268,9 +268,9 @@ Keep the Domain's Feature index up to date:
 ```markdown
 | Feature ID | Title | Path | Status | Owner | Depends On |
 |------------|-------|------|--------|-------|------------|
-| S-AUTH-001 | Authentication | .specify/specs/auth/spec.md | Implementing | @alice | - |
-| S-ORDERS-001 | Order Management | .specify/specs/orders/spec.md | Approved | @bob | S-AUTH-001 |
-| S-DASHBOARD-001 | Dashboard | .specify/specs/dashboard/spec.md | Draft | @carol | S-ORDERS-001 |
+| S-AUTH-001 | Authentication | .specify/specs/features/auth/spec.md | Implementing | @alice | - |
+| S-ORDERS-001 | Order Management | .specify/specs/features/orders/spec.md | Approved | @bob | S-AUTH-001 |
+| S-DASHBOARD-001 | Dashboard | .specify/specs/features/dashboard/spec.md | Draft | @carol | S-ORDERS-001 |
 ```
 
 #### 7.1.1 Feature Index Update Procedure
@@ -288,13 +288,13 @@ When working in parallel, follow this procedure to update the Feature Index:
 1. **Before updating**: Check for concurrent changes
    ```bash
    git fetch origin main
-   git log origin/main -- .specify/specs/{project}/overview/domain/spec.md
+   git log origin/main -- .specify/specs/overview/domain/spec.md
    ```
 
 2. **If no conflicts**: Update directly in your feature branch
    ```markdown
    # In Domain Spec's Feature Index section:
-   | S-MYFEATURE-001 | My Feature | .specify/specs/{project}/features/my-feature/spec.md | Draft | @you | S-AUTH-001 |
+   | S-MYFEATURE-001 | My Feature | .specify/specs/features/my-feature/spec.md | Draft | @you | S-AUTH-001 |
    ```
 
 3. **If conflicts likely**: Create a separate spec branch

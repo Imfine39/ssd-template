@@ -15,7 +15,7 @@ Break the approved plan into concrete, reviewable tasks.
 
 1. **Read Plan:**
    ```
-   Read tool: .specify/specs/{project}/features/{id}/plan.md
+   Read tool: .specify/specs/features/{id}/plan.md
    ```
 
 2. **Verify plan is approved** (check state or ask user)
@@ -71,7 +71,7 @@ From plan's Work Breakdown section, create atomic tasks:
 
 Save to feature directory:
 ```
-.specify/specs/{project}/features/{id}/tasks.md
+.specify/specs/features/{id}/tasks.md
 ```
 
 ### Step 4: Update TodoWrite
@@ -90,7 +90,7 @@ Display:
 === Tasks 作成完了 ===
 
 Feature: {Feature名}
-Tasks: .specify/specs/{project}/features/{id}/tasks.md
+Tasks: .specify/specs/features/{id}/tasks.md
 
 タスク一覧:
 1. [ ] {Task 1}

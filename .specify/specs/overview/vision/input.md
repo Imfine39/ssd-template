@@ -1,3 +1,7 @@
+<!-- Preserved Input -->
+<!-- Source: vision-input.md -->
+<!-- Date: 2025-12-25T03:33:06.395Z -->
+
 # Vision Quick Input（統合版）
 
 新しいプロジェクトの概要を入力してください。

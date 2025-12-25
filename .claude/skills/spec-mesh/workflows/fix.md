@@ -112,9 +112,9 @@ node .claude/skills/spec-mesh/scripts/spec-lint.cjs
 If input file was used:
 1. **Preserve input to spec directory:**
    ```bash
-   node .claude/skills/spec-mesh/scripts/preserve-input.cjs fix --project {project} --fix {fix-dir}
+   node .claude/skills/spec-mesh/scripts/preserve-input.cjs fix --fix {fix-dir}
    ```
-   - Saves to: `.specify/specs/{project}/fixes/{fix-dir}/input.md`
+   - Saves to: `.specify/specs/fixes/{fix-dir}/input.md`
 
 2. **Reset input file:**
    ```bash
@@ -130,7 +130,7 @@ Display:
 Bug: {概要}
 Issue: #{issue_num}
 Branch: fix/{issue_num}-{slug}
-Spec: .specify/specs/{project}/fixes/{id}/spec.md
+Spec: .specify/specs/fixes/{id}/spec.md
 
 Root Cause: {原因の要約}
 Impact: {影響範囲}

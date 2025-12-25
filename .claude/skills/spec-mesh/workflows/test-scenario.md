@@ -23,7 +23,7 @@ Feature Spec から Test Scenario Spec を作成する。
 
 1. **Feature Spec を読み込み:**
    ```
-   Read tool: .specify/specs/{project}/features/{feature}/spec.md
+   Read tool: .specify/specs/features/{feature}/spec.md
    ```
 
 2. **抽出する情報:**
@@ -35,7 +35,7 @@ Feature Spec から Test Scenario Spec を作成する。
 
 3. **Screen Spec を読み込み（UI 要素参照用）:**
    ```
-   Read tool: .specify/specs/{project}/overview/screen/spec.md
+   Read tool: .specify/specs/overview/screen/spec.md
    ```
 
 ### Step 2: Generate Test Coverage Matrix
@@ -177,7 +177,7 @@ User Story 全体をカバーする E2E テストを作成：
 
 3. **Save to:**
    ```
-   .specify/specs/{project}/features/{feature}/test-scenarios.md
+   .specify/specs/features/{feature}/test-scenarios.md
    ```
 
 ### Step 8: Multi-Review
@@ -201,7 +201,7 @@ Test Scenario Spec の品質を確認：
 === Test Scenario Spec 作成完了 ===
 
 Feature: {Feature Name}
-Spec: .specify/specs/{project}/features/{feature}/test-scenarios.md
+Spec: .specify/specs/features/{feature}/test-scenarios.md
 
 Test Coverage:
 - Acceptance Criteria: {N}/{total} カバー

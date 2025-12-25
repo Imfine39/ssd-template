@@ -16,10 +16,10 @@ Multi-Review で「ユーザー確認が必要」と判断された項目を解�
 ### Step 1: Load Spec
 
 1. **Determine which Spec to clarify:**
-   - Vision Spec: `.specify/specs/{project}/overview/vision/spec.md`
-   - Domain Spec: `.specify/specs/{project}/overview/domain/spec.md`
-   - Feature Spec: `.specify/specs/{project}/features/{id}/spec.md`
-   - Fix Spec: `.specify/specs/{project}/fixes/{id}/spec.md`
+   - Vision Spec: `.specify/specs/overview/vision/spec.md`
+   - Domain Spec: `.specify/specs/overview/domain/spec.md`
+   - Feature Spec: `.specify/specs/features/{id}/spec.md`
+   - Fix Spec: `.specify/specs/fixes/{id}/spec.md`
 
 2. **Read the Spec:**
    ```

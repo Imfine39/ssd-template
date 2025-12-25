@@ -28,7 +28,7 @@ Checklist はオプションです。Review は必須です。
 ### Step 1: Load Spec
 
 ```
-Read tool: .specify/specs/{project}/features/{id}/spec.md
+Read tool: .specify/specs/features/{id}/spec.md
 ```
 
 ### Step 2: Generate Checklist
@@ -68,7 +68,7 @@ Based on Spec content, generate checklist for:
 
 Save to feature directory:
 ```
-.specify/specs/{project}/features/{id}/checklist.md
+.specify/specs/features/{id}/checklist.md
 ```
 
 ### Step 4: Report
@@ -77,7 +77,7 @@ Save to feature directory:
 === Checklist 生成完了 ===
 
 Feature: {Feature名}
-Checklist: .specify/specs/{project}/features/{id}/checklist.md
+Checklist: .specify/specs/features/{id}/checklist.md
 
 ## Quality Score
 

@@ -31,7 +31,7 @@ Handle changes to shared specifications that may impact multiple Features.
 ### Step 2: Load Current Spec
 
 ```
-Read tool: .specify/specs/{project}/overview/{spec_type}/spec.md
+Read tool: .specify/specs/overview/{spec_type}/spec.md
 ```
 
 ### Step 3: Identify Change Scope

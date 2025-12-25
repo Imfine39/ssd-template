@@ -17,7 +17,7 @@ Compare actual implementation with specifications to detect:
 
 1. **Read Feature Spec:**
    ```
-   Read tool: .specify/specs/{project}/features/{id}/spec.md
+   Read tool: .specify/specs/features/{id}/spec.md
    ```
 
 2. **Read Domain Spec** for M-*/API-* definitions
@@ -57,7 +57,7 @@ node .claude/skills/spec-mesh/scripts/spec-metrics.cjs
 === 分析レポート ===
 
 Feature: {Feature名}
-Spec: .specify/specs/{project}/features/{id}/spec.md
+Spec: .specify/specs/features/{id}/spec.md
 
 ## Coverage
 

@@ -25,26 +25,29 @@
  *   - "WARNING: Screen spec should reference a Domain spec" - Add --domain for traceability
  *
  * Examples:
- *   node .claude/skills/spec-mesh/scripts/scaffold-spec.cjs --kind vision --id S-VISION-001 --title "Project Vision" --project sample
+ *   node .claude/skills/spec-mesh/scripts/scaffold-spec.cjs --kind vision --id S-VISION-001 --title "Project Vision"
  *
- *   node .claude/skills/spec-mesh/scripts/scaffold-spec.cjs --kind domain --id S-DOMAIN-001 --title "System Domain" --project sample
+ *   node .claude/skills/spec-mesh/scripts/scaffold-spec.cjs --kind domain --id S-DOMAIN-001 --title "System Domain"
  *     --vision S-VISION-001 --masters M-CLIENTS,M-ORDERS --apis API-ORDERS-LIST
  *
- *   node .claude/skills/spec-mesh/scripts/scaffold-spec.cjs --kind screen --id S-SCREEN-001 --title "System Screens" --project sample
+ *   node .claude/skills/spec-mesh/scripts/scaffold-spec.cjs --kind screen --id S-SCREEN-001 --title "System Screens"
  *     --vision S-VISION-001 --domain S-DOMAIN-001
  *
- *   node .claude/skills/spec-mesh/scripts/scaffold-spec.cjs --kind feature --id S-SALES-001 --title "Basic Sales Recording" --project sample
+ *   node .claude/skills/spec-mesh/scripts/scaffold-spec.cjs --kind feature --id S-SALES-001 --title "Basic Sales Recording"
  *     --domain S-DOMAIN-001 --uc UC-001:Record sale,UC-002:Adjust sale --masters M-CLIENTS --apis API-ORDERS-LIST
  *
- *   node .claude/skills/spec-mesh/scripts/scaffold-spec.cjs --kind fix --id F-AUTH-001 --title "Login Error Fix" --project sample
+ *   node .claude/skills/spec-mesh/scripts/scaffold-spec.cjs --kind fix --id F-AUTH-001 --title "Login Error Fix"
  *     --issue 50
  *
- *   node .claude/skills/spec-mesh/scripts/scaffold-spec.cjs --kind test-scenario --id TS-SALES-001 --title "Sales Recording Tests" --project sample
+ *   node .claude/skills/spec-mesh/scripts/scaffold-spec.cjs --kind test-scenario --id TS-SALES-001 --title "Sales Recording Tests"
  *     --feature ssales001-basic-sales-recording
  *
  * Directory structure:
- *   .specify/specs/{project}/
+ *   .specify/specs/
  *   ├── overview/           # vision, domain, screen, matrix
+ *   │   ├── vision/
+ *   │   ├── domain/
+ *   │   └── screen/
  *   ├── features/           # feature specs
  *   └── fixes/              # fix specs
  *
@@ -66,7 +69,6 @@ function parseArgs() {
     title: null,
     vision: null,
     domain: null,
-    project: 'sample',  // Default project
     issue: null,
     feature: null,
     masters: [],
@@ -80,7 +82,7 @@ function parseArgs() {
     else if (a === '--title') out.title = args[++i];
     else if (a === '--vision') out.vision = args[++i];
     else if (a === '--domain' || a === '--overview') out.domain = args[++i]; // --overview for legacy
-    else if (a === '--project') out.project = args[++i];
+    else if (a === '--project') { args[++i]; /* ignored for backward compatibility */ }
     else if (a === '--issue') out.issue = args[++i];
     else if (a === '--feature') out.feature = args[++i];
     else if (a === '--masters') out.masters = args[++i].split(',').map((s) => s.trim()).filter(Boolean);
@@ -198,8 +200,8 @@ function buildSpecContent(template, args, relDir) {
     content = content.replace('[FEATURE_NAME]', args.title);
     if (args.feature) {
       content = content.replace('Feature: S-{XXX}-001', `Feature: ${args.feature}`);
-      content = content.replace('.specify/specs/{project}/features/{feature}/spec.md', `${relDir}/spec.md`);
-      content = content.replace(/\.specify\/specs\/\{project\}\/features\/\{feature\}/g, relDir);
+      content = content.replace('.specify/specs/features/{feature}/spec.md', `${relDir}/spec.md`);
+      content = content.replace(/\.specify\/specs\/features\/\{feature\}/g, relDir);
     }
   }
 
@@ -253,7 +255,7 @@ function fixDirFromId(id, title) {
 function main() {
   const args = parseArgs();
   const template = readTemplate(args.kind);
-  const specsBase = path.join(process.cwd(), '.specify', 'specs', args.project);
+  const specsBase = path.join(process.cwd(), '.specify', 'specs');
 
   // Overview specs: vision, domain, screen
   if (['vision', 'domain', 'screen'].includes(args.kind)) {
@@ -306,15 +308,15 @@ function main() {
   console.log(`Created Feature spec at ${path.relative(process.cwd(), outPath)}`);
 
   // Append to Domain index if present
-  // New structure: {project}/overview/domain/spec.md
+  // Structure: specs/overview/domain/spec.md
   // Legacy: specs/domain/spec.md or specs/overview/spec.md
-  const newDomainPath = path.join(specsBase, 'overview', 'domain', 'spec.md');
-  const legacyDomainPath = path.join(process.cwd(), '.specify', 'specs', 'domain', 'spec.md');
-  const legacyOverviewPath = path.join(process.cwd(), '.specify', 'specs', 'overview', 'spec.md');
+  const domainPath = path.join(specsBase, 'overview', 'domain', 'spec.md');
+  const legacyDomainPath = path.join(specsBase, 'domain', 'spec.md');
+  const legacyOverviewPath = path.join(specsBase, 'overview', 'spec.md');
 
   let targetPath = null;
-  if (fs.existsSync(newDomainPath)) {
-    targetPath = newDomainPath;
+  if (fs.existsSync(domainPath)) {
+    targetPath = domainPath;
   } else if (fs.existsSync(legacyDomainPath)) {
     targetPath = legacyDomainPath;
   } else if (fs.existsSync(legacyOverviewPath)) {

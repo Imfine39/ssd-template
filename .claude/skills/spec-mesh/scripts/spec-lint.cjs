@@ -467,17 +467,9 @@ if (domainSpecs.length > 0) {
 
 // Matrix paths - check new structure first, then legacy locations
 function findMatrixPath() {
-  // New structure: .specify/specs/{project}/overview/matrix/
-  const projectDirs = fs.existsSync(specsRoot)
-    ? fs.readdirSync(specsRoot, { withFileTypes: true })
-        .filter(d => d.isDirectory() && d.name !== 'vision')
-        .map(d => d.name)
-    : [];
-
-  for (const project of projectDirs) {
-    const newPath = path.join(specsRoot, project, 'overview', 'matrix', 'cross-reference.json');
-    if (fs.existsSync(newPath)) return newPath;
-  }
+  // New structure: .specify/specs/overview/matrix/
+  const newPath = path.join(specsRoot, 'overview', 'matrix', 'cross-reference.json');
+  if (fs.existsSync(newPath)) return newPath;
 
   // Legacy: .specify/matrix/
   const legacyPath1 = path.join(root, '.specify', 'matrix', 'cross-reference.json');

@@ -20,9 +20,9 @@ Execute tasks from the plan with tests and adherence to spec.
    - Must be `feature/*` or `fix/*`
 
 2. **Read all context:**
-   - Spec: `.specify/specs/{project}/features/{id}/spec.md`
-   - Plan: `.specify/specs/{project}/features/{id}/plan.md`
-   - Tasks: `.specify/specs/{project}/features/{id}/tasks.md`
+   - Spec: `.specify/specs/features/{id}/spec.md`
+   - Plan: `.specify/specs/features/{id}/plan.md`
+   - Tasks: `.specify/specs/features/{id}/tasks.md`
 
 3. **Confirm Spec IDs** are clear (S-*, UC-*, FR-*)
 

@@ -49,18 +49,13 @@ const STATE_DIR = path.join(process.cwd(), '.specify', 'state');
 const REPO_STATE_PATH = path.join(STATE_DIR, 'repo-state.cjson');
 const BRANCH_STATE_PATH = path.join(STATE_DIR, 'branch-state.cjson');
 
-// Default project name
-const DEFAULT_PROJECT = 'sample';
-
-// Get project-aware spec paths
-function getProjectSpecPaths(project) {
-  return {
-    vision: `.specify/specs/${project}/overview/vision/spec.md`,
-    domain: `.specify/specs/${project}/overview/domain/spec.md`,
-    screen: `.specify/specs/${project}/overview/screen/spec.md`,
-    matrix: `.specify/specs/${project}/overview/matrix/cross-reference.json`,
-  };
-}
+// Spec paths (no project subdirectory - 1 repo = 1 project)
+const SPEC_PATHS = {
+  vision: '.specify/specs/overview/vision/spec.md',
+  domain: '.specify/specs/overview/domain/spec.md',
+  screen: '.specify/specs/overview/screen/spec.md',
+  matrix: '.specify/specs/overview/matrix/cross-reference.json',
+};
 
 // Legacy paths for backward compatibility
 const LEGACY_SPEC_PATHS = {
@@ -71,12 +66,12 @@ const LEGACY_SPEC_PATHS = {
 };
 
 // Find existing path from candidates
-function findExistingSpecPath(projectPath, legacyPaths) {
-  const resolved = path.isAbsolute(projectPath)
-    ? projectPath
-    : path.resolve(process.cwd(), projectPath);
+function findExistingSpecPath(specPath, legacyPaths) {
+  const resolved = path.isAbsolute(specPath)
+    ? specPath
+    : path.resolve(process.cwd(), specPath);
   if (fs.existsSync(resolved)) {
-    return projectPath;
+    return specPath;
   }
   for (const p of legacyPaths) {
     const legacyResolved = path.resolve(process.cwd(), p);
@@ -84,28 +79,26 @@ function findExistingSpecPath(projectPath, legacyPaths) {
       return p;
     }
   }
-  return projectPath; // Return project path as default even if not exists
+  return specPath; // Return spec path as default even if not exists
 }
 
-// Create default repo state for a project
-function createDefaultRepoState(project) {
-  const projectPaths = getProjectSpecPaths(project);
+// Create default repo state
+function createDefaultRepoState() {
   return {
     version: '1.1.0',
     project: {
       name: '',
-      slug: project,
       createdAt: new Date().toISOString()
     },
     specs: {
       vision: {
-        path: findExistingSpecPath(projectPaths.vision, LEGACY_SPEC_PATHS.vision),
+        path: findExistingSpecPath(SPEC_PATHS.vision, LEGACY_SPEC_PATHS.vision),
         status: 'none',
         lastModified: null,
         clarifyComplete: false
       },
       domain: {
-        path: findExistingSpecPath(projectPaths.domain, LEGACY_SPEC_PATHS.domain),
+        path: findExistingSpecPath(SPEC_PATHS.domain, LEGACY_SPEC_PATHS.domain),
         status: 'none',
         lastModified: null,
         clarifyComplete: false,
@@ -116,7 +109,7 @@ function createDefaultRepoState(project) {
         }
       },
       screen: {
-        path: findExistingSpecPath(projectPaths.screen, LEGACY_SPEC_PATHS.screen),
+        path: findExistingSpecPath(SPEC_PATHS.screen, LEGACY_SPEC_PATHS.screen),
         status: 'none',
         lastModified: null,
         screenCount: 0
@@ -134,8 +127,8 @@ function createDefaultRepoState(project) {
   };
 }
 
-// Default schemas (for backward compatibility)
-const DEFAULT_REPO_STATE = createDefaultRepoState(DEFAULT_PROJECT);
+// Default schemas
+const DEFAULT_REPO_STATE = createDefaultRepoState();
 
 const DEFAULT_BRANCH_STATE = {
   version: '1.0.0',
@@ -193,19 +186,17 @@ function getProjectName() {
 }
 
 // Command handlers
-function cmdInit(project = DEFAULT_PROJECT) {
+function cmdInit() {
   ensureDir(STATE_DIR);
 
   // Initialize repo-state.cjson if not exists
   if (!fs.existsSync(REPO_STATE_PATH)) {
-    const repoState = createDefaultRepoState(project);
+    const repoState = createDefaultRepoState();
     repoState.project.name = getProjectName();
     repoState.project.createdAt = new Date().toISOString();
 
-    const projectPaths = getProjectSpecPaths(project);
-
     // Check if Vision spec exists (new path first, then legacy)
-    const visionPath = findExistingSpecPath(projectPaths.vision, LEGACY_SPEC_PATHS.vision);
+    const visionPath = findExistingSpecPath(SPEC_PATHS.vision, LEGACY_SPEC_PATHS.vision);
     const resolvedVisionPath = path.resolve(process.cwd(), visionPath);
     if (fs.existsSync(resolvedVisionPath)) {
       repoState.specs.vision.status = 'draft';
@@ -214,7 +205,7 @@ function cmdInit(project = DEFAULT_PROJECT) {
     }
 
     // Check if Domain spec exists (new path first, then legacy)
-    const domainPath = findExistingSpecPath(projectPaths.domain, LEGACY_SPEC_PATHS.domain);
+    const domainPath = findExistingSpecPath(SPEC_PATHS.domain, LEGACY_SPEC_PATHS.domain);
     const resolvedDomainPath = path.resolve(process.cwd(), domainPath);
     if (fs.existsSync(resolvedDomainPath)) {
       repoState.specs.domain.status = 'draft';
@@ -223,7 +214,7 @@ function cmdInit(project = DEFAULT_PROJECT) {
     }
 
     // Check if Screen spec exists (new path first, then legacy)
-    const screenPath = findExistingSpecPath(projectPaths.screen, LEGACY_SPEC_PATHS.screen);
+    const screenPath = findExistingSpecPath(SPEC_PATHS.screen, LEGACY_SPEC_PATHS.screen);
     const resolvedScreenPath = path.resolve(process.cwd(), screenPath);
     if (fs.existsSync(resolvedScreenPath)) {
       repoState.specs.screen.status = 'draft';
@@ -296,7 +287,7 @@ function cmdRepo(args) {
         process.exit(1);
       }
       if (!repoState.specs.screen) {
-        repoState.specs.screen = { path: '.specify/specs/screen/spec.md', status: 'none', lastModified: null, screenCount: 0 };
+        repoState.specs.screen = { path: SPEC_PATHS.screen, status: 'none', lastModified: null, screenCount: 0 };
       }
       repoState.specs.screen.status = val;
       repoState.specs.screen.lastModified = new Date().toISOString();
@@ -304,7 +295,7 @@ function cmdRepo(args) {
       i++;
     } else if (arg === '--set-screen-count' && val) {
       if (!repoState.specs.screen) {
-        repoState.specs.screen = { path: '.specify/specs/screen/spec.md', status: 'none', lastModified: null, screenCount: 0 };
+        repoState.specs.screen = { path: SPEC_PATHS.screen, status: 'none', lastModified: null, screenCount: 0 };
       }
       repoState.specs.screen.screenCount = parseInt(val, 10);
       modified = true;
@@ -680,26 +671,15 @@ function cmdQuery(args) {
   }
 }
 
-// Parse --project from args
-function parseProjectFromArgs(args) {
-  for (let i = 0; i < args.length; i++) {
-    if (args[i] === '--project' && args[i + 1]) {
-      return args[i + 1];
-    }
-  }
-  return DEFAULT_PROJECT;
-}
-
 // Main
 function main() {
   const args = process.argv.slice(2);
   const command = args[0];
   const restArgs = args.slice(1);
-  const project = parseProjectFromArgs(restArgs);
 
   switch (command) {
     case 'init':
-      cmdInit(project);
+      cmdInit();
       break;
     case 'repo':
       cmdRepo(restArgs);
@@ -730,9 +710,6 @@ Commands:
   suspend                       Suspend a branch
   resume                        Resume a suspended branch
   query                         Query state
-
-Global Options:
-  --project <name>              Project name (default: sample)
 
 Repo Options:
   --set-vision-status <status>  Set Vision spec status (none|scaffold|draft|clarified|approved)

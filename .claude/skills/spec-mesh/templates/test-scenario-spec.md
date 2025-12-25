@@ -41,7 +41,7 @@ Status: Draft
 | Item | Value |
 |------|-------|
 | Feature | [Feature Name] |
-| Feature Spec | `.specify/specs/{project}/features/{feature}/spec.md` |
+| Feature Spec | `.specify/specs/features/{feature}/spec.md` |
 | Screens | SCR-001, SCR-002 |
 | APIs | API-XXX-001, API-XXX-002 |
 
@@ -242,9 +242,9 @@ Status: Draft
 
 ## 8. Related Documents
 
-- Feature Spec: `.specify/specs/{project}/features/{feature}/spec.md`
-- Screen Spec: `.specify/specs/{project}/overview/screen/spec.md`
-- Domain Spec: `.specify/specs/{project}/overview/domain/spec.md`
+- Feature Spec: `.specify/specs/features/{feature}/spec.md`
+- Screen Spec: `.specify/specs/overview/screen/spec.md`
+- Domain Spec: `.specify/specs/overview/domain/spec.md`
 
 ---
 

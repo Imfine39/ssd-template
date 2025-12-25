@@ -270,7 +270,7 @@ working in production.
    - Update Modification Log status if applicable.
 3. **Commit the change**:
    ```bash
-   git add .specify/specs/screen/spec.md
+   git add .specify/specs/overview/screen/spec.md
    git commit -m "chore: Update Screen Spec Status to Implemented for SCR-XXX"
    git push
    ```

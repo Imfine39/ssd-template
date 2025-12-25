@@ -22,10 +22,10 @@
  *   - "NOTE: Input file appears to be empty" - No content to preserve, skipped
  *
  * Usage:
- *   node .claude/skills/spec-mesh/scripts/preserve-input.cjs vision --project sample
- *   node .claude/skills/spec-mesh/scripts/preserve-input.cjs add --project sample --feature s-lead-001
- *   node .claude/skills/spec-mesh/scripts/preserve-input.cjs fix --project sample --fix f-auth-001
- *   node .claude/skills/spec-mesh/scripts/preserve-input.cjs design --project sample
+ *   node .claude/skills/spec-mesh/scripts/preserve-input.cjs vision
+ *   node .claude/skills/spec-mesh/scripts/preserve-input.cjs add --feature s-lead-001
+ *   node .claude/skills/spec-mesh/scripts/preserve-input.cjs fix --fix f-auth-001
+ *   node .claude/skills/spec-mesh/scripts/preserve-input.cjs design
  *
  * Input file is copied (not moved) to the spec directory as input.md
  */
@@ -49,14 +49,13 @@ function parseArgs() {
   const args = process.argv.slice(2);
   const out = {
     type: null,
-    project: 'sample',
     feature: null,
     fix: null
   };
 
   for (let i = 0; i < args.length; i++) {
     const a = args[i];
-    if (a === '--project') out.project = args[++i];
+    if (a === '--project') { args[++i]; /* ignored for backward compatibility */ }
     else if (a === '--feature') out.feature = args[++i];
     else if (a === '--fix') out.fix = args[++i];
     else if (!a.startsWith('--')) out.type = a.toLowerCase();
@@ -81,41 +80,38 @@ function showHelp() {
   console.log('Usage: node preserve-input.cjs <type> [options]');
   console.log('');
   console.log('Types:');
-  console.log('  vision   - Preserve to .specify/specs/{project}/overview/vision/input.md');
-  console.log('  add      - Preserve to .specify/specs/{project}/features/{feature}/input.md');
-  console.log('  fix      - Preserve to .specify/specs/{project}/fixes/{fix}/input.md');
-  console.log('  design   - Preserve to .specify/specs/{project}/overview/domain/input.md');
+  console.log('  vision   - Preserve to .specify/specs/overview/vision/input.md');
+  console.log('  add      - Preserve to .specify/specs/features/{feature}/input.md');
+  console.log('  fix      - Preserve to .specify/specs/fixes/{fix}/input.md');
+  console.log('  design   - Preserve to .specify/specs/overview/domain/input.md');
   console.log('');
   console.log('Options:');
-  console.log('  --project <name>   Project name (default: sample)');
   console.log('  --feature <id>     Feature directory name (required for add)');
   console.log('  --fix <id>         Fix directory name (required for fix)');
 }
 
 function getDestinationPath(args) {
-  const projectDir = path.join(SPECS_BASE, args.project);
-
   switch (args.type) {
     case 'vision':
-      return path.join(projectDir, 'overview', 'vision', 'input.md');
+      return path.join(SPECS_BASE, 'overview', 'vision', 'input.md');
 
     case 'design':
       // Design input goes to domain directory (covers both screen and domain)
-      return path.join(projectDir, 'overview', 'domain', 'input.md');
+      return path.join(SPECS_BASE, 'overview', 'domain', 'input.md');
 
     case 'add':
       if (!args.feature) {
         console.error('ERROR: --feature is required for add type');
         process.exit(1);
       }
-      return path.join(projectDir, 'features', args.feature, 'input.md');
+      return path.join(SPECS_BASE, 'features', args.feature, 'input.md');
 
     case 'fix':
       if (!args.fix) {
         console.error('ERROR: --fix is required for fix type');
         process.exit(1);
       }
-      return path.join(projectDir, 'fixes', args.fix, 'input.md');
+      return path.join(SPECS_BASE, 'fixes', args.fix, 'input.md');
 
     default:
       console.error(`ERROR: Unknown type '${args.type}'`);

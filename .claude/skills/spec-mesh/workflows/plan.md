@@ -18,7 +18,7 @@ Create implementation plan from spec. **Human must review and approve before pro
 
 ```bash
 # Spec 内の [NEEDS CLARIFICATION] をカウント
-grep -c "\[NEEDS CLARIFICATION\]" .specify/specs/{project}/features/{id}/spec.md
+grep -c "\[NEEDS CLARIFICATION\]" .specify/specs/features/{id}/spec.md
 ```
 
 - **0 件**: CLARIFY GATE 通過 → Step 1 へ進む
@@ -39,12 +39,12 @@ grep -c "\[NEEDS CLARIFICATION\]" .specify/specs/{project}/features/{id}/spec.md
 
 1. **Read Feature/Fix Spec:**
    ```
-   Read tool: .specify/specs/{project}/features/{id}/spec.md
+   Read tool: .specify/specs/features/{id}/spec.md
    ```
 
 2. **Read Domain Spec** for M-*/API-* context:
    ```
-   Read tool: .specify/specs/{project}/overview/domain/spec.md
+   Read tool: .specify/specs/overview/domain/spec.md
    ```
 
 3. **Read Constitution:**
@@ -83,7 +83,7 @@ grep -c "\[NEEDS CLARIFICATION\]" .specify/specs/{project}/features/{id}/spec.md
 
 Save to feature directory:
 ```
-.specify/specs/{project}/features/{id}/plan.md
+.specify/specs/features/{id}/plan.md
 ```
 
 ### Step 5: Run Lint
@@ -99,7 +99,7 @@ Display:
 === Plan 作成完了 ===
 
 Feature: {Feature名}
-Plan: .specify/specs/{project}/features/{id}/plan.md
+Plan: .specify/specs/features/{id}/plan.md
 
 Work Breakdown:
 1. {Task 1}

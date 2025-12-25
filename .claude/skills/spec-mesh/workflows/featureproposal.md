@@ -18,12 +18,12 @@ AI-assisted discovery of potential Features from:
 
 1. **Read Vision Spec:**
    ```
-   Read tool: .specify/specs/{project}/overview/vision/spec.md
+   Read tool: .specify/specs/overview/vision/spec.md
    ```
 
 2. **Read Domain Spec** (Feature Index):
    ```
-   Read tool: .specify/specs/{project}/overview/domain/spec.md
+   Read tool: .specify/specs/overview/domain/spec.md
    ```
 
 3. **Check existing Issues:**

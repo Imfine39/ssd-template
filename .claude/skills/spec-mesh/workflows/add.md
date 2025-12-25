@@ -119,9 +119,9 @@ node .claude/skills/spec-mesh/scripts/spec-lint.cjs
 If input file was used:
 1. **Preserve input to spec directory:**
    ```bash
-   node .claude/skills/spec-mesh/scripts/preserve-input.cjs add --project {project} --feature {feature-dir}
+   node .claude/skills/spec-mesh/scripts/preserve-input.cjs add --feature {feature-dir}
    ```
-   - Saves to: `.specify/specs/{project}/features/{feature-dir}/input.md`
+   - Saves to: `.specify/specs/features/{feature-dir}/input.md`
 
 2. **Reset input file:**
    ```bash
@@ -137,7 +137,7 @@ Display:
 Feature: {機能名}
 Issue: #{issue_num}
 Branch: feature/{issue_num}-{slug}
-Spec: .specify/specs/{project}/features/{id}/spec.md
+Spec: .specify/specs/features/{id}/spec.md
 
 === 曖昧点 ===
 [NEEDS CLARIFICATION]: {N} 箇所

@@ -18,23 +18,17 @@
  *   node .claude/skills/spec-mesh/scripts/generate-matrix-view.cjs [options] [path-to-json]
  *
  * Options:
- *   --project <name>  Project name (default: sample)
  *   --help            Show this help message
  *
- * If no path provided, uses .specify/specs/{project}/overview/matrix/cross-reference.json
+ * If no path provided, uses .specify/specs/overview/matrix/cross-reference.json
  * Output is written to same directory as cross-reference.md
  */
 
 const fs = require('fs');
 const path = require('path');
 
-// Default project
-const DEFAULT_PROJECT = 'sample';
-
-// Get default JSON path for a project
-function getDefaultJsonPath(project) {
-  return `.specify/specs/${project}/overview/matrix/cross-reference.json`;
-}
+// Default JSON path (no project subdirectory - 1 repo = 1 project)
+const DEFAULT_JSON_PATH = '.specify/specs/overview/matrix/cross-reference.json';
 
 // Legacy paths for backward compatibility
 const LEGACY_JSON_PATHS = [
@@ -296,13 +290,12 @@ ${generatePermissionTable(data.permissions)}
 // Parse command line arguments
 function parseArgs() {
   const args = process.argv.slice(2);
-  let project = DEFAULT_PROJECT;
   let jsonPath = null;
 
   for (let i = 0; i < args.length; i++) {
     switch (args[i]) {
       case '--project':
-        project = args[++i];
+        args[++i]; // ignored for backward compatibility
         break;
       case '--help':
         console.log(`
@@ -314,16 +307,14 @@ Usage:
   node .claude/skills/spec-mesh/scripts/generate-matrix-view.cjs [options] [path-to-json]
 
 Options:
-  --project <name>  Project name (default: ${DEFAULT_PROJECT})
   --help            Show this help message
 
 If no path is provided, uses:
-  .specify/specs/{project}/overview/matrix/cross-reference.json
+  ${DEFAULT_JSON_PATH}
 
 Examples:
   node .claude/skills/spec-mesh/scripts/generate-matrix-view.cjs
-  node .claude/skills/spec-mesh/scripts/generate-matrix-view.cjs --project myproject
-  node .claude/skills/spec-mesh/scripts/generate-matrix-view.cjs .specify/specs/sample/overview/matrix/cross-reference.json
+  node .claude/skills/spec-mesh/scripts/generate-matrix-view.cjs .specify/specs/overview/matrix/cross-reference.json
         `);
         process.exit(0);
       default:
@@ -334,17 +325,16 @@ Examples:
     }
   }
 
-  // Determine JSON path: explicit > existing project path > existing legacy path > default project path
-  const projectPath = getDefaultJsonPath(project);
+  // Determine JSON path: explicit > existing default path > existing legacy path > default path
   if (!jsonPath) {
-    jsonPath = findExistingPath([projectPath, ...LEGACY_JSON_PATHS]) || projectPath;
+    jsonPath = findExistingPath([DEFAULT_JSON_PATH, ...LEGACY_JSON_PATHS]) || DEFAULT_JSON_PATH;
   }
 
-  return { project, jsonPath };
+  return { jsonPath };
 }
 
 function main() {
-  const { project, jsonPath: inputPath } = parseArgs();
+  const { jsonPath: inputPath } = parseArgs();
 
   // Resolve to absolute path
   let jsonPath = inputPath;
@@ -352,7 +342,6 @@ function main() {
     jsonPath = path.resolve(process.cwd(), jsonPath);
   }
 
-  console.log(`Project: ${project}`);
   console.log(`Reading: ${jsonPath}`);
   const data = loadJson(jsonPath);
 

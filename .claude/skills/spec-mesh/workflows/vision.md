@@ -77,7 +77,7 @@ Main Journeys:
 1. [Journey 1]: [概要]
 2. [Journey 2]: [概要]
 
-Spec: .specify/specs/{project}/overview/vision/spec.md
+Spec: .specify/specs/overview/vision/spec.md
 
 === 曖昧点 ===
 [NEEDS CLARIFICATION] マーク: {N} 箇所
@@ -91,9 +91,9 @@ Spec: .specify/specs/{project}/overview/vision/spec.md
 If input file was used:
 1. **Preserve input to spec directory:**
    ```bash
-   node .claude/skills/spec-mesh/scripts/preserve-input.cjs vision --project {project}
+   node .claude/skills/spec-mesh/scripts/preserve-input.cjs vision
    ```
-   - Saves to: `.specify/specs/{project}/overview/vision/input.md`
+   - Saves to: `.specify/specs/overview/vision/input.md`
 
 2. **Reset input file:**
    ```bash
@@ -143,7 +143,7 @@ Spec 作成後、品質を担保するため Multi-Review を実行：
 
 ## Output
 
-- Vision spec: `.specify/specs/{project}/overview/vision/spec.md`
+- Vision spec: `.specify/specs/overview/vision/spec.md`
 - 曖昧点レポート
 - Next step: `/spec-mesh clarify` → `/spec-mesh design`
 

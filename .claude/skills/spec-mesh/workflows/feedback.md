@@ -20,11 +20,11 @@ This workflow records these discoveries for future reference.
 
 | Spec Type | Path | Feedback セクション |
 |-----------|------|-------------------|
-| Vision | `.specify/specs/{project}/overview/vision/spec.md` | Implementation Notes |
-| Domain | `.specify/specs/{project}/overview/domain/spec.md` | Implementation Notes |
-| Screen | `.specify/specs/{project}/overview/screen/spec.md` | Implementation Notes |
-| Feature | `.specify/specs/{project}/features/{id}/spec.md` | Clarifications |
-| Fix | `.specify/specs/{project}/fixes/{id}/spec.md` | Clarifications |
+| Vision | `.specify/specs/overview/vision/spec.md` | Implementation Notes |
+| Domain | `.specify/specs/overview/domain/spec.md` | Implementation Notes |
+| Screen | `.specify/specs/overview/screen/spec.md` | Implementation Notes |
+| Feature | `.specify/specs/features/{id}/spec.md` | Clarifications |
+| Fix | `.specify/specs/fixes/{id}/spec.md` | Clarifications |
 
 ---
 
@@ -59,11 +59,11 @@ Impact: {Spec への影響}
    ```
 
    Spec タイプに応じたパス:
-   - Vision: `.specify/specs/{project}/overview/vision/spec.md`
-   - Domain: `.specify/specs/{project}/overview/domain/spec.md`
-   - Screen: `.specify/specs/{project}/overview/screen/spec.md`
-   - Feature: `.specify/specs/{project}/features/{id}/spec.md`
-   - Fix: `.specify/specs/{project}/fixes/{id}/spec.md`
+   - Vision: `.specify/specs/overview/vision/spec.md`
+   - Domain: `.specify/specs/overview/domain/spec.md`
+   - Screen: `.specify/specs/overview/screen/spec.md`
+   - Feature: `.specify/specs/features/{id}/spec.md`
+   - Fix: `.specify/specs/fixes/{id}/spec.md`
 
 2. **Add to appropriate section:**
 

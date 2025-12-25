@@ -24,7 +24,7 @@ Chrome 拡張を使用して E2E テストを実行する。
 
 1. **Test Scenario Spec を読み込み:**
    ```
-   Read tool: .specify/specs/{project}/features/{feature}/test-scenarios.md
+   Read tool: .specify/specs/features/{feature}/test-scenarios.md
    ```
 
 2. **抽出する情報:**
@@ -35,7 +35,7 @@ Chrome 拡張を使用して E2E テストを実行する。
 
 3. **Screen Spec を読み込み（要素特定用）:**
    ```
-   Read tool: .specify/specs/{project}/overview/screen/spec.md
+   Read tool: .specify/specs/overview/screen/spec.md
    ```
 
 ### Step 2: Setup Browser Session

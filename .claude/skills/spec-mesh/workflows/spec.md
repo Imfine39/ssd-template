@@ -37,7 +37,7 @@ node .claude/skills/spec-mesh/scripts/scaffold-spec.cjs --kind {kind} --id {id} 
 
 Display created file path:
 ```
-Spec created: .specify/specs/{project}/{path}/spec.md
+Spec created: .specify/specs/{path}/spec.md
 
 Edit this file to fill in the details.
 After editing, run `/spec-mesh lint` to verify.

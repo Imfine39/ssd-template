@@ -33,8 +33,8 @@ Brief description of the technical domain this spec covers.
 Reference the Vision Spec for business context and user journeys.
 Reference the Screen Spec for UI context and screen definitions.
 
-- Vision Spec: `.specify/specs/vision/spec.md`
-- Screen Spec: `.specify/specs/screen/spec.md`
+- Vision Spec: `.specify/specs/overview/vision/spec.md`
+- Screen Spec: `.specify/specs/overview/screen/spec.md`
 - Domain boundaries:
 - Core concepts:
 
@@ -252,7 +252,7 @@ All features that implement this domain. Updated as features are added.
 
 | Feature ID | Title | Path | Status | Related M-*/API-* |
 |------------|-------|------|--------|-------------------|
-| S-{XXX}-001 | {Title} | `.specify/specs/s-xxx-001/` | {Status} | {M-*, API-*} |
+| S-{XXX}-001 | {Title} | `.specify/specs/features/s-xxx-001/` | {Status} | {M-*, API-*} |
 
 **Status values (see constitution.md):** Draft | In Review | Clarified | Approved | Implemented
 
