@@ -25,7 +25,6 @@ Extract from ARGUMENTS:
 - `--kind`: Spec type (required)
 - `--id`: Spec ID (required)
 - `--title`: Spec title (required)
-- `--project`: Project name (optional, default: current)
 
 ### Step 2: Run Scaffold
 

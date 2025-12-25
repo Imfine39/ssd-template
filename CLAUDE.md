@@ -162,7 +162,7 @@ node .claude/skills/spec-mesh/scripts/state.cjs init
 
 # Quick Input
 node .claude/skills/spec-mesh/scripts/reset-input.cjs vision|add|fix
-node .claude/skills/spec-mesh/scripts/preserve-input.cjs <type> --project <name>
+node .claude/skills/spec-mesh/scripts/preserve-input.cjs <type>
 
 # Lint・検証
 node .claude/skills/spec-mesh/scripts/spec-lint.cjs

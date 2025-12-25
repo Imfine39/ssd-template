@@ -232,7 +232,7 @@ Preserves input files to spec directories.
 node .claude/skills/spec-mesh/scripts/reset-input.cjs vision
 
 # Then preserve after adding content
-node .claude/skills/spec-mesh/scripts/preserve-input.cjs vision --project sample
+node .claude/skills/spec-mesh/scripts/preserve-input.cjs vision
 ```
 
 ---
