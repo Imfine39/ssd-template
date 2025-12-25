@@ -14,7 +14,7 @@ Low-level Spec manipulation when standard workflows don't fit:
 ## Usage
 
 ```
-/spec-mesh spec --kind {vision|domain|screen|feature|fix} --id {ID} --title "{Title}"
+spec ワークフロー --kind {vision|domain|screen|feature|fix} --id {ID} --title "{Title}"
 ```
 
 ## Steps
@@ -39,7 +39,7 @@ Display created file path:
 Spec created: .specify/specs/{path}/spec.md
 
 Edit this file to fill in the details.
-After editing, run `/spec-mesh lint` to verify.
+After editing, run lint ワークフロー to verify.
 ```
 
 ### Step 4: Update State (optional)
@@ -65,8 +65,8 @@ node .claude/skills/spec-mesh/scripts/state.cjs repo --set-{kind}-status scaffol
 
 | Condition | Command | Description |
 |-----------|---------|-------------|
-| Vision Spec の場合 | `/spec-mesh clarify` | 曖昧点解消 → `/spec-mesh design` |
-| Domain Spec の場合 | `/spec-mesh clarify` | 曖昧点解消 → `/spec-mesh issue` |
-| Screen Spec の場合 | `/spec-mesh clarify` | 曖昧点解消 → `/spec-mesh issue` |
-| Feature Spec の場合 | `/spec-mesh clarify` | 曖昧点解消 → `/spec-mesh plan` |
-| Fix Spec の場合 | `/spec-mesh clarify` | 曖昧点解消 → `/spec-mesh plan` |
+| Vision Spec の場合 | clarify ワークフロー | 曖昧点解消 → design ワークフロー |
+| Domain Spec の場合 | clarify ワークフロー | 曖昧点解消 → issue ワークフロー |
+| Screen Spec の場合 | clarify ワークフロー | 曖昧点解消 → issue ワークフロー |
+| Feature Spec の場合 | clarify ワークフロー | 曖昧点解消 → plan ワークフロー |
+| Fix Spec の場合 | clarify ワークフロー | 曖昧点解消 → plan ワークフロー |

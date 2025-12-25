@@ -96,7 +96,7 @@ gh issue create --title "[Feature] {Feature名}" --body "## Summary
 - Screens: {関連SCR-*}
 
 ## Proposed by
-AI analysis via /spec-mesh featureproposal"
+AI analysis via Feature 提案ワークフロー"
 ```
 
 ### Step 5: Update Domain Feature Index
@@ -124,8 +124,8 @@ Add proposed Features to Domain Spec:
 - #{num2}: S-EXPORT-001 - データエクスポート
 
 次のステップ:
-- `/spec-mesh issue` で Feature 開発を開始
-- または `/spec-mesh add` で詳細を追加
+- issue ワークフロー で Feature 開発を開始
+- または add ワークフロー で詳細を追加
 ```
 
 ---
@@ -147,5 +147,5 @@ Add proposed Features to Domain Spec:
 
 | Condition | Command | Description |
 |-----------|---------|-------------|
-| Issue から開始する場合 | `/spec-mesh issue` | Feature 開発を開始 |
-| 詳細を追加する場合 | `/spec-mesh add` | 新機能の詳細を追加 |
+| Issue から開始する場合 | issue ワークフロー | Feature 開発を開始 |
+| 詳細を追加する場合 | add ワークフロー | 新機能の詳細を追加 |

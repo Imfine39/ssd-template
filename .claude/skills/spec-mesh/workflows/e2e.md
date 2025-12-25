@@ -306,9 +306,9 @@ find でマッチしない場合:
 
 | Condition | Command | Description |
 |-----------|---------|-------------|
-| 全テストパスの場合 | `/spec-mesh pr` | PR 作成 |
-| 一部失敗の場合 | `/spec-mesh e2e` | 実装修正後に再テスト |
-| Spec に問題がある場合 | `/spec-mesh change` | Spec 更新 |
+| 全テストパスの場合 | pr ワークフロー | PR 作成 |
+| 一部失敗の場合 | e2e ワークフロー | 実装修正後に再テスト |
+| Spec に問題がある場合 | change ワークフロー | Spec 更新 |
 
 ---
 

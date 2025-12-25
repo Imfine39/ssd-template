@@ -34,7 +34,7 @@ incorrect behavior.
      the impact on existing work.
 3. **Create a spec branch** - `spec/<issue>-fix-<spec-id>`
 4. **Update the spec**:
-   - Run `/spec-mesh spec` to correct the specification.
+   - Run spec ワークフロー to correct the specification.
    - Update the Changelog section with the correction.
    - Update affected UC, FR, and SC.
 5. **Update dependent artifacts**:
@@ -51,7 +51,7 @@ proceed confidently.
 **Recovery steps**:
 
 1. **Do not guess** - This is a constitutional rule.
-2. **Run `/spec-mesh clarify`** - Generate clarification questions.
+2. **Run clarify ワークフロー** - Generate clarification questions.
 3. **Create an Issue** (if needed) - For significant ambiguities:
    - Title: `Clarification needed: S-XXX-001 - [topic]`
    - List the ambiguous points and proposed interpretations.
@@ -103,7 +103,7 @@ constraints discovered during implementation.
 
 **Recovery steps**:
 
-1. **Re-run `/spec-mesh tasks`** to regenerate task list.
+1. **Re-run tasks ワークフロー** to regenerate task list.
 2. **Review generated tasks** against new spec requirements.
 3. **Update task status**:
    - Mark obsolete tasks as cancelled (remove from list).
@@ -348,7 +348,7 @@ missing navigation paths.
 | Situation | First Step |
 |-----------|------------|
 | Spec is wrong | Create Issue, then fix spec |
-| Spec is ambiguous | Run `/spec-mesh clarify` |
+| Spec is ambiguous | Run clarify ワークフロー |
 | Plan is infeasible | Document constraint, update plan |
 | Tests fail | Classify cause (spec/test/impl/env) |
 | PR rejected | Categorize feedback, fix at correct level |

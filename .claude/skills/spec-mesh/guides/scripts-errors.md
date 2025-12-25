@@ -78,7 +78,7 @@ Scaffolds new specs from templates.
 | `ERROR: Feature requires --domain` | Feature without domain reference | Add `--domain S-DOMAIN-001` |
 | `ERROR: Test-scenario requires --feature` | Test scenario without feature | Add `--feature <feature-dir-name>` |
 | `ERROR: Template not found: X` | Missing template file | Check `.claude/skills/spec-mesh/templates/` exists |
-| `ERROR: Feature directory not found: X` | Feature dir doesn't exist | Create feature spec first with `/spec-mesh add` |
+| `ERROR: Feature directory not found: X` | Feature dir doesn't exist | Create feature spec first with add ワークフロー |
 
 **Recovery:**
 ```bash
@@ -130,7 +130,7 @@ Validates spec consistency across the project.
 | `Plan at X does not reference any IDs` | Plan doesn't link to spec | Add spec ID references to plan |
 | `Tasks at X do not reference IDs` | Tasks don't link to spec/UC | Add spec/UC ID references to tasks |
 | `Feature X modified N days before Domain update` | May be stale | Review feature against latest Domain spec |
-| `No cross-reference.json found` | Matrix not created | Run `/spec-mesh design` to create |
+| `No cross-reference.json found` | Matrix not created | Run design ワークフロー to create |
 
 **Recovery:**
 ```bash
@@ -161,7 +161,7 @@ Validates that specs are reflected in the cross-reference matrix.
 |--------------|-------|----------|
 | `ERROR: File not found: X` | Spec file doesn't exist | Create Screen/Domain spec at expected path |
 | `ERROR: Failed to parse Matrix JSON` | Invalid JSON syntax | Fix syntax in `cross-reference.json` |
-| `Matrix file not found` | No matrix created | Run `/spec-mesh design` or create manually |
+| `Matrix file not found` | No matrix created | Run design ワークフロー or create manually |
 | `Missing Screens in Matrix` | Screens in spec not in matrix | Add screen entries to matrix |
 | `Missing Features in Matrix` | Features in spec not in matrix | Add feature entries to matrix |
 | `Masters in Spec but not referenced` | Masters not in any matrix entry | Add to screen/feature mappings |

@@ -83,7 +83,7 @@ node .claude/skills/spec-mesh/scripts/branch.cjs --type feature --slug {slug} --
 4. **Check M-*/API-* requirements (Case 1/2/3):**
    - Case 1: All exist → Reference only
    - Case 2: Need new → Add to Domain
-   - Case 3: Need change → Recommend `/spec-mesh change`
+   - Case 3: Need change → Recommend change ワークフロー
 
 5. **Update Domain Spec Feature Index**
 
@@ -105,7 +105,7 @@ Feature Spec の品質を担保するため Multi-Review を実行：
 
 3. **Handle results:**
    - すべてパス → Step 8 へ
-   - 曖昧点あり → `/spec-mesh clarify` を推奨
+   - 曖昧点あり → clarify ワークフロー を推奨
    - Critical 未解決 → 問題をリストし対応を促す
 
 ### Step 8: Run Lint
@@ -143,7 +143,7 @@ Spec: .specify/specs/features/{id}/spec.md
 [NEEDS CLARIFICATION]: {N} 箇所
 - [List of ambiguous items]
 
-推奨: `/spec-mesh clarify` で曖昧点を解消してください。
+推奨: clarify ワークフロー で曖昧点を解消してください。
 ```
 
 ---
@@ -173,5 +173,5 @@ Spec: .specify/specs/features/{id}/spec.md
 
 | Condition | Command | Description |
 |-----------|---------|-------------|
-| 曖昧点がある場合 | `/spec-mesh clarify` | 曖昧点解消 |
-| 曖昧点が解消済み | `/spec-mesh plan` | 実装計画作成 |
+| 曖昧点がある場合 | clarify ワークフロー | 曖昧点解消 |
+| 曖昧点が解消済み | plan ワークフロー | 実装計画作成 |

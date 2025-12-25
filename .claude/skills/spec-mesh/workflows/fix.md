@@ -10,7 +10,7 @@ Entry point for bug fixes. Creates Issue → Branch → Fix Spec (調査報告�
 
 For urgent fixes, use `--quick` flag:
 ```
-/spec-mesh fix --quick ログインできない
+「ログインできないバグを直して」
 ```
 
 ## Quick Input
@@ -141,8 +141,8 @@ Impact: {影響範囲}
 
 === 次のステップ ===
 緊急度に応じて選択:
-- Trivial: `/spec-mesh implement` で直接修正
-- Standard: `/spec-mesh plan` → `/spec-mesh tasks` → `/spec-mesh implement`
+- Trivial: implement ワークフロー で直接修正
+- Standard: plan ワークフロー → tasks ワークフロー → implement ワークフロー
 ```
 
 ---
@@ -171,6 +171,6 @@ Impact: {影響範囲}
 
 | Condition | Command | Description |
 |-----------|---------|-------------|
-| 詳細確認が必要な場合 | `/spec-mesh clarify` | 詳細確認 |
-| 標準フローで修正する場合 | `/spec-mesh plan` | 修正計画作成 |
-| Trivial fix の場合 | `/spec-mesh implement` | 直接修正 |
+| 詳細確認が必要な場合 | clarify ワークフロー | 詳細確認 |
+| 標準フローで修正する場合 | plan ワークフロー | 修正計画作成 |
+| Trivial fix の場合 | implement ワークフロー | 直接修正 |

@@ -100,7 +100,7 @@ Checklist: .specify/specs/features/{id}/checklist.md
 1. {Recommendation 1}
 2. {Recommendation 2}
 
-チェックリストを確認し、問題があれば `/spec-mesh clarify` で解消してください。
+チェックリストを確認し、問題があれば clarify ワークフロー で解消してください。
 ```
 
 ---
@@ -167,6 +167,6 @@ Checklist: .specify/specs/features/{id}/checklist.md
 
 | Condition | Command | Description |
 |-----------|---------|-------------|
-| スコア 40+ の場合 | `/spec-mesh plan` | 実装計画作成 |
-| スコア 30-39 の場合 | `/spec-mesh clarify` | 軽微な問題を解消（推奨） |
-| スコア 30 未満の場合 | `/spec-mesh clarify` | 重大な問題を解消（必須） |
+| スコア 40+ の場合 | plan ワークフロー | 実装計画作成 |
+| スコア 30-39 の場合 | clarify ワークフロー | 軽微な問題を解消（推奨） |
+| スコア 30 未満の場合 | clarify ワークフロー | 重大な問題を解消（必須） |

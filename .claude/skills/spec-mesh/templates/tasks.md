@@ -4,7 +4,7 @@
   Template: Task Breakdown
 
   Purpose: Break implementation plan into atomic, trackable tasks.
-  Used by: /spec-mesh tasks workflow
+  Used by: tasks ワークフロー
 
   Task ID Format: T-{NNN} (e.g., T-001, T-002)
   See: .claude/skills/spec-mesh/guides/id-naming.md for ID formats

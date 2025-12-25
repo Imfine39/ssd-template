@@ -24,7 +24,7 @@ Technical design phase. Creates Screen Spec + Domain Spec + Matrix simultaneousl
 
 2. **Check Vision Spec exists:**
    - Look for `.specify/specs/overview/vision/spec.md`
-   - If not found → Recommend `/spec-mesh vision` first
+   - If not found → Recommend vision ワークフロー first
 
 3. **Read Vision Spec (including Screen Hints):**
    ```
@@ -125,7 +125,7 @@ Screen Spec と Domain Spec の品質を担保するため Multi-Review を実�
 
 3. **Handle results:**
    - すべてパス → Step 7 へ
-   - 曖昧点あり → `/spec-mesh clarify` を推奨
+   - 曖昧点あり → clarify ワークフロー を推奨
    - Critical 未解決 → 問題をリストし対応を促す
 
 ### Step 7: Run Lint
@@ -173,7 +173,7 @@ Foundation Issue: #{issue_num}
 === 曖昧点 ===
 [NEEDS CLARIFICATION]: {N} 箇所
 
-推奨: `/spec-mesh clarify` → `/spec-mesh issue` (Foundation)
+推奨: clarify ワークフロー → issue ワークフロー (Foundation)
 ```
 
 ### Step 11: Update State
@@ -210,6 +210,6 @@ node .claude/skills/spec-mesh/scripts/state.cjs repo --set-domain-status draft -
 
 | Condition | Command | Description |
 |-----------|---------|-------------|
-| 曖昧点がある場合 | `/spec-mesh clarify` | Domain の曖昧点解消 |
-| Foundation を開始する場合 | `/spec-mesh issue` | Foundation Issue から開始 |
-| 追加機能を提案する場合 | `/spec-mesh featureproposal` | 追加 Feature 提案 |
+| 曖昧点がある場合 | clarify ワークフロー | Domain の曖昧点解消 |
+| Foundation を開始する場合 | issue ワークフロー | Foundation Issue から開始 |
+| 追加機能を提案する場合 | featureproposal ワークフロー | 追加 Feature 提案 |

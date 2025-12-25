@@ -143,7 +143,7 @@ Major: {N} (Required: 0 for PASS)
 
 {PASS の場合}
 分析完了。PR 作成に進めます。
-Next: /spec-mesh pr
+Next: pr ワークフロー
 
 {WARN の場合}
 軽微な問題があります。以下を確認してから PR してください:
@@ -162,7 +162,7 @@ Next: /spec-mesh pr
 
 | Condition | Command | Description |
 |-----------|---------|-------------|
-| PASS の場合 | `/spec-mesh pr` | PR 作成 |
-| WARN の場合 | `/spec-mesh pr` | Issue 確認後 PR 作成 |
-| FAIL (未実装) の場合 | `/spec-mesh analyze` | 実装追加後に再分析 |
-| FAIL (Spec外実装) の場合 | `/spec-mesh analyze` | Spec 追加 or コード削除後に再分析 |
+| PASS の場合 | pr ワークフロー | PR 作成 |
+| WARN の場合 | pr ワークフロー | Issue 確認後 PR 作成 |
+| FAIL (未実装) の場合 | analyze ワークフロー | 実装追加後に再分析 |
+| FAIL (Spec外実装) の場合 | analyze ワークフロー | Spec 追加 or コード削除後に再分析 |

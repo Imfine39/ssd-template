@@ -9,7 +9,7 @@ Entry point for existing Issues. Lists Issues → User selects → Creates Branc
 
 ## Use Cases
 
-- Issues from `/spec-mesh design`
+- Issues from design ワークフロー
 - Human-created Issues
 - Foundation Issue (S-FOUNDATION-001)
 
@@ -28,7 +28,7 @@ Entry point for existing Issues. Lists Issues → User selects → Creates Branc
 2. **Verify Domain Spec:**
    - Check `.specify/specs/overview/domain/spec.md`
    - Must have M-* and API-* definitions
-   - If scaffold only → Recommend `/spec-mesh design`
+   - If scaffold only → Recommend design ワークフロー
 
 3. **Check Screen Spec (optional):**
    - If not found → Warning (can continue)
@@ -93,7 +93,7 @@ node .claude/skills/spec-mesh/scripts/scaffold-spec.cjs --kind feature --id {spe
 **6.4 Check M-*/API-* requirements:**
 - Case 1: All exist → Reference only
 - Case 2: Need new → Add to Domain
-- Case 3: Need change → Recommend `/spec-mesh change`
+- Case 3: Need change → Recommend change ワークフロー
 
 **6.5 Update Domain Feature Index**
 
@@ -116,7 +116,7 @@ Spec 作成後、品質を担保するため Multi-Review を実行：
 
 3. **Handle results:**
    - すべてパス → Step 8 (Summary) へ
-   - 曖昧点あり → `/spec-mesh clarify` を推奨
+   - 曖昧点あり → clarify ワークフロー を推奨
    - Critical 未解決 → 問題をリストし対応を促す
 
 ### Step 8: Run Lint
@@ -145,7 +145,7 @@ Screen References:
 === 曖昧点 ===
 [NEEDS CLARIFICATION]: {N} 箇所
 
-推奨: `/spec-mesh clarify` で曖昧点を解消してください。
+推奨: clarify ワークフロー で曖昧点を解消してください。
 ```
 
 ### Step 10: Update State
@@ -175,5 +175,5 @@ node .claude/skills/spec-mesh/scripts/state.cjs branch --set-step spec --set-fea
 
 | Condition | Command | Description |
 |-----------|---------|-------------|
-| 曖昧点がある場合 | `/spec-mesh clarify` | 曖昧点解消 |
-| 曖昧点が解消済み | `/spec-mesh plan` | 実装計画作成 |
+| 曖昧点がある場合 | clarify ワークフロー | 曖昧点解消 |
+| 曖昧点が解消済み | plan ワークフロー | 実装計画作成 |

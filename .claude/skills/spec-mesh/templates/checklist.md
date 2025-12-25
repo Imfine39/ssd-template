@@ -173,4 +173,4 @@ Record how issues were addressed:
 - Items marked `[Ambiguity]` indicate unclear requirements
 - Items marked `[Conflict]` indicate inconsistent requirements
 - Reference `[Spec §X.Y]` to link to specific spec sections
-- High priority issues should be addressed before `/spec-mesh plan`
+- High priority issues should be addressed before plan ワークフロー

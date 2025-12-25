@@ -83,7 +83,7 @@ Spec: .specify/specs/overview/vision/spec.md
 [NEEDS CLARIFICATION] マーク: {N} 箇所
 - [List of ambiguous items]
 
-推奨: `/spec-mesh clarify` で曖昧点を解消してください。
+推奨: clarify ワークフロー で曖昧点を解消してください。
 ```
 
 ### Step 4: Preserve & Reset Input
@@ -123,7 +123,7 @@ Spec 作成後、品質を担保するため Multi-Review を実行：
 
 3. **Handle results:**
    - すべてパス → Step 7 (Output Summary) へ
-   - 曖昧点あり → `/spec-mesh clarify` を推奨
+   - 曖昧点あり → clarify ワークフロー を推奨
    - Critical 未解決 → 問題をリストし対応を促す
 
 ---
@@ -145,7 +145,7 @@ Spec 作成後、品質を担保するため Multi-Review を実行：
 
 - Vision spec: `.specify/specs/overview/vision/spec.md`
 - 曖昧点レポート
-- Next step: `/spec-mesh clarify` → `/spec-mesh design`
+- Next step: clarify ワークフロー → design ワークフロー
 
 ---
 
@@ -161,5 +161,5 @@ Spec 作成後、品質を担保するため Multi-Review を実行：
 
 | Condition | Command | Description |
 |-----------|---------|-------------|
-| 曖昧点がある場合 | `/spec-mesh clarify` | 曖昧点を 4問バッチで解消 |
-| 曖昧点が解消済み | `/spec-mesh design` | Screen + Domain + Matrix 同時作成 |
+| 曖昧点がある場合 | clarify ワークフロー | 曖昧点を 4問バッチで解消 |
+| 曖昧点が解消済み | design ワークフロー | Screen + Domain + Matrix 同時作成 |

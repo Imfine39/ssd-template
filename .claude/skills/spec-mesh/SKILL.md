@@ -13,35 +13,34 @@ Spec-Driven Development の全工程を管理するオーケストレーター�
 
 ## Routing
 
-ARGUMENTS に基づいて適切な workflow を実行します。
+ユーザーの意図に基づいて適切な workflow を実行します。
 
-| ARGUMENTS | Workflow | Description |
-|-----------|----------|-------------|
-| vision | workflows/vision.md | Vision Spec 作成（プロジェクト初期化） |
-| design | workflows/design.md | Screen + Domain + Matrix 同時作成 |
-| add | workflows/add.md | 新機能追加（Issue → Spec → 開発） |
-| fix | workflows/fix.md | バグ修正（調査 → Fix Spec → 修正） |
-| issue | workflows/issue.md | 既存 Issue から開発開始 |
-| plan | workflows/plan.md | 実装計画作成 |
-| tasks | workflows/tasks.md | タスク分割 |
-| implement | workflows/implement.md | 実装実行 |
-| pr | workflows/pr.md | PR 作成 |
-| clarify | workflows/clarify.md | 曖昧点解消（4問バッチ） |
-| change | workflows/change.md | Spec 変更（Vision/Domain/Screen） |
-| **review** | workflows/review.md | **Multi-Review（3観点並列レビュー）** |
-| lint | workflows/lint.md | Spec 整合性チェック |
-| analyze | workflows/analyze.md | 実装 vs Spec 分析 |
-| checklist | workflows/checklist.md | 要件品質チェックリスト |
-| feedback | workflows/feedback.md | Spec へのフィードバック記録 |
-| featureproposal | workflows/featureproposal.md | Feature 提案 |
-| spec | workflows/spec.md | Spec 直接操作（上級者向け） |
-| **test-scenario** | workflows/test-scenario.md | **Test Scenario Spec 作成** |
-| **e2e** | workflows/e2e.md | **E2E テスト実行（Chrome 拡張）** |
-| (none/help) | Show available commands |
+| ユーザーの意図 | Workflow | Description |
+|---------------|----------|-------------|
+| 「Vision を作成」「プロジェクトを始めたい」 | workflows/vision.md | Vision Spec 作成（プロジェクト初期化） |
+| 「画面設計」「Design を作成」 | workflows/design.md | Screen + Domain + Matrix 同時作成 |
+| 「機能を追加」「〇〇機能を作りたい」 | workflows/add.md | 新機能追加（Issue → Spec → 開発） |
+| 「バグを修正」「エラーを直して」 | workflows/fix.md | バグ修正（調査 → Fix Spec → 修正） |
+| 「Issue #N から開始」 | workflows/issue.md | 既存 Issue から開発開始 |
+| 「実装計画」「Plan を作成」 | workflows/plan.md | 実装計画作成 |
+| 「タスク分割」 | workflows/tasks.md | タスク分割 |
+| 「実装して」 | workflows/implement.md | 実装実行 |
+| 「PR を作成」 | workflows/pr.md | PR 作成 |
+| 「曖昧点を解消」 | workflows/clarify.md | 曖昧点解消（4問バッチ） |
+| 「Spec を変更」「M-* を修正」 | workflows/change.md | Spec 変更（Vision/Domain/Screen） |
+| 「レビュー」「品質チェック」 | workflows/review.md | Multi-Review（3観点並列レビュー） |
+| 「Lint 実行」 | workflows/lint.md | Spec 整合性チェック |
+| 「実装と Spec を比較」 | workflows/analyze.md | 実装 vs Spec 分析 |
+| 「品質スコアを測定」 | workflows/checklist.md | 要件品質チェックリスト |
+| 「フィードバックを記録」 | workflows/feedback.md | Spec へのフィードバック記録 |
+| 「Feature を提案して」 | workflows/featureproposal.md | Feature 提案 |
+| 「Spec を直接編集」 | workflows/spec.md | Spec 直接操作（上級者向け） |
+| 「テストシナリオを作成」 | workflows/test-scenario.md | Test Scenario Spec 作成 |
+| 「E2E テスト実行」 | workflows/e2e.md | E2E テスト実行（Chrome 拡張） |
 
 ## Instructions
 
-1. **Parse ARGUMENTS**: 最初の単語を workflow 名として取得
+1. **Parse user intent**: ユーザーの発言から意図を判断
 2. **Route to workflow**: 対応する `workflows/{name}.md` を Read tool で読み込む
 3. **Execute**: workflow の指示に従って実行
 
@@ -85,7 +84,7 @@ Spec 作成は以下のフローで品質を担保：
 | 段階 | タイミング | 対象 | 方法 |
 |------|-----------|------|------|
 | 入力検証 | Spec作成前 | 入力の必須項目・明らかな不足 | ユーザーに追加入力を要求 |
-| Spec Clarify | Multi-Review後 | Spec内の[NEEDS CLARIFICATION] | `/spec-mesh clarify` で解消 |
+| Spec Clarify | Multi-Review後 | Spec内の[NEEDS CLARIFICATION] | 曖昧点解消ワークフローで解消 |
 
 **重要: CLARIFY GATE**
 - **Plan に進む前提条件:** `[NEEDS CLARIFICATION]` マーカーが 0 件であること
@@ -148,38 +147,38 @@ Task tool (parallel, subagent_type: reviewer):
 - Guides: `guides/` ディレクトリ
 - Agents: `.claude/agents/` ディレクトリ
 
-## If No Arguments
+## Available Workflows
 
-利用可能なコマンド一覧を表示：
+利用可能なワークフロー一覧：
 
 ```
-=== Spec-Mesh Commands ===
+=== Spec-Mesh Workflows ===
 
 [プロジェクト初期化]
-/spec-mesh vision      - Vision Spec 作成
-/spec-mesh design      - Screen + Domain + Matrix 作成
+「Vision を作成して」      - Vision Spec 作成
+「画面設計して」          - Screen + Domain + Matrix 作成
 
 [開発エントリーポイント]
-/spec-mesh add         - 新機能追加
-/spec-mesh fix         - バグ修正
-/spec-mesh issue       - 既存 Issue から開始
-/spec-mesh change      - Spec 変更
+「機能を追加したい」      - 新機能追加
+「バグを修正して」        - バグ修正
+「Issue #N から開始」     - 既存 Issue から開始
+「Spec を変更して」       - Spec 変更
 
 [開発フロー]
-/spec-mesh plan        - 実装計画作成
-/spec-mesh tasks       - タスク分割
-/spec-mesh implement   - 実装実行
-/spec-mesh pr          - PR 作成
+「実装計画を作成」        - 実装計画作成
+「タスク分割して」        - タスク分割
+「実装して」              - 実装実行
+「PR を作成」             - PR 作成
 
 [品質管理]
-/spec-mesh review      - Multi-Review（3観点並列）
-/spec-mesh clarify     - 曖昧点解消
-/spec-mesh lint        - 整合性チェック
-/spec-mesh analyze     - 実装分析
-/spec-mesh checklist   - 品質チェックリスト
-/spec-mesh feedback    - フィードバック記録
+「レビューして」          - Multi-Review（3観点並列）
+「曖昧点を解消」          - 曖昧点解消
+「Lint 実行」             - 整合性チェック
+「実装を分析」            - 実装分析
+「品質チェック」          - 品質チェックリスト
+「フィードバック記録」    - フィードバック記録
 
 [テスト]
-/spec-mesh test-scenario - Test Scenario Spec 作成
-/spec-mesh e2e           - E2E テスト実行（Chrome 拡張）
+「テストシナリオ作成」    - Test Scenario Spec 作成
+「E2E テスト実行」        - E2E テスト実行（Chrome 拡張）
 ```

@@ -19,7 +19,7 @@ Spec 作成後に 3 つの観点から並列レビューを実行し、品質を
 - fix.md (Step 5)
 - change.md (Step 4)
 
-直接 `/spec-mesh review` として呼び出すことも可能。
+直接 review ワークフロー として呼び出すことも可能。
 
 ---
 
@@ -248,11 +248,11 @@ node .claude/skills/spec-mesh/scripts/validate-matrix.cjs (if Matrix exists)
 ```
 if has_critical_unresolved:
     // ユーザー確認が必要な Critical がある
-    suggest: "/spec-mesh clarify で解消してください"
+    suggest: "clarify ワークフローで解消してください"
 
 elif has_ambiguity_markers:
     // [NEEDS CLARIFICATION] が残っている
-    suggest: "/spec-mesh clarify で曖昧点を解消してください"
+    suggest: "clarify ワークフローで曖昧点を解消してください"
 
 elif lint_failed:
     // Lint エラーがある
@@ -285,11 +285,11 @@ Status: {PASSED|NEEDS_CLARIFY|NEEDS_FIX}
 
 {if PASSED}
 [HUMAN_CHECKPOINT] Spec を確認し、問題なければ次へ進んでください。
-Next: /spec-mesh {next_workflow}
+Next: {next_workflow} ワークフロー
 
 {if NEEDS_CLARIFY}
 ユーザー確認が必要な項目があります。
-Next: /spec-mesh clarify
+Next: clarify ワークフロー
 
 {if NEEDS_FIX}
 修正が必要な項目があります。
@@ -349,8 +349,8 @@ MAX_REVIEW_ITERATIONS = 2
 | Condition | Command | Description |
 |-----------|---------|-------------|
 | すべてパスした場合 | (呼び出し元へ戻る) | 次のワークフローステップへ |
-| 曖昧点がある場合 | `/spec-mesh clarify` | 曖昧点解消 |
-| 修正が必要な場合 | `/spec-mesh review` | 修正後に再レビュー |
+| 曖昧点がある場合 | clarify ワークフロー | 曖昧点解消 |
+| 修正が必要な場合 | review ワークフロー | 修正後に再レビュー |
 
 ---
 

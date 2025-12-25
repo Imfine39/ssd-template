@@ -15,7 +15,7 @@ SSD-MESH は、Claude Code のスキルとして動作する開発フレーム�
 ```
 人間: 「新しいプロジェクトを始めたい」
   ↓
-Claude: spec-mesh vision スキルを実行
+Claude: vision ワークフローを実行
   ↓
 Vision Spec 生成 → Design → 実装
 ```

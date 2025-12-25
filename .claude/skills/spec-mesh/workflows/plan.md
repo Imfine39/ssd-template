@@ -22,7 +22,7 @@ grep -c "\[NEEDS CLARIFICATION\]" .specify/specs/features/{id}/spec.md
 ```
 
 - **0 件**: CLARIFY GATE 通過 → Step 1 へ進む
-- **1 件以上**: GATE 未通過 → `/spec-mesh clarify` を実行してから再度 Plan を開始
+- **1 件以上**: GATE 未通過 → clarify ワークフロー を実行してから再度 Plan を開始
 
 ```
 ⚠️ CLARIFY GATE 未通過
@@ -30,7 +30,7 @@ grep -c "\[NEEDS CLARIFICATION\]" .specify/specs/features/{id}/spec.md
 [NEEDS CLARIFICATION] が {N} 件残っています。
 曖昧点を解消してから Plan に進んでください。
 
-推奨: /spec-mesh clarify
+推奨: clarify ワークフロー
 ```
 
 ---
@@ -115,7 +115,7 @@ Risks:
 
 ---
 **[HUMAN_CHECKPOINT]** Plan の承認を待っています。
-承認後、`/spec-mesh tasks` でタスク分割に進んでください。
+承認後、tasks ワークフロー でタスク分割に進んでください。
 ```
 
 ### Step 7: Update State (on approval)
@@ -146,9 +146,9 @@ node .claude/skills/spec-mesh/scripts/state.cjs branch --set-step plan
 - [ ] Risks/Trade-offs が許容範囲か
 - [ ] Open Questions に回答できるか（回答が必要）
 
-承認後、`/spec-mesh tasks` でタスク分割に進んでください。
+承認後、tasks ワークフロー でタスク分割に進んでください。
 
 | Condition | Command | Description |
 |-----------|---------|-------------|
-| Plan 承認後 | `/spec-mesh tasks` | タスク分割 |
-| 不明点がある場合 | `/spec-mesh clarify` | 不明点確認 |
+| Plan 承認後 | tasks ワークフロー | タスク分割 |
+| 不明点がある場合 | clarify ワークフロー | 不明点確認 |

@@ -80,9 +80,9 @@ describe('Feature behavior', () => {
 **Feedback Approval Flow:**
 1. If any of the above apply, **stop and ask human permission**
 2. Describe the issue and proposed feedback
-3. On approval, use `/spec-mesh feedback` to record:
+3. On approval, use feedback ワークフロー to record:
    ```
-   /spec-mesh feedback
+   feedback ワークフロー
    ```
 4. The feedback workflow will guide you to add Implementation Notes to the appropriate Spec
 5. **Never** record feedback without explicit human approval
@@ -120,7 +120,7 @@ Test Results:
 
 Feedback recorded: {Y/N}
 
-次のステップ: `/spec-mesh pr` で PR 作成
+次のステップ: pr ワークフロー で PR 作成
 ```
 
 ### Step 6: Update State
@@ -148,5 +148,5 @@ node .claude/skills/spec-mesh/scripts/state.cjs branch --set-step implement --se
 
 | Condition | Command | Description |
 |-----------|---------|-------------|
-| 実装完了後 | `/spec-mesh pr` | PR 作成 |
-| Spec へのフィードバックがある場合 | `/spec-mesh feedback` | Spec へのフィードバック記録 |
+| 実装完了後 | pr ワークフロー | PR 作成 |
+| Spec へのフィードバックがある場合 | feedback ワークフロー | Spec へのフィードバック記録 |

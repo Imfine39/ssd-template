@@ -122,7 +122,7 @@ Section: {Clarifications|Implementation Notes}
 関連 Spec への影響:
 - {related_spec_path}: {影響内容}
 
-実装を続行してください: `/spec-mesh implement`
+実装を続行してください: implement ワークフロー
 ```
 
 ---
@@ -142,5 +142,5 @@ Section: {Clarifications|Implementation Notes}
 
 | Condition | Command | Description |
 |-----------|---------|-------------|
-| 実装を続行する場合 | `/spec-mesh implement` | 実装続行 |
-| 実装完了の場合 | `/spec-mesh pr` | PR 作成 |
+| 実装を続行する場合 | implement ワークフロー | 実装続行 |
+| 実装完了の場合 | pr ワークフロー | PR 作成 |

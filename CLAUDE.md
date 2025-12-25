@@ -17,31 +17,34 @@
 ## Workflow Routing
 
 ユーザーの依頼に応じて、適切なワークフローを選択して実行してください。
+対応するワークフローファイルを Read tool で読み込み、指示に従って実行します。
 
 ### 依頼 → ワークフロー対応表
 
-| ユーザーの依頼 | 実行 |
-|---------------|------|
-| 「プロジェクトを始めたい」「Vision を作成」 | `/spec-mesh vision` |
-| 「画面設計」「Design を作成」 | `/spec-mesh design` |
-| 「機能を追加」「〇〇機能を作りたい」 | `/spec-mesh add` |
-| 「バグを修正」「エラーを直して」 | `/spec-mesh fix` |
-| 「Issue #N から開始」 | `/spec-mesh issue` |
-| 「Spec を変更」「M-* を修正」 | `/spec-mesh change` |
-| 「実装計画」「Plan を作成」 | `/spec-mesh plan` |
-| 「タスク分割」 | `/spec-mesh tasks` |
-| 「実装して」 | `/spec-mesh implement` |
-| 「PR を作成」 | `/spec-mesh pr` |
-| 「テストシナリオを作成」 | `/spec-mesh test-scenario` |
-| 「E2E テスト実行」 | `/spec-mesh e2e` |
-| 「品質チェック」「レビュー」 | `/spec-mesh review` |
-| 「曖昧点を解消」 | `/spec-mesh clarify` |
-| 「Lint 実行」 | `/spec-mesh lint` |
-| 「実装と Spec を比較」 | `/spec-mesh analyze` |
-| 「品質スコアを測定」 | `/spec-mesh checklist` |
-| 「フィードバックを記録」 | `/spec-mesh feedback` |
-| 「Feature を提案して」 | `/spec-mesh featureproposal` |
-| 「Spec を直接編集」 | `/spec-mesh spec` |
+| ユーザーの依頼 | ワークフロー |
+|---------------|-------------|
+| 「プロジェクトを始めたい」「Vision を作成」 | `workflows/vision.md` |
+| 「画面設計」「Design を作成」 | `workflows/design.md` |
+| 「機能を追加」「〇〇機能を作りたい」 | `workflows/add.md` |
+| 「バグを修正」「エラーを直して」 | `workflows/fix.md` |
+| 「Issue #N から開始」 | `workflows/issue.md` |
+| 「Spec を変更」「M-* を修正」 | `workflows/change.md` |
+| 「実装計画」「Plan を作成」 | `workflows/plan.md` |
+| 「タスク分割」 | `workflows/tasks.md` |
+| 「実装して」 | `workflows/implement.md` |
+| 「PR を作成」 | `workflows/pr.md` |
+| 「テストシナリオを作成」 | `workflows/test-scenario.md` |
+| 「E2E テスト実行」 | `workflows/e2e.md` |
+| 「品質チェック」「レビュー」 | `workflows/review.md` |
+| 「曖昧点を解消」 | `workflows/clarify.md` |
+| 「Lint 実行」 | `workflows/lint.md` |
+| 「実装と Spec を比較」 | `workflows/analyze.md` |
+| 「品質スコアを測定」 | `workflows/checklist.md` |
+| 「フィードバックを記録」 | `workflows/feedback.md` |
+| 「Feature を提案して」 | `workflows/featureproposal.md` |
+| 「Spec を直接編集」 | `workflows/spec.md` |
+
+ワークフローファイルは `.claude/skills/spec-mesh/workflows/` にあります。
 
 ---
 

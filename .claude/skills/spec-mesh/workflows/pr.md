@@ -156,7 +156,7 @@ PR 作成完了後、レビューを待ってください。
 | Condition | Command | Description |
 |-----------|---------|-------------|
 | PR マージ後 | (Post-Merge Actions 参照) | Screen Spec / Feature Index の Status 更新 |
-| 追加修正が必要な場合 | `/spec-mesh implement` | 実装を修正 |
+| 追加修正が必要な場合 | implement ワークフロー | 実装を修正 |
 
 ---
 

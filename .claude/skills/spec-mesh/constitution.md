@@ -138,7 +138,7 @@ See `guides/id-naming.md` for complete ID format definitions.
 ## Workflow Overview
 
 ```
-1. Entry Point (/spec-mesh add, fix, issue)
+1. Entry Point (add, fix, issue ワークフロー)
    → Issue creation → Branch creation
 
 2. 入力検証（厳格）
@@ -148,7 +148,7 @@ See `guides/id-naming.md` for complete ID format definitions.
 3. Spec 作成
    → 曖昧な箇所は [NEEDS CLARIFICATION] でマーク
 
-4. Multi-Review (/spec-mesh review) [自動実行]
+4. Multi-Review (review ワークフロー) [自動実行]
    → 3観点並列レビュー（構造・内容・完全性）
    → AI修正可能な問題を修正
 
@@ -158,7 +158,7 @@ See `guides/id-naming.md` for complete ID format definitions.
 6. [HUMAN_CHECKPOINT] Spec 確認
    → ユーザーが Spec 内容を確認
 
-7. Clarify (/spec-mesh clarify) [条件付き]
+7. Clarify (clarify ワークフロー) [条件付き]
    → [NEEDS CLARIFICATION] がある場合のみ実行
    → 解消後 Step 4 へ戻りループ
 
@@ -166,27 +166,27 @@ See `guides/id-naming.md` for complete ID format definitions.
    ★ CLARIFY GATE: [NEEDS CLARIFICATION] = 0 必須
    ════════════════════════════════════════════════════
 
-8. Test Scenario (/spec-mesh test-scenario) [任意]
+8. Test Scenario (test-scenario ワークフロー) [任意]
    → Feature Spec からテストケース生成
    → テストデータ定義
 
-9. Plan (/spec-mesh plan)
+9. Plan (plan ワークフロー)
    → CLARIFY GATE 通過が前提条件
    → Implementation plan
    → HUMAN_CHECKPOINT: approval required
 
-10. Tasks (/spec-mesh tasks)
+10. Tasks (tasks ワークフロー)
     → Break into atomic tasks
 
-11. Implement (/spec-mesh implement)
+11. Implement (implement ワークフロー)
     → Test-first development
     → Record feedback if discoveries
 
-12. E2E Test (/spec-mesh e2e) [任意]
+12. E2E Test (e2e ワークフロー) [任意]
     → Chrome 拡張によるブラウザテスト
     → スクリーンショット/GIF 証跡
 
-13. PR (/spec-mesh pr)
+13. PR (pr ワークフロー)
     → Integrity checks → PR creation → Review → Merge
 ```
 

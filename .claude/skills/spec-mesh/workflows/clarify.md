@@ -134,11 +134,11 @@ Spec: {spec_path}
 - ...
 
 {M > 0 の場合}
-まだ曖昧点が残っています。再度 `/spec-mesh clarify` を実行してください。
+まだ曖昧点が残っています。再度 clarify ワークフロー を実行してください。
 
 {M = 0 の場合}
 全ての曖昧点が解消されました。
-次のステップ: `/spec-mesh {next_command}`
+次のステップ: {next_command} ワークフロー
 ```
 
 ### Step 7: Update State
@@ -166,7 +166,7 @@ node .claude/skills/spec-mesh/scripts/state.cjs repo --set-{spec_type}-status cl
 
 | Condition | Command | Description |
 |-----------|---------|-------------|
-| Vision Spec の場合 | `/spec-mesh design` | Screen + Domain + Matrix 作成 |
-| Domain Spec の場合 | `/spec-mesh issue` | Issue から開発開始 |
-| Feature Spec の場合 | `/spec-mesh plan` | 実装計画作成 |
-| Fix Spec の場合 | `/spec-mesh plan` | 修正計画作成 |
+| Vision Spec の場合 | design ワークフロー | Screen + Domain + Matrix 作成 |
+| Domain Spec の場合 | issue ワークフロー | Issue から開発開始 |
+| Feature Spec の場合 | plan ワークフロー | 実装計画作成 |
+| Fix Spec の場合 | plan ワークフロー | 修正計画作成 |

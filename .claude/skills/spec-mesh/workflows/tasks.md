@@ -100,7 +100,7 @@ Tasks: .specify/specs/features/{id}/tasks.md
 
 合計: {N} タスク
 
-次のステップ: `/spec-mesh implement` で実装を開始
+次のステップ: implement ワークフロー で実装を開始
 ```
 
 ### Step 6: Update State
@@ -128,4 +128,4 @@ node .claude/skills/spec-mesh/scripts/state.cjs branch --set-step tasks --set-ta
 
 | Condition | Command | Description |
 |-----------|---------|-------------|
-| タスク確認後 | `/spec-mesh implement` | 実装開始 |
+| タスク確認後 | implement ワークフロー | 実装開始 |

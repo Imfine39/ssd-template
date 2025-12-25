@@ -132,7 +132,7 @@ Matrix: 更新済み
 
 次のステップ:
 - 影響を受ける Feature の実装を更新
-- または `/spec-mesh pr` で Spec 変更を PR
+- または pr ワークフロー で Spec 変更を PR
 ```
 
 ---
@@ -161,5 +161,5 @@ Matrix: 更新済み
 
 | Condition | Command | Description |
 |-----------|---------|-------------|
-| Spec のみの変更の場合 | `/spec-mesh pr` | PR 作成 |
-| 実装が必要な場合 | `/spec-mesh implement` | Feature 作業を再開 |
+| Spec のみの変更の場合 | pr ワークフロー | PR 作成 |
+| 実装が必要な場合 | implement ワークフロー | Feature 作業を再開 |
