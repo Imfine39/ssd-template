@@ -1,0 +1,15 @@
+{
+  "version": "1.0.0",
+  "entries": [
+    {
+      "id": "CL-20251225-101256-RIUS",
+      "timestamp": "2025-12-25T10:12:56.479Z",
+      "type": "update",
+      "spec": "domain/spec.md",
+      "feature": null,
+      "description": "Test entry - changelog automation added",
+      "branch": "feature/workflow-test",
+      "author": "Atsushi Kayatani"
+    }
+  ]
+}
