@@ -9,6 +9,18 @@ Execute tasks from the plan with tests and adherence to spec.
 
 ---
 
+## Todo Management
+
+**IMPORTANT:** このワークフローでは、ワークフローステップではなく **tasks.md の各タスク** を TodoWrite で管理する。
+
+1. Step 2 で tasks.md を読み込んだ後、各タスクを TodoWrite に登録
+2. 各タスクの実装前に `in_progress` に更新
+3. 各タスクの実装完了時に `completed` に更新
+
+**ワークフローステップ自体の Todo 化は不要。** タスクの進捗管理に集中すること。
+
+---
+
 ## Steps
 
 ### Step 1: Verify Context
@@ -29,8 +41,13 @@ Execute tasks from the plan with tests and adherence to spec.
 ### Step 2: Load Tasks
 
 1. Parse tasks.md for pending tasks
-2. Present task list
-3. Confirm implementation order with user
+2. **TodoWrite でタスクを登録:**
+   ```
+   tasks.md の各タスクを TodoWrite に登録する。
+   例: Task 1, Task 2, Task 3 → それぞれ pending として登録
+   ```
+3. Present task list
+4. Confirm implementation order with user
 
 ### Step 3: For Each Task
 
@@ -134,8 +151,10 @@ node .claude/skills/spec-mesh/scripts/state.cjs branch --set-step implement --se
 ## Self-Check
 
 - [ ] Spec, Plan, Tasks を読み込んだか
+- [ ] **tasks.md の各タスクを TodoWrite に登録したか**
 - [ ] テストを先に書いたか（fail-first）
 - [ ] 全タスクを実装したか
+- [ ] **各タスク完了時に TodoWrite で completed にしたか**
 - [ ] テストが全て pass したか
 - [ ] lint を実行したか
 - [ ] Feedback が必要な場合、人間に確認したか

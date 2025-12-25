@@ -10,6 +10,35 @@ Verify integrity and create Pull Request.
 
 ---
 
+## Todo Template
+
+**IMPORTANT:** ワークフロー開始時に、以下の Todo を TodoWrite tool で作成すること。
+
+```
+TodoWrite:
+  todos:
+    - content: "Step 1: コンテキスト確認"
+      status: "pending"
+      activeForm: "Verifying context"
+    - content: "Step 2: 整合性チェック実行"
+      status: "pending"
+      activeForm: "Running integrity checks"
+    - content: "Step 3: ステージング・コミット"
+      status: "pending"
+      activeForm: "Staging and committing"
+    - content: "Step 4: Push・PR 作成"
+      status: "pending"
+      activeForm: "Pushing and creating PR"
+    - content: "Step 5: サマリー提示"
+      status: "pending"
+      activeForm: "Presenting summary"
+    - content: "Step 6: 状態更新"
+      status: "pending"
+      activeForm: "Updating state"
+```
+
+---
+
 ## Steps
 
 ### Step 1: Verify Context
@@ -139,6 +168,7 @@ node .claude/skills/spec-mesh/scripts/state.cjs branch --set-step pr
 
 ## Self-Check
 
+- [ ] **TodoWrite で全ステップを登録したか**
 - [ ] spec-lint を実行したか
 - [ ] validate-matrix を実行したか
 - [ ] テストが全て pass したか
@@ -146,6 +176,7 @@ node .claude/skills/spec-mesh/scripts/state.cjs branch --set-step pr
 - [ ] commit メッセージに Issue 番号と Spec ID を含めたか
 - [ ] PR を作成したか
 - [ ] Post-merge checklist を提示したか
+- [ ] **TodoWrite で全ステップを completed にしたか**
 
 ---
 

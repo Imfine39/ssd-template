@@ -23,8 +23,35 @@ function run(cmd, opts = {}) {
   return execSync(cmd, { stdio: 'inherit', ...opts });
 }
 
+function showHelp() {
+  console.log(`
+PR helper: runs spec lint (and optional tests), then opens a PR via gh.
+
+Usage:
+  node .claude/skills/spec-mesh/scripts/pr.cjs --title <title> --body <body> [options]
+
+Options:
+  --title <title>     PR title (required)
+  --body <body>       PR body (include Issues/Spec IDs/Tests)
+  --body-file <file>  Read PR body from file (alternative to --body)
+  --no-lint           Skip spec-lint
+  --test "<command>"  Run a test command before PR; abort on failure
+  --help              Show this help message
+
+Examples:
+  node .claude/skills/spec-mesh/scripts/pr.cjs --title "feat: add sales" --body "Fixes #123\\nImplements S-SALES-001"
+  node .claude/skills/spec-mesh/scripts/pr.cjs --title "feat: add sales" --body-file pr-body.md --test "npm test"
+`);
+}
+
 function parseArgs() {
   const args = process.argv.slice(2);
+
+  if (args.includes('--help') || args.includes('-h')) {
+    showHelp();
+    process.exit(0);
+  }
+
   const out = { title: null, body: null, bodyFile: null, lint: true, test: null };
   for (let i = 0; i < args.length; i++) {
     const a = args[i];
@@ -36,10 +63,12 @@ function parseArgs() {
   }
   if (!out.title) {
     console.error('ERROR: --title is required');
+    showHelp();
     process.exit(1);
   }
   if (!out.body && !out.bodyFile) {
     console.error('ERROR: --body or --body-file is required');
+    showHelp();
     process.exit(1);
   }
   return out;

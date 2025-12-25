@@ -23,6 +23,47 @@ Required fields:
 
 ---
 
+## Todo Template
+
+**IMPORTANT:** ワークフロー開始時に、以下の Todo を TodoWrite tool で作成すること。
+
+```
+TodoWrite:
+  todos:
+    - content: "Step 1: 入力収集"
+      status: "pending"
+      activeForm: "Collecting input"
+    - content: "Step 2: GitHub Issue 作成"
+      status: "pending"
+      activeForm: "Creating GitHub Issue"
+    - content: "Step 3: ブランチ作成"
+      status: "pending"
+      activeForm: "Creating branch"
+    - content: "Step 4: 原因調査"
+      status: "pending"
+      activeForm: "Investigating root cause"
+    - content: "Step 5: Fix Spec 作成"
+      status: "pending"
+      activeForm: "Creating Fix Spec"
+    - content: "Step 6: Multi-Review 実行"
+      status: "pending"
+      activeForm: "Executing Multi-Review"
+    - content: "Step 7: CLARIFY GATE チェック"
+      status: "pending"
+      activeForm: "Checking CLARIFY GATE"
+    - content: "Step 8: Lint 実行"
+      status: "pending"
+      activeForm: "Running Lint"
+    - content: "Step 9: 入力保存・リセット"
+      status: "pending"
+      activeForm: "Preserving input"
+    - content: "Step 10: サマリー・[HUMAN_CHECKPOINT]"
+      status: "pending"
+      activeForm: "Presenting summary"
+```
+
+---
+
 ## Steps
 
 ### Step 1: Input Collection
@@ -99,15 +140,51 @@ Fix Spec の品質を担保するため Multi-Review を実行：
 
 3. **Handle results:**
    - すべてパス → Step 7 へ
+   - 曖昧点あり → Step 7 でブロック
    - Critical 未解決 → 問題をリストし対応を促す
 
-### Step 7: Run Lint
+### Step 7: CLARIFY GATE チェック（必須）
+
+**★ このステップはスキップ禁止 ★**
+
+Multi-Review 後、Grep tool で `[NEEDS CLARIFICATION]` マーカーをカウント：
+
+```
+Grep tool:
+  pattern: "\[NEEDS CLARIFICATION\]"
+  path: .specify/specs/fixes/{id}/spec.md
+  output_mode: count
+```
+
+**判定ロジック:**
+
+```
+clarify_count = [NEEDS CLARIFICATION] マーカー数
+
+if clarify_count > 0:
+    ┌─────────────────────────────────────────────────────────────┐
+    │ ★ CLARIFY GATE: 曖昧点が {clarify_count} 件あります         │
+    │                                                             │
+    │ 実装に進む前に clarify ワークフロー が必須です。             │
+    │                                                             │
+    │ 「clarify を実行して」と依頼してください。                   │
+    └─────────────────────────────────────────────────────────────┘
+    → clarify ワークフロー を実行（必須）
+    → clarify 完了後、Multi-Review からやり直し
+
+else:
+    → Step 8 (Lint) へ進む
+```
+
+**重要:** clarify_count > 0 の場合、実装への遷移は禁止。
+
+### Step 8: Run Lint
 
 ```bash
 node .claude/skills/spec-mesh/scripts/spec-lint.cjs
 ```
 
-### Step 8: Preserve & Reset Input
+### Step 9: Preserve & Reset Input
 
 If input file was used:
 1. **Preserve input to spec directory:**
@@ -121,56 +198,62 @@ If input file was used:
    node .claude/skills/spec-mesh/scripts/reset-input.cjs fix
    ```
 
-### Step 9: Summary
+### Step 10: Summary & [HUMAN_CHECKPOINT]
 
-Display:
-```
-=== Fix Spec 作成完了 ===
+1. **Display Summary:**
+   ```
+   === Fix Spec 作成完了 ===
 
-Bug: {概要}
-Issue: #{issue_num}
-Branch: fix/{issue_num}-{slug}
-Spec: .specify/specs/fixes/{id}/spec.md
+   Bug: {概要}
+   Issue: #{issue_num}
+   Branch: fix/{issue_num}-{slug}
+   Spec: .specify/specs/fixes/{id}/spec.md
 
-Root Cause: {原因の要約}
-Impact: {影響範囲}
+   Root Cause: {原因の要約}
+   Impact: {影響範囲}
 
-=== 曖昧点 ===
-[NEEDS CLARIFICATION]: {N} 箇所
-- [List of ambiguous items]
+   === CLARIFY GATE ===
+   [NEEDS CLARIFICATION]: {N} 箇所
+   Status: {PASSED | BLOCKED}
 
-=== 次のステップ ===
-緊急度に応じて選択:
-- Trivial: implement ワークフロー で直接修正
-- Standard: plan ワークフロー → tasks ワークフロー → implement ワークフロー
-```
+   {if BLOCKED}
+   ★ clarify ワークフロー を実行してください。
+   {/if}
+   ```
+
+2. **CLARIFY GATE が PASSED の場合のみ:**
+   ```
+   === [HUMAN_CHECKPOINT] ===
+   確認事項:
+   - [ ] Root Cause Analysis が正確か
+   - [ ] Proposed Fix が問題を解決するか
+   - [ ] 影響範囲が適切に評価されているか
+   - [ ] Verification Plan が十分か
+
+   承認後、次のステップへ進んでください。
+   ```
 
 ---
 
 ## Self-Check
 
+- [ ] **TodoWrite で全ステップを登録したか**
 - [ ] Read tool で入力ファイルを読み込んだか（--quick 以外）
 - [ ] gh issue create を実行したか
 - [ ] branch.cjs でブランチを作成したか
 - [ ] 原因調査を実施したか
 - [ ] Fix Spec に Root Cause を記載したか
 - [ ] **Multi-Review を実行したか（3観点並列）**
+- [ ] **CLARIFY GATE をチェックしたか**
 - [ ] spec-lint.cjs を実行したか
+- [ ] **TodoWrite で全ステップを completed にしたか**
 
 ---
 
 ## Next Steps
 
-**[HUMAN_CHECKPOINT]**
-- [ ] Root Cause Analysis が正確か
-- [ ] Proposed Fix が問題を解決するか
-- [ ] 影響範囲が適切に評価されているか
-- [ ] Verification Plan が十分か
-
-承認後、次のステップへ進んでください。
-
 | Condition | Command | Description |
 |-----------|---------|-------------|
-| 詳細確認が必要な場合 | clarify ワークフロー | 詳細確認 |
-| 標準フローで修正する場合 | plan ワークフロー | 修正計画作成 |
-| Trivial fix の場合 | implement ワークフロー | 直接修正 |
+| CLARIFY GATE: BLOCKED | clarify ワークフロー | **必須** - 曖昧点を解消 |
+| CLARIFY GATE: PASSED + Trivial | implement ワークフロー | 直接修正 |
+| CLARIFY GATE: PASSED + Standard | plan ワークフロー | 修正計画作成 |

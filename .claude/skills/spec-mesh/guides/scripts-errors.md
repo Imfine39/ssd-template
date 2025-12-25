@@ -4,6 +4,22 @@ This guide documents common errors across all spec-mesh scripts and how to troub
 
 ---
 
+## Requirements
+
+**Node.js Version:** 18.x or higher (LTS recommended)
+
+All scripts use ES modules features and modern JavaScript syntax. Tested with:
+- Node.js 18.x (LTS)
+- Node.js 20.x (LTS)
+- Node.js 22.x
+
+**Check version:**
+```bash
+node --version  # Should be v18.0.0 or higher
+```
+
+---
+
 ## Scope
 
 This guide covers:
@@ -21,12 +37,13 @@ This guide covers:
 
 All scripts use consistent exit codes:
 
-| Exit Code | Meaning | Action |
-|-----------|---------|--------|
-| 0 | Success | Continue workflow |
-| 1 | Validation/Argument Error | Fix input and retry |
-| 2 | File/Path Error | Check file paths exist |
-| 3 | Data Inconsistency | Fix spec/matrix data |
+| Exit Code | Meaning | Action | Scripts |
+|-----------|---------|--------|---------|
+| 0 | Success / Help / Passed | Continue workflow | All |
+| 1 | Validation/Argument Error | Fix input and retry | All |
+| 2 | File/Parse Error | Check file paths, fix JSON | validate-matrix, generate-matrix-view |
+
+**Note:** Exit code 2 is only used by file-processing scripts that may encounter parse errors.
 
 ---
 

@@ -14,6 +14,47 @@ Handle changes to shared specifications that may impact multiple Features.
 
 ---
 
+## Todo Template
+
+**IMPORTANT:** ワークフロー開始時に、以下の Todo を TodoWrite tool で作成すること。
+
+```
+TodoWrite:
+  todos:
+    - content: "Step 1: 変更対象特定"
+      status: "pending"
+      activeForm: "Identifying change target"
+    - content: "Step 2: 現行 Spec 読み込み"
+      status: "pending"
+      activeForm: "Loading current Spec"
+    - content: "Step 3: 変更スコープ特定"
+      status: "pending"
+      activeForm: "Identifying change scope"
+    - content: "Step 4: 影響分析・[HUMAN_CHECKPOINT]"
+      status: "pending"
+      activeForm: "Analyzing impact"
+    - content: "Step 5: Change Spec 作成"
+      status: "pending"
+      activeForm: "Creating Change Spec"
+    - content: "Step 6: 変更適用"
+      status: "pending"
+      activeForm: "Applying changes"
+    - content: "Step 7: Multi-Review 実行"
+      status: "pending"
+      activeForm: "Executing Multi-Review"
+    - content: "Step 8: CLARIFY GATE チェック"
+      status: "pending"
+      activeForm: "Checking CLARIFY GATE"
+    - content: "Step 9: Lint 実行"
+      status: "pending"
+      activeForm: "Running Lint"
+    - content: "Step 10: サマリー・[HUMAN_CHECKPOINT]"
+      status: "pending"
+      activeForm: "Presenting summary"
+```
+
+---
+
 ## Steps
 
 ### Step 1: Identify Change Target
@@ -106,39 +147,92 @@ node .claude/skills/spec-mesh/scripts/branch.cjs --type spec --slug {slug} --iss
 
 3. **Handle results:**
    - すべてパス → Step 8 へ
+   - 曖昧点あり → Step 8 でブロック
    - Critical 未解決 → 問題をリストし対応を促す
 
-### Step 8: Run Lint
+### Step 8: CLARIFY GATE チェック（必須）
+
+**★ このステップはスキップ禁止 ★**
+
+Multi-Review 後、Grep tool で `[NEEDS CLARIFICATION]` マーカーをカウント：
+
+```
+Grep tool:
+  pattern: "\[NEEDS CLARIFICATION\]"
+  path: .specify/specs/overview/{spec_type}/spec.md
+  output_mode: count
+```
+
+**判定ロジック:**
+
+```
+clarify_count = [NEEDS CLARIFICATION] マーカー数
+
+if clarify_count > 0:
+    ┌─────────────────────────────────────────────────────────────┐
+    │ ★ CLARIFY GATE: 曖昧点が {clarify_count} 件あります         │
+    │                                                             │
+    │ 次のステップに進む前に clarify ワークフロー が必須です。     │
+    │                                                             │
+    │ 「clarify を実行して」と依頼してください。                   │
+    └─────────────────────────────────────────────────────────────┘
+    → clarify ワークフロー を実行（必須）
+    → clarify 完了後、Multi-Review からやり直し
+
+else:
+    → Step 9 (Lint) へ進む
+```
+
+**重要:** clarify_count > 0 の場合、次のステップへの遷移は禁止。
+
+### Step 9: Run Lint
 
 ```bash
 node .claude/skills/spec-mesh/scripts/spec-lint.cjs
 node .claude/skills/spec-mesh/scripts/validate-matrix.cjs
 ```
 
-### Step 9: Summary
+### Step 10: Summary & [HUMAN_CHECKPOINT]
 
-```
-=== Spec Change 完了 ===
+1. **Display Summary:**
+   ```
+   === Spec Change 完了 ===
 
-Changed: {target spec}
-Items modified:
-- M-USER: email 属性追加
+   Changed: {target spec}
+   Items modified:
+   - M-USER: email 属性追加
 
-Affected Features updated:
-- S-AUTH-001: 参照更新
-- S-PROFILE-001: 参照更新
+   Affected Features updated:
+   - S-AUTH-001: 参照更新
+   - S-PROFILE-001: 参照更新
 
-Matrix: 更新済み
+   Matrix: 更新済み
 
-次のステップ:
-- 影響を受ける Feature の実装を更新
-- または pr ワークフロー で Spec 変更を PR
-```
+   === CLARIFY GATE ===
+   [NEEDS CLARIFICATION]: {N} 箇所
+   Status: {PASSED | BLOCKED}
+
+   {if BLOCKED}
+   ★ clarify ワークフロー を実行してください。
+   {/if}
+   ```
+
+2. **CLARIFY GATE が PASSED の場合のみ:**
+   ```
+   === [HUMAN_CHECKPOINT] ===
+   確認事項:
+   - [ ] 変更内容が正しく反映されているか
+   - [ ] 影響を受ける Feature Spec が更新されているか
+   - [ ] Matrix の整合性が確認されているか
+
+   承認後、次のステップへ進んでください。
+   ```
 
 ---
 
 ## Self-Check
 
+- [ ] **TodoWrite で全ステップを登録したか**
 - [ ] 変更対象を特定したか
 - [ ] Impact Analysis を実施したか
 - [ ] 人間の承認を得たか
@@ -146,20 +240,16 @@ Matrix: 更新済み
 - [ ] Matrix を更新したか
 - [ ] 影響を受ける Feature Spec を更新したか
 - [ ] **Multi-Review を実行したか（3観点並列）**
+- [ ] **CLARIFY GATE をチェックしたか**
 - [ ] lint を実行したか
+- [ ] **TodoWrite で全ステップを completed にしたか**
 
 ---
 
 ## Next Steps
 
-**[HUMAN_CHECKPOINT]**
-- [ ] 変更内容が正しく反映されているか
-- [ ] 影響を受ける Feature Spec が更新されているか
-- [ ] Matrix の整合性が確認されているか
-
-承認後、次のステップへ進んでください。
-
 | Condition | Command | Description |
 |-----------|---------|-------------|
-| Spec のみの変更の場合 | pr ワークフロー | PR 作成 |
-| 実装が必要な場合 | implement ワークフロー | Feature 作業を再開 |
+| CLARIFY GATE: BLOCKED | clarify ワークフロー | **必須** - 曖昧点を解消 |
+| CLARIFY GATE: PASSED + Spec のみ | pr ワークフロー | PR 作成 |
+| CLARIFY GATE: PASSED + 実装必要 | implement ワークフロー | Feature 作業を再開 |

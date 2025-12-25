@@ -18,6 +18,38 @@ Chrome 拡張を使用して E2E テストを実行する。
 
 ---
 
+## Todo Template
+
+**IMPORTANT:** ワークフロー開始時に、以下の Todo を TodoWrite tool で作成すること。
+
+```
+TodoWrite:
+  todos:
+    - content: "Step 1: Test Scenario Spec 読み込み"
+      status: "pending"
+      activeForm: "Loading Test Scenario Spec"
+    - content: "Step 2: ブラウザセッションセットアップ"
+      status: "pending"
+      activeForm: "Setting up browser session"
+    - content: "Step 3: Test Cases 実行"
+      status: "pending"
+      activeForm: "Executing Test Cases"
+    - content: "Step 4: Journey Test 実行"
+      status: "pending"
+      activeForm: "Executing Journey Tests"
+    - content: "Step 5: クリーンアップ"
+      status: "pending"
+      activeForm: "Cleaning up"
+    - content: "Step 6: Test Scenario Spec 更新"
+      status: "pending"
+      activeForm: "Updating Test Scenario Spec"
+    - content: "Step 7: サマリー提示"
+      status: "pending"
+      activeForm: "Presenting summary"
+```
+
+---
+
 ## Steps
 
 ### Step 1: Load Test Scenario Spec
@@ -259,6 +291,7 @@ Evidence:
 
 ## Self-Check
 
+- [ ] **TodoWrite で全ステップを登録したか**
 - [ ] Test Scenario Spec を読み込んだか
 - [ ] ブラウザセッションをセットアップしたか
 - [ ] GIF 記録を開始したか
@@ -266,6 +299,7 @@ Evidence:
 - [ ] 結果を記録したか
 - [ ] GIF をエクスポートしたか
 - [ ] Test Scenario Spec を更新したか
+- [ ] **TodoWrite で全ステップを completed にしたか**
 
 ---
 

@@ -28,7 +28,7 @@
 
 Spec Type: Test Scenario
 Spec ID: TS-{FEATURE_ID}
-Feature: S-{XXX}-001
+Feature: S-{AREA}-001
 Created: {date}
 Status: Draft
 

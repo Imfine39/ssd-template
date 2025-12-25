@@ -40,6 +40,9 @@ node .claude/skills/spec-mesh/scripts/validate-matrix.cjs
 
 ### Step 3: Report Results
 
+> **Severity Classification:** constitution.md の Severity Classifications を参照。
+> Error = Critical, Warning = Major, Info = Minor
+
 **All passed:**
 ```
 === Lint 完了 ===

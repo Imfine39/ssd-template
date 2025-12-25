@@ -1,7 +1,23 @@
 # Bug Fix Quick Input
 
 修正したいバグの概要を入力してください。空欄があってもOKです。
-緊急の場合は Claude に「このバグを直して: [問題の説明]」と直接伝えればスキップ可能です。
+緊急の場合は Claude Code に「バグを修正して: 問題の説明」と依頼することでスキップ可能です。
+
+<!--
+  Input → Spec Mapping:
+
+  | Input Section | Fix Spec Section | Notes |
+  |---------------|------------------|-------|
+  | バグの概要.何が起きているか | 1.1 What is happening | 現象 |
+  | バグの概要.期待する動作 | 1.2 Expected behavior | あるべき姿 |
+  | 再現手順 | 1.3 Steps to reproduce | 1, 2, 3... |
+  | 発生環境 | 1.4 Environment | Browser/OS/Version |
+  | 影響範囲.緊急度 | 1.5 Severity | Critical/High/Medium/Low |
+  | 影響範囲.影響を受ける機能 | 2.1-2.6 Impact Analysis | SCR/M/API/Feature への影響 |
+  | 関連情報.エラーメッセージ | 3.4 Evidence | ログ・スクショ |
+  | 原因の推測 | 3.1, 3.2 Investigation/Root Cause | 調査の出発点 |
+  | 補足情報 | (Original context) | 必要に応じて参照 |
+-->
 
 ---
 

@@ -9,6 +9,14 @@ Break the approved plan into concrete, reviewable tasks.
 
 ---
 
+## Todo Management
+
+**NOTE:** このワークフローの目的は **tasks.md を作成し、その各タスクを TodoWrite に登録すること**。
+
+ワークフローステップ自体の Todo 化は不要。Step 4 で作成したタスクを TodoWrite に登録することが重要。
+
+---
+
 ## Steps
 
 ### Step 1: Load Context
@@ -118,7 +126,7 @@ node .claude/skills/spec-mesh/scripts/state.cjs branch --set-step tasks --set-ta
 - [ ] タスクを atomic に分割したか
 - [ ] 各タスクに Spec ID をリンクしたか
 - [ ] tasks.md を保存したか
-- [ ] TodoWrite でタスクを登録したか
+- [ ] **TodoWrite で各タスクを登録したか（Step 4）**
 
 ---
 

@@ -4,14 +4,67 @@ Entry point for existing Issues. Lists Issues → User selects → Creates Branc
 
 ## Prerequisites
 
-- Domain Spec must exist with M-*/API-* definitions
-- Screen Spec recommended
+**推奨フロー:**
+1. Vision Spec が存在すること（必須）
+2. Domain Spec + Screen Spec が存在すること（推奨）
+
+**新規プロジェクトの場合:**
+- Vision Spec がない → `vision ワークフロー` を先に実行
+- Domain/Screen Spec がない → `design ワークフロー` を先に実行
+
+**既存プロジェクトの場合:**
+- Domain Spec の M-*/API-* を参照して Feature Spec を作成
+
+**警告レベル:**
+| 状態 | レベル | アクション |
+|------|--------|-----------|
+| Vision なし | エラー | vision ワークフロー へ誘導 |
+| Domain なし | 警告 | design ワークフロー を推奨（続行可） |
+| Screen なし | 情報 | design ワークフロー を推奨（続行可） |
 
 ## Use Cases
 
 - Issues from design ワークフロー
 - Human-created Issues
 - Foundation Issue (S-FOUNDATION-001)
+
+---
+
+## Todo Template
+
+**IMPORTANT:** ワークフロー開始時に、以下の Todo を TodoWrite tool で作成すること。
+
+```
+TodoWrite:
+  todos:
+    - content: "Step 1: 前提条件確認"
+      status: "pending"
+      activeForm: "Checking prerequisites"
+    - content: "Step 2: Issue 一覧取得・選択"
+      status: "pending"
+      activeForm: "Fetching and selecting Issue"
+    - content: "Step 3: Issue 詳細確認"
+      status: "pending"
+      activeForm: "Validating selection"
+    - content: "Step 4: ブランチ作成"
+      status: "pending"
+      activeForm: "Creating branch"
+    - content: "Step 5: コードベース分析"
+      status: "pending"
+      activeForm: "Analyzing codebase"
+    - content: "Step 6: Feature Spec 作成"
+      status: "pending"
+      activeForm: "Creating Feature Spec"
+    - content: "Step 7: Multi-Review 実行"
+      status: "pending"
+      activeForm: "Executing Multi-Review"
+    - content: "Step 8: Lint 実行"
+      status: "pending"
+      activeForm: "Running Lint"
+    - content: "Step 9: サマリー・状態更新"
+      status: "pending"
+      activeForm: "Presenting summary"
+```
 
 ---
 
@@ -158,6 +211,7 @@ node .claude/skills/spec-mesh/scripts/state.cjs branch --set-step spec --set-fea
 
 ## Self-Check
 
+- [ ] **TodoWrite で全ステップを登録したか**
 - [ ] gh issue list で Issues を取得したか
 - [ ] ユーザーに Issue 選択を求めたか
 - [ ] branch.cjs でブランチを作成したか
@@ -166,6 +220,7 @@ node .claude/skills/spec-mesh/scripts/state.cjs branch --set-step spec --set-fea
 - [ ] Feature Spec を作成したか
 - [ ] **Multi-Review を実行したか（3観点並列）**
 - [ ] spec-lint.cjs を実行したか
+- [ ] **TodoWrite で全ステップを completed にしたか**
 
 ---
 

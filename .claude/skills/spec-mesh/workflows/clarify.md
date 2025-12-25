@@ -16,10 +16,14 @@ Multi-Review で「ユーザー確認が必要」と判断された項目を解�
 ### Step 1: Load Spec
 
 1. **Determine which Spec to clarify:**
-   - Vision Spec: `.specify/specs/overview/vision/spec.md`
-   - Domain Spec: `.specify/specs/overview/domain/spec.md`
-   - Feature Spec: `.specify/specs/features/{id}/spec.md`
-   - Fix Spec: `.specify/specs/fixes/{id}/spec.md`
+
+   | Spec Type | Path | Clarification セクション |
+   |-----------|------|-------------------------|
+   | Vision | `.specify/specs/overview/vision/spec.md` | Implementation Notes |
+   | Domain | `.specify/specs/overview/domain/spec.md` | Implementation Notes |
+   | Screen | `.specify/specs/overview/screen/spec.md` | Implementation Notes |
+   | Feature | `.specify/specs/features/{id}/spec.md` | Clarifications |
+   | Fix | `.specify/specs/fixes/{id}/spec.md` | Clarifications |
 
 2. **Read the Spec:**
    ```
@@ -97,13 +101,28 @@ After each batch response:
 1. **Parse answers**
 2. **Update Spec immediately:**
    - Replace `[NEEDS CLARIFICATION]` with resolved content
-   - Add to Clarifications section:
-     ```markdown
-     ### Clarification (YYYY-MM-DD)
-     - Q: {質問}
-     - A: {回答}
-     - Section updated: {セクション番号}
-     ```
+   - Add to appropriate section based on Spec type:
+
+   **For Feature/Fix Specs → Clarifications section:**
+   ```markdown
+   ## Clarifications
+
+   ### Clarification (YYYY-MM-DD)
+   - Q: {質問}
+   - A: {回答}
+   - Section updated: {セクション番号}
+   ```
+
+   **For Vision/Domain/Screen Specs → Implementation Notes section:**
+   ```markdown
+   ## Implementation Notes
+
+   ### Clarification (YYYY-MM-DD)
+   - Q: {質問}
+   - A: {回答}
+   - Section updated: {セクション番号}
+   - Affected Items: {影響を受ける M-*/API-*/SCR-* ID}
+   ```
 
 3. **Save Spec:**
    ```
@@ -168,5 +187,6 @@ node .claude/skills/spec-mesh/scripts/state.cjs repo --set-{spec_type}-status cl
 |-----------|---------|-------------|
 | Vision Spec の場合 | design ワークフロー | Screen + Domain + Matrix 作成 |
 | Domain Spec の場合 | issue ワークフロー | Issue から開発開始 |
+| Screen Spec の場合 | issue ワークフロー | Issue から開発開始 |
 | Feature Spec の場合 | plan ワークフロー | 実装計画作成 |
 | Fix Spec の場合 | plan ワークフロー | 修正計画作成 |

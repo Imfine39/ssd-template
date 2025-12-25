@@ -2,6 +2,23 @@
 
 追加したい機能の概要を入力してください。空欄があってもOKです。
 
+<!--
+  Input → Spec Mapping:
+
+  | Input Section | Feature Spec Section | Notes |
+  |---------------|----------------------|-------|
+  | 機能概要.機能名 | Spec Title, 1.1 | 機能名 → タイトル |
+  | 機能概要.一言で説明 | 1.1 Feature Description | What this feature does |
+  | なぜ必要か.解決したい課題 | 1.1 Problem it solves | ユーザー価値 |
+  | なぜ必要か.誰が使うか | 3. Actors | Feature 固有のアクター |
+  | なぜ必要か.どんな価値 | 1.1, 7. Success Criteria | 価値 → 成功基準 |
+  | 期待する動作 | 4. Use Cases | UC-* として展開 |
+  | 関連する既存機能 | 2.4 Feature Dependencies | Hard/Soft 依存関係 |
+  | UI/UX イメージ | 8. Screen Dependencies | SCR-* 参照 |
+  | 制約・注意点 | 9. Feature-Specific Rules | FR-RULE-* |
+  | 補足情報 | 14. Original Input | 原文保存 |
+-->
+
 ---
 
 ## 機能概要

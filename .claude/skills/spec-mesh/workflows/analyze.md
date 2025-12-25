@@ -70,13 +70,15 @@ Spec: .specify/specs/features/{id}/spec.md
 
 ## Issues Found
 
+> **Severity Classification:** constitution.md の Severity Classifications を参照。
+
 ❌ Critical:
 - FR-002: 未実装
 
-⚠️ Warning:
+⚠️ Major:
 - UC-002: テストが不足
 
-ℹ️ Info:
+ℹ️ Minor:
 - Extra file found: src/utils/helper.ts (not in spec)
 
 ## Metrics

@@ -19,7 +19,7 @@
 -->
 
 Spec Type: Fix
-Spec ID: F-{XXX}-001
+Spec ID: F-{AREA}-001
 Created: {date}
 Status: [Draft | In Review | Clarified | Approved | Implemented]
 Author: AI Generated

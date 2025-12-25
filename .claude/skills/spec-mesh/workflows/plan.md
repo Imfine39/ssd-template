@@ -10,20 +10,60 @@ Create implementation plan from spec. **Human must review and approve before pro
 
 ---
 
+## Todo Template
+
+**IMPORTANT:** ワークフロー開始時に、以下の Todo を TodoWrite tool で作成すること。
+
+```
+TodoWrite:
+  todos:
+    - content: "Step 0: CLARIFY GATE 確認"
+      status: "pending"
+      activeForm: "Verifying CLARIFY GATE"
+    - content: "Step 1: コンテキスト読み込み"
+      status: "pending"
+      activeForm: "Loading context"
+    - content: "Step 2: コードベース探索"
+      status: "pending"
+      activeForm: "Exploring codebase"
+    - content: "Step 3: Plan セクション記入"
+      status: "pending"
+      activeForm: "Filling Plan sections"
+    - content: "Step 4: Plan 保存"
+      status: "pending"
+      activeForm: "Saving Plan"
+    - content: "Step 5: Lint 実行"
+      status: "pending"
+      activeForm: "Running Lint"
+    - content: "Step 6: 人間レビュー依頼・[HUMAN_CHECKPOINT]"
+      status: "pending"
+      activeForm: "Requesting human review"
+    - content: "Step 7: 状態更新"
+      status: "pending"
+      activeForm: "Updating state"
+```
+
+---
+
 ## Steps
 
 ### Step 0: Verify CLARIFY GATE
 
 **Plan 開始前に必ず確認:**
 
-```bash
-# Spec 内の [NEEDS CLARIFICATION] をカウント
-grep -c "\[NEEDS CLARIFICATION\]" .specify/specs/features/{id}/spec.md
+Grep tool で `[NEEDS CLARIFICATION]` マーカーをカウント：
+
+```
+Grep tool:
+  pattern: "\[NEEDS CLARIFICATION\]"
+  path: .specify/specs/features/{id}/spec.md
+  output_mode: count
 ```
 
 - **0 件**: CLARIFY GATE 通過 → Step 1 へ進む
 - **1 件以上**: GATE 未通過 → clarify ワークフロー を実行してから再度 Plan を開始
 
+**GATE 未通過時の表示:**
 ```
 ⚠️ CLARIFY GATE 未通過
 
@@ -128,6 +168,8 @@ node .claude/skills/spec-mesh/scripts/state.cjs branch --set-step plan
 
 ## Self-Check
 
+- [ ] **TodoWrite で全ステップを登録したか**
+- [ ] **CLARIFY GATE を確認したか（Step 0）**
 - [ ] Feature Spec を読み込んだか
 - [ ] Domain Spec を読み込んだか
 - [ ] Plan template を使用したか
@@ -135,6 +177,7 @@ node .claude/skills/spec-mesh/scripts/state.cjs branch --set-step plan
 - [ ] plan.md を保存したか
 - [ ] spec-lint を実行したか
 - [ ] 人間レビューを依頼したか
+- [ ] **TodoWrite で全ステップを completed にしたか**
 
 ---
 

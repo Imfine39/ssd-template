@@ -327,6 +327,129 @@ Document any skipped checkpoint in the PR description.
 
 ---
 
+## TodoWrite Usage Patterns
+
+ワークフローでの TodoWrite tool の使い分けを明確化する。
+
+### Pattern 1: Workflow Step Tracking
+
+**対象ワークフロー:** vision, design, add, fix, issue, change, pr, test-scenario, e2e
+
+ワークフロー開始時に**ワークフローのステップ自体**を Todo として登録し、各ステップ完了時に `completed` に更新する。
+
+```
+例: vision.md
+- Step 1: 入力検証 → in_progress → completed
+- Step 2: Scaffold 実行 → in_progress → completed
+- Step 3: Spec 作成 → in_progress → completed
+...
+```
+
+**目的:** ワークフローの進捗を可視化し、中断からの復帰を容易にする。
+
+### Pattern 2: Task Management
+
+**対象ワークフロー:** tasks, implement
+
+**tasks.md:** tasks.md ファイルで定義したタスク（T-001, T-002...）を TodoWrite に登録する。ワークフローステップ自体の Todo 化は不要。
+
+**implement.md:** tasks.md から読み込んだタスクを TodoWrite で管理する。各タスクの実装前に `in_progress`、完了時に `completed` に更新。
+
+```
+例: implement.md
+- T-001: API エンドポイント実装 → in_progress → completed
+- T-002: バリデーション追加 → in_progress → completed
+- T-003: テスト作成 → in_progress → completed
+...
+```
+
+**目的:** 実装作業の進捗を正確に追跡し、state.cjs の task-progress と同期する。
+
+### Pattern 3: No TodoWrite
+
+**対象ワークフロー:** review, clarify, lint, analyze, checklist, feedback, spec, featureproposal
+
+これらはサポート的なワークフローであり、TodoWrite は不要。
+
+---
+
+## Severity Classifications
+
+すべてのワークフロー（review, lint, analyze 等）で統一された重要度分類を使用する。
+
+| Severity | 定義 | アクション | 次ステップ |
+|----------|------|-----------|-----------|
+| **Critical** | ブロッカー - このままでは次に進めない | 必須修正 | 修正完了まで停止 |
+| **Major** | 品質問題 - 修正推奨 | 推奨修正 | 修正後に続行 |
+| **Minor** | 軽微 - 任意修正 | 情報のみ | そのまま続行可 |
+
+### Severity とツール出力のマッピング
+
+| ツール/ワークフロー | Critical | Major | Minor |
+|--------------------|----------|-------|-------|
+| review.md | Critical | Major | Minor |
+| lint (spec-lint.cjs) | Error | Warning | Info |
+| analyze.md | Critical | Major | Minor |
+| checklist.md | スコア < 30 | スコア 30-39 | スコア 40+ |
+
+---
+
+## State Management Responsibility
+
+`state.cjs` のブランチ状態（step, task-progress）をどのワークフローで更新するかを定義する。
+
+### Branch Step 値
+
+| Step | 意味 | 設定するワークフロー |
+|------|------|---------------------|
+| `idle` | 作業なし | 初期値 / ブランチ削除時 |
+| `spec` | Spec 作成中/完了 | issue, add, fix, change |
+| `spec_review` | Spec レビュー待ち | (オプション) HUMAN_CHECKPOINT 待ち時 |
+| `plan` | Plan 作成完了 | plan |
+| `plan_review` | Plan レビュー待ち | (オプション) HUMAN_CHECKPOINT 待ち時 |
+| `tasks` | Tasks 作成完了 | tasks |
+| `implement` | 実装完了 | implement |
+| `pr` | PR 作成済み | pr |
+| `suspended` | 中断中 | suspend コマンド |
+
+### State 更新タイミング
+
+| ワークフロー | 更新フィールド | タイミング |
+|-------------|---------------|-----------|
+| **issue.md** | `--set-step spec`, `--set-feature {id}` | Step 10: Feature Spec 作成後 |
+| **add.md** | `--set-step spec`, `--set-feature {id}` | Step 7: Feature Spec 作成後 |
+| **fix.md** | `--set-step spec` | Step 7: Fix Spec 作成後 |
+| **change.md** | `--set-step spec` | Step 6: Domain/Screen Spec 更新後 |
+| **plan.md** | `--set-step plan` | Step 7: Plan 作成・承認後 |
+| **tasks.md** | `--set-step tasks`, `--set-task-progress 0/N` | Step 6: Tasks 作成後 |
+| **implement.md** | `--set-task-progress M/N` | Step 3.1: 各タスク完了時 |
+| **implement.md** | `--set-step implement`, `--set-task-progress N/N` | Step 6: 全タスク完了後 |
+| **pr.md** | `--set-step pr` | Step 6: PR 作成後 |
+
+### Task Progress
+
+`--set-task-progress` は `{completed}/{total}` 形式で指定。
+
+```bash
+# Tasks 作成時（0/5 タスク完了）
+node .claude/skills/spec-mesh/scripts/state.cjs branch --set-step tasks --set-task-progress 0/5
+
+# タスク完了ごとに更新
+node .claude/skills/spec-mesh/scripts/state.cjs branch --set-task-progress 1/5
+node .claude/skills/spec-mesh/scripts/state.cjs branch --set-task-progress 2/5
+
+# 全タスク完了時
+node .claude/skills/spec-mesh/scripts/state.cjs branch --set-step implement --set-task-progress 5/5
+```
+
+### 注意事項
+
+1. **`_review` 系 step はオプション**: より詳細な進捗追跡が必要な場合のみ使用
+2. **HUMAN_CHECKPOINT 待ち時**: 明示的に `_review` step に設定することで、レビュー待ち状態を記録可能
+3. **サポートワークフローは state 更新なし**: review, clarify, lint, analyze, feedback 等は state を更新しない
+
+---
+
 ## Governance
 
 ### Amendment Process

@@ -5,10 +5,58 @@ Technical design phase. Creates Screen Spec + Domain Spec + Matrix simultaneousl
 ## Prerequisites
 
 - Vision Spec should exist (warning if not)
+- **★ Vision の CLARIFY GATE 通過必須**: Open Questions = 0
 
 ## Key Principle
 
 > Screen と Domain を同時に作成することで、ID の相互参照が可能になり、整合性が保証される。
+
+---
+
+## Todo Template
+
+**IMPORTANT:** ワークフロー開始時に、以下の Todo を TodoWrite tool で作成すること。
+
+```
+TodoWrite:
+  todos:
+    - content: "Step 1: 前提条件確認・Vision Spec 読み込み"
+      status: "pending"
+      activeForm: "Checking prerequisites"
+    - content: "Step 2: 画面情報収集"
+      status: "pending"
+      activeForm: "Collecting screen information"
+    - content: "Step 3: Feature 提案"
+      status: "pending"
+      activeForm: "Proposing features"
+    - content: "Step 4: Screen + Domain Spec 同時作成"
+      status: "pending"
+      activeForm: "Creating Screen and Domain Specs"
+    - content: "Step 5: Cross-Reference Matrix 作成"
+      status: "pending"
+      activeForm: "Creating Matrix"
+    - content: "Step 6: Multi-Review 実行"
+      status: "pending"
+      activeForm: "Executing Multi-Review"
+    - content: "Step 7: CLARIFY GATE チェック"
+      status: "pending"
+      activeForm: "Checking CLARIFY GATE"
+    - content: "Step 8: Lint 実行"
+      status: "pending"
+      activeForm: "Running Lint"
+    - content: "Step 9: Design Input 保存"
+      status: "pending"
+      activeForm: "Preserving Design Input"
+    - content: "Step 10: Foundation Issue 作成"
+      status: "pending"
+      activeForm: "Creating Foundation Issue"
+    - content: "Step 11: サマリー提示・状態更新"
+      status: "pending"
+      activeForm: "Presenting summary"
+    - content: "Step 12: [HUMAN_CHECKPOINT] 提示"
+      status: "pending"
+      activeForm: "Presenting checkpoint"
+```
 
 ---
 
@@ -125,17 +173,57 @@ Screen Spec と Domain Spec の品質を担保するため Multi-Review を実�
 
 3. **Handle results:**
    - すべてパス → Step 7 へ
-   - 曖昧点あり → clarify ワークフロー を推奨
+   - 曖昧点あり → Step 7 でブロック
    - Critical 未解決 → 問題をリストし対応を促す
 
-### Step 7: Run Lint
+### Step 7: CLARIFY GATE チェック（必須）
+
+**★ このステップはスキップ禁止 ★**
+
+Multi-Review 後、Grep tool で以下をカウント：
+
+```
+Grep tool (1): Screen Spec
+  pattern: "\[NEEDS CLARIFICATION\]"
+  path: .specify/specs/overview/screen/spec.md
+  output_mode: count
+
+Grep tool (2): Domain Spec
+  pattern: "\[NEEDS CLARIFICATION\]"
+  path: .specify/specs/overview/domain/spec.md
+  output_mode: count
+```
+
+**判定ロジック:**
+
+```
+clarify_count = Screen Spec の [NEEDS CLARIFICATION] 数 + Domain Spec の [NEEDS CLARIFICATION] 数
+
+if clarify_count > 0:
+    ┌─────────────────────────────────────────────────────────────┐
+    │ ★ CLARIFY GATE: 曖昧点が {clarify_count} 件あります         │
+    │                                                             │
+    │ 次のステップに進む前に clarify ワークフロー が必須です。     │
+    │                                                             │
+    │ 「clarify を実行して」と依頼してください。                   │
+    └─────────────────────────────────────────────────────────────┘
+    → clarify ワークフロー を実行（必須）
+    → clarify 完了後、Multi-Review からやり直し
+
+else:
+    → Step 8 (Lint) へ進む
+```
+
+**重要:** clarify_count > 0 の場合、次のステップへの遷移は禁止。
+
+### Step 8: Run Lint
 
 ```bash
 node .claude/skills/spec-mesh/scripts/spec-lint.cjs
 node .claude/skills/spec-mesh/scripts/validate-matrix.cjs
 ```
 
-### Step 8: Preserve Design Input
+### Step 9: Preserve Design Input
 
 If Vision input file was used (contains Part B screen information):
 ```bash
@@ -143,7 +231,7 @@ node .claude/skills/spec-mesh/scripts/preserve-input.cjs design
 ```
 - Saves to: `.specify/specs/overview/domain/input.md`
 
-### Step 9: Create Foundation Issue
+### Step 10: Create Foundation Issue
 
 ```bash
 gh issue create --title "[Foundation] S-FOUNDATION-001: 基盤実装" --body "..."
@@ -151,41 +239,58 @@ gh issue create --title "[Foundation] S-FOUNDATION-001: 基盤実装" --body "..
 
 Foundation includes: 認証、DB接続、基本構造
 
-### Step 10: Summary
+### Step 11: Summary & Update State
 
-Display:
+1. **Update State:**
+   ```bash
+   node .claude/skills/spec-mesh/scripts/state.cjs repo --set-domain-status draft --set-screen-status draft --set-phase design
+   ```
+
+2. **Display Summary:**
+   ```
+   === Design 完了 ===
+
+   Screen Spec: .specify/specs/overview/screen/spec.md
+     - Screens: {N} 画面定義
+
+   Domain Spec: .specify/specs/overview/domain/spec.md
+     - Masters: {N} M-* 定義
+     - APIs: {N} API-* 定義
+     - Rules: {N} BR-*/VR-* 定義
+
+   Matrix: .specify/specs/overview/matrix/cross-reference.json
+
+   Feature Issues: {N} 件作成
+   Foundation Issue: #{issue_num}
+
+   === CLARIFY GATE ===
+   [NEEDS CLARIFICATION]: {N} 箇所
+   Status: {PASSED | BLOCKED}
+
+   {if BLOCKED}
+   ★ clarify ワークフロー を実行してください。
+   {/if}
+   ```
+
+### Step 12: [HUMAN_CHECKPOINT]
+
+**CLARIFY GATE が PASSED の場合のみ表示:**
+
 ```
-=== Design 完了 ===
+=== [HUMAN_CHECKPOINT] ===
+確認事項:
+- [ ] Screen Spec の画面定義が要件を網羅しているか
+- [ ] Domain Spec の M-*/API-* 定義が適切か
+- [ ] Cross-Reference Matrix の整合性を確認したか
 
-Screen Spec: .specify/specs/overview/screen/spec.md
-  - Screens: {N} 画面定義
-
-Domain Spec: .specify/specs/overview/domain/spec.md
-  - Masters: {N} M-* 定義
-  - APIs: {N} API-* 定義
-  - Rules: {N} BR-*/VR-* 定義
-
-Matrix: .specify/specs/overview/matrix/cross-reference.json
-
-Feature Issues: {N} 件作成
-Foundation Issue: #{issue_num}
-
-=== 曖昧点 ===
-[NEEDS CLARIFICATION]: {N} 箇所
-
-推奨: clarify ワークフロー → issue ワークフロー (Foundation)
-```
-
-### Step 11: Update State
-
-```bash
-node .claude/skills/spec-mesh/scripts/state.cjs repo --set-domain-status draft --set-screen-status draft --set-phase design
+承認後、次のステップへ進んでください。
 ```
 
 ---
 
 ## Self-Check
 
+- [ ] **TodoWrite で全ステップを登録したか**
 - [ ] Vision Spec を読み込んだか
 - [ ] Screen Spec を作成したか（SCR-* ID 付き）
 - [ ] Domain Spec を作成したか（M-*/API-* 定義）
@@ -193,23 +298,17 @@ node .claude/skills/spec-mesh/scripts/state.cjs repo --set-domain-status draft -
 - [ ] Feature Issues を作成したか
 - [ ] Foundation Issue を作成したか
 - [ ] **Multi-Review を実行したか（3観点並列）**
+- [ ] **CLARIFY GATE をチェックしたか**
 - [ ] spec-lint + validate-matrix を実行したか
 - [ ] Design Input を保存したか
+- [ ] **TodoWrite で全ステップを completed にしたか**
 
 ---
 
 ## Next Steps
 
-**[HUMAN_CHECKPOINT]**
-- [ ] Screen Spec の画面定義が要件を網羅しているか
-- [ ] Domain Spec の M-*/API-* 定義が適切か
-- [ ] Cross-Reference Matrix の整合性を確認したか
-- [ ] [NEEDS CLARIFICATION] マーカーの箇所を確認したか
-
-承認後、次のステップへ進んでください。
-
 | Condition | Command | Description |
 |-----------|---------|-------------|
-| 曖昧点がある場合 | clarify ワークフロー | Domain の曖昧点解消 |
-| Foundation を開始する場合 | issue ワークフロー | Foundation Issue から開始 |
+| CLARIFY GATE: BLOCKED | clarify ワークフロー | **必須** - 曖昧点を解消 |
+| CLARIFY GATE: PASSED + 人間承認 | issue ワークフロー | Foundation Issue から開始 |
 | 追加機能を提案する場合 | featureproposal ワークフロー | 追加 Feature 提案 |

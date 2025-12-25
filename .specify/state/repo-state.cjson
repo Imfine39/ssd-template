@@ -7,8 +7,8 @@
   "specs": {
     "vision": {
       "path": ".specify/specs/vision/spec.md",
-      "status": "clarified",
-      "lastModified": "2025-12-23T00:56:20.123Z",
+      "status": "draft",
+      "lastModified": "2025-12-25T06:01:03.056Z",
       "clarifyComplete": false
     },
     "domain": {

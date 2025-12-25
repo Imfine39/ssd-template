@@ -84,22 +84,26 @@ Read tool: {input_path} (if exists)
 
 ### Step 2: Run 3 Reviewers in Parallel
 
-**IMPORTANT: Parallel Execution**
+**IMPORTANT: 並列実行の方法**
 
-To run 3 reviewers in parallel, you MUST invoke all 3 Task tools in a single response.
-Each Task tool call should:
-- Use `subagent_type: reviewer`
-- Use the default `run_in_background: false`
-- Be included in the same response message
+3 つの Reviewer を並列で実行するには、**1 つのレスポンス内で 3 つの Task tool を同時に呼び出す**。
 
-Claude Code will automatically execute them in parallel when multiple Task calls are in one message.
+```
+Task tool を 3 回呼び出す（すべて同一メッセージ内）:
+- subagent_type: "reviewer" (reviewer エージェントを使用)
+- description: "Reviewer A: 構造レビュー" 等
+- prompt: 各 Reviewer 用のプロンプト
+```
+
+**注意:**
+- 3 つの Task tool 呼び出しを別々のメッセージに分けると順次実行になる
+- 必ず 1 つのメッセージで 3 つ同時に呼び出すこと
 
 ---
 
-**Task Tool Invocations (3 parallel calls):**
+**Task Tool 呼び出しテンプレート:**
 
-Below shows the format for each of the 3 parallel Task tool invocations.
-Include all 3 in a single `<function_calls>` block:
+以下に各 Reviewer のプロンプトテンプレートを示す：
 
 ```
 Task tool #1 (Reviewer A):
@@ -309,7 +313,27 @@ Issues:
 MAX_REVIEW_ITERATIONS = 2
 ```
 
-2 回のレビュー後も Critical が残る場合はユーザーにエスカレート。
+**上限超過時の対応:**
+
+2 回のレビュー後も Critical が残る場合：
+
+1. **エスカレーション表示:**
+   ```
+   ⚠️ Multi-Review 上限 (2回) に達しました
+
+   未解決の Critical Issues:
+   - [C1] {issue}
+   - [C2] {issue}
+
+   これらは AI では修正できない問題です。
+   以下のいずれかを選択してください:
+   1. clarify ワークフロー で人間が判断
+   2. Spec を手動で修正後、review ワークフロー を再実行
+   3. 現状のまま続行（非推奨）
+   ```
+
+2. **自動続行禁止:** Critical 未解決のまま Plan に進むことは禁止
+3. **記録:** 未解決 Critical は Spec の Open Questions に追記
 
 ### Severity Definitions
 

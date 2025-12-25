@@ -24,7 +24,7 @@
 -->
 
 Spec Type: Feature
-Spec ID: S-{XXX}-001
+Spec ID: S-{AREA}-001
 Created: {date}
 Status: [Draft | In Review | Clarified | Approved | Implemented]
 Author: [OWNER]
@@ -59,13 +59,13 @@ This feature depends on the following elements from the Domain Spec.
 
 | Master ID | Name | Usage in this Feature |
 |-----------|------|----------------------|
-| M-{XXX}-001 | {Name} | {How this feature uses it} |
+| M-{AREA}-001 | {Name} | {How this feature uses it} |
 
 ### 2.2 API Dependencies
 
 | API ID | Name | Usage |
 |--------|------|-------|
-| API-{XXX}-001 | {Name} | {Calls/Implements} |
+| API-{AREA}-001 | {Name} | {Calls/Implements} |
 
 ### 2.3 Business Rules Dependencies
 
@@ -79,7 +79,7 @@ Other features this feature depends on.
 
 | Feature ID | Type | Description |
 |------------|------|-------------|
-| S-{XXX}-001 | Hard/Soft | {Why this feature depends on another} |
+| S-{AREA}-001 | Hard/Soft | {Why this feature depends on another} |
 
 **Dependency types:**
 - **Hard**: Cannot implement until dependency is completed (blocks implementation)
@@ -104,7 +104,7 @@ Reference from Domain Spec, filtered to actors relevant to this feature.
 
 Each use case should be independently testable.
 
-### UC-{XXX}-001: {Title}
+### UC-{AREA}-001: {Title}
 
 **Priority:** [P1 | P2 | P3]
 **Actor:** [Actor]
@@ -129,7 +129,7 @@ Each use case should be independently testable.
 
 ---
 
-### UC-{XXX}-002: {Title}
+### UC-{AREA}-002: {Title}
 
 **Priority:** [P1 | P2 | P3]
 **Actor:** [Actor]
@@ -150,8 +150,8 @@ Each use case should be independently testable.
 
 | FR ID | Description | Related UC | Priority |
 |-------|-------------|------------|----------|
-| FR-{XXX}-001 | {Requirement} | UC-{XXX}-001 | P1 |
-| FR-{XXX}-002 | {Requirement} | UC-{XXX}-001 | P2 |
+| FR-{AREA}-001 | {Requirement} | UC-{AREA}-001 | P1 |
+| FR-{AREA}-002 | {Requirement} | UC-{AREA}-001 | P2 |
 
 Mark unclear requirements with `[NEEDS CLARIFICATION]`.
 
@@ -170,8 +170,8 @@ Mark unclear requirements with `[NEEDS CLARIFICATION]`.
 
 | SC ID | Description | Measurement |
 |-------|-------------|-------------|
-| SC-{XXX}-001 | {Outcome} | {How to measure} |
-| SC-{XXX}-002 | {Outcome} | {How to measure} |
+| SC-{AREA}-001 | {Outcome} | {How to measure} |
+| SC-{AREA}-002 | {Outcome} | {How to measure} |
 
 ---
 
@@ -184,7 +184,7 @@ This feature uses the following screens from the Screen Spec.
 
 | Screen ID | Name | Usage in this Feature |
 |-----------|------|----------------------|
-| SCR-{XXX} | {Screen Name} | {How this feature uses/modifies this screen} |
+| SCR-{AREA} | {Screen Name} | {How this feature uses/modifies this screen} |
 
 ### 8.2 Feature-Specific UI States
 
@@ -201,7 +201,7 @@ If this feature modifies existing screens, the changes are already recorded in S
 
 | Screen ID | Modification | Screen Spec Ref |
 |-----------|-------------|-----------------|
-| SCR-{XXX} | {What changes} | Section 2.1 Modification Log |
+| SCR-{AREA} | {What changes} | Section 2.1 Modification Log |
 
 **Spec-First Policy:**
 - Screen Spec is the **source of truth** for all screen designs
@@ -236,9 +236,9 @@ Rules that apply only to this feature (not shared across domain).
 
 | UC/FR | Test Type | Test Description |
 |-------|-----------|------------------|
-| UC-{XXX}-001 | Unit | {What to test} |
-| UC-{XXX}-001 | Integration | {What to test} |
-| FR-{XXX}-001 | E2E | {What to test} |
+| UC-{AREA}-001 | Unit | {What to test} |
+| UC-{AREA}-001 | Integration | {What to test} |
+| FR-{AREA}-001 | E2E | {What to test} |
 
 ### 10.2 Critical Edge Cases
 
@@ -267,8 +267,8 @@ Rules that apply only to this feature (not shared across domain).
 - Vision Spec: S-VISION-001
 - Domain Spec: S-DOMAIN-001
 - Screen Spec: S-SCREEN-001
-- Related Screens: SCR-{XXX}, SCR-{YYY}
-- Related Issues: #{XXX}
+- Related Screens: SCR-{AREA}, SCR-{YYY}
+- Related Issues: #{AREA}
 - Related Plan: [plan path]
 - Related Tasks: [tasks path]
 

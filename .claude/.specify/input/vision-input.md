@@ -3,24 +3,6 @@
 新しいプロジェクトの概要を入力してください。
 **画面リストまで入力すると、より精度の高い Spec が生成されます。**
 
-<!--
-  Input → Spec Mapping:
-
-  | Input Section | Vision Spec Section | Notes |
-  |---------------|---------------------|-------|
-  | A1. 基本情報 | 1.1, 1.2 Purpose/Vision | プロジェクト名 → タイトル |
-  | A2. 課題 | 1.1 Problem statement | 課題 → Why we build |
-  | A3. ユーザー | 2.1, 2.2 Actors | ユーザー → Primary/Secondary Users |
-  | A4. やりたいこと | 3. User Journeys, 4.1 In Scope | 機能 → Journeys + Scope |
-  | A5. やらないこと | 4.2 Out of Scope | スコープ外 |
-  | A6. 制約・前提条件 | 6.1, 6.2 Constraints | 技術・業務制約 |
-  | B1. 画面リスト | 5.1 Screen List (Provisional) | Design で正式化 |
-  | B2. 画面遷移 | 5.2 Screen Transitions | Design で正式化 |
-  | C1-C3. デザイン希望 | 5.3 Design Preferences | スタイル・レスポンシブ |
-  | D1-D3. ビジネスルール | (→ Domain Spec) | Design ワークフローで使用 |
-  | 全入力 | 11. Original Input | 原文保存 |
--->
-
 ---
 
 ## Part A: ビジョン（必須）

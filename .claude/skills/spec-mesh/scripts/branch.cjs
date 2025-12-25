@@ -59,8 +59,33 @@ function listSpecDirs() {
   return dirs;
 }
 
+function showHelp() {
+  console.log(`
+Branch creation helper for spec-mesh.
+
+Usage:
+  node .claude/skills/spec-mesh/scripts/branch.cjs --slug <name> [options]
+
+Options:
+  --type <type>   Branch type: feature, fix, spec (default: feature)
+  --slug <name>   Branch name suffix (required)
+  --issue <num>   GitHub issue number
+  --help          Show this help message
+
+Examples:
+  node .claude/skills/spec-mesh/scripts/branch.cjs --type feature --slug user-auth --issue 123
+  node .claude/skills/spec-mesh/scripts/branch.cjs --type fix --slug login-bug --issue 456
+`);
+}
+
 function parseArgs() {
   const args = process.argv.slice(2);
+
+  if (args.includes('--help') || args.includes('-h')) {
+    showHelp();
+    process.exit(0);
+  }
+
   const out = { type: 'feature', slug: null, issue: null };
   for (let i = 0; i < args.length; i++) {
     const a = args[i];
@@ -70,6 +95,7 @@ function parseArgs() {
   }
   if (!out.slug) {
     console.error('ERROR: --slug is required');
+    showHelp();
     process.exit(1);
   }
   return out;

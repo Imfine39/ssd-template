@@ -72,7 +72,13 @@ Feature specs MUST reference these by ID, not redefine them.
 > **Note:** Screen ↔ Master ↔ API mappings are managed in `../matrix/cross-reference.json`.
 > Run `node .claude/skills/spec-mesh/scripts/generate-matrix-view.cjs` to regenerate the view.
 
-### M-[NAME]-001: [Entity Name]
+### M-[NAME]: [Entity Name]
+
+<!--
+  ID Format: M-{NAME} (no number suffix)
+  Examples: M-USER, M-ORDER, M-PROJECT
+  See: guides/id-naming.md Section 4
+-->
 
 **Purpose:** [Why this master exists]
 
@@ -92,7 +98,9 @@ Feature specs MUST reference these by ID, not redefine them.
 
 ---
 
-### M-[NAME]-002: [Entity Name]
+### M-[NAME]: [Entity Name]
+
+<!-- Add more masters as needed. Each master has a unique name (M-USER, M-ORDER, etc.) -->
 
 **Purpose:** [Why this master exists]
 
@@ -252,7 +260,7 @@ All features that implement this domain. Updated as features are added.
 
 | Feature ID | Title | Path | Status | Related M-*/API-* |
 |------------|-------|------|--------|-------------------|
-| S-{XXX}-001 | {Title} | `.specify/specs/features/s-xxx-001/` | {Status} | {M-*, API-*} |
+| S-{AREA}-001 | {Title} | `.specify/specs/features/s-xxx-001/` | {Status} | {M-*, API-*} |
 
 **Status values (see constitution.md):** Draft | In Review | Clarified | Approved | Implemented
 
