@@ -3,7 +3,7 @@
 This document defines the foundational principles for Spec-Driven Development (SSD).
 All development decisions, code reviews, and architectural choices MUST align with these principles.
 
-Version: 2.1.0 | Ratified: 2025-12-23
+Version: 2.2.0 | Ratified: 2025-12-31
 
 ---
 
@@ -47,6 +47,29 @@ All changes MUST be driven by specifications.
 - Ambiguity → Escalate, never guess
 - **CLARIFY GATE**: [NEEDS CLARIFICATION] = 0 is required before Plan
   - See [quality-gates.md](quality-gates.md) for details
+
+**Spec Creation Flow:**
+```
+Entry (vision/add/fix/issue)
+    ↓
+入力検証（必須項目確認）
+    ↓
+Spec 作成
+    ↓
+深掘りインタビュー（必須）← AskUserQuestion で潜在課題を発掘
+    ↓
+Multi-Review（3観点並列） → AI修正
+    ↓
+Lint
+    ↓
+[NEEDS CLARIFICATION] あり? → YES: Clarify → Multi-Review へ戻る
+    ↓ NO
+★ CLARIFY GATE 通過 ★
+    ↓
+[HUMAN_CHECKPOINT] Spec 承認
+    ↓
+Plan → Tasks → Implement → PR
+```
 
 ### 5. Git Discipline
 Version control MUST ensure traceability.
