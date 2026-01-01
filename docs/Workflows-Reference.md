@@ -9,25 +9,11 @@ SSD-MESH の全ワークフロー詳細リファレンスです。
 | カテゴリ | ワークフロー | 概要 |
 |---------|-------------|------|
 | **初期化** | vision, design | プロジェクト立ち上げ |
-| **開発** | add, fix, issue, change, quick | 開発エントリーポイント |
+| **開発** | add, fix, issue, change | 開発エントリーポイント |
 | **実装** | plan, tasks, implement, pr | 実装フロー |
 | **品質** | review, clarify, lint, analyze, checklist, feedback | 品質管理 |
 | **テスト** | test-scenario, e2e | テスト |
 | **その他** | featureproposal, spec | ユーティリティ |
-
-**Spec パス一覧:**
-
-| Spec Type | パス |
-|-----------|------|
-| Vision | `.specify/specs/overview/vision/spec.md` |
-| Screen | `.specify/specs/overview/screen/spec.md` |
-| Domain | `.specify/specs/overview/domain/spec.md` |
-| Matrix | `.specify/specs/overview/matrix/cross-reference.json` |
-| Feature | `.specify/specs/features/{id}/spec.md` |
-| Fix | `.specify/specs/fixes/{id}/spec.md` |
-| Test Scenario | `.specify/specs/features/{id}/test-scenarios.md` |
-| Plan | `.specify/specs/features/{id}/plan.md` または `.specify/specs/fixes/{id}/plan.md` |
-| Tasks | `.specify/specs/features/{id}/tasks.md` または `.specify/specs/fixes/{id}/tasks.md` |
 
 ---
 
@@ -42,21 +28,16 @@ SSD-MESH の全ワークフロー詳細リファレンスです。
 - または Claude との対話
 
 **出力:**
-- `.specify/specs/overview/vision/spec.md`
+- `.specify/specs/{project}/overview/vision/spec.md`
 
 **フロー:**
 1. Quick Input または対話で情報収集
 2. Vision Spec 作成
-3. Vision Interview（3フェーズ構成）
-   - Phase 1: 方向性確認
-   - Phase 2: 機能洗い出し
-   - Phase 3: 優先順位・リスク
-4. Multi-Review（3観点並列）
-5. Lint 実行
-6. **[CLARIFY GATE]** ← 曖昧点チェック
-7. Clarify（曖昧点があれば → Multi-Review へ戻る）
-8. [HUMAN_CHECKPOINT]
-9. 状態更新
+3. Multi-Review（3観点並列）
+4. Lint 実行
+5. [HUMAN_CHECKPOINT]
+6. Clarify（曖昧点があれば）
+7. 状態更新
 
 **依頼例:**
 ```
@@ -73,32 +54,28 @@ SSD-MESH の全ワークフロー詳細リファレンスです。
 
 **前提条件:**
 - Vision Spec が存在すること（推奨）
-- Vision の CLARIFY GATE 通過
 
 **入力:**
-- Vision Spec + Vision Input
+- Vision Spec
 - ユーザーからの画面情報
 
 **出力:**
-- `.specify/specs/overview/screen/spec.md`
-- `.specify/specs/overview/domain/spec.md`
-- `.specify/specs/overview/matrix/cross-reference.json`
+- `.specify/specs/{project}/overview/screen/spec.md`
+- `.specify/specs/{project}/overview/domain/spec.md`
+- `.specify/specs/{project}/overview/matrix/cross-reference.json`
 - GitHub Issues（Feature ごと）
 
 **フロー:**
-1. Vision Spec + Vision Input 読み込み
+1. Vision Spec 読み込み
 2. 画面情報収集（Vision Part B または対話）
 3. Screen Spec 作成（SCR-* ID）
-4. Domain Spec 作成（M-*, API-*, BR-*, VR-*, CR-*）
+4. Domain Spec 作成（M-*, API-*, BR-*, VR-*）
 5. Cross-Reference Matrix 作成
-6. Deep Interview（質問数制限なし）
-7. Multi-Review（各 Spec に 3観点）
-8. Lint + validate-matrix
-9. **[CLARIFY GATE]** ← 曖昧点チェック
-10. Clarify（曖昧点があれば → Multi-Review へ戻る）
-11. [HUMAN_CHECKPOINT]
-12. Feature Issues 作成
-13. Foundation Issue 作成
+6. Multi-Review
+7. Lint 実行
+8. [HUMAN_CHECKPOINT]
+9. Feature Issues 作成
+10. Foundation Issue 作成
 
 **依頼例:**
 ```
@@ -112,7 +89,7 @@ SSD-MESH の全ワークフロー詳細リファレンスです。
 
 ### add
 
-**目的:** 新機能を追加（Issue 作成 → Branch → Feature Spec → 開発フロー）
+**目的:** 新機能を追加（Issue 作成 → Feature Spec → 開発フロー）
 
 **入力:**
 - Quick Input: `.specify/input/add-input.md`（任意）
@@ -120,21 +97,18 @@ SSD-MESH の全ワークフロー詳細リファレンスです。
 
 **出力:**
 - GitHub Issue
-- `.specify/specs/features/{id}/spec.md`
+- `.specify/specs/{project}/features/{feature}/spec.md`
 
 **フロー:**
 1. Quick Input または対話で情報収集
 2. 入力検証（必須項目確認）
-3. コードベース分析
-4. Feature Spec 作成
-5. Deep Interview（質問数制限なし）
-6. Multi-Review（3観点並列）
+3. GitHub Issue 作成
+4. Feature ブランチ作成
+5. Feature Spec 作成
+6. Multi-Review
 7. Lint 実行
-8. **★ CLARIFY GATE ★** ← 必須（曖昧点 = 0）
-9. Clarify（曖昧点があれば → Multi-Review へ戻る）
-10. [HUMAN_CHECKPOINT] Spec 承認
-11. GitHub Issue 作成
-12. Branch 作成（feature/{issue}-{slug}）
+8. [HUMAN_CHECKPOINT]
+9. Clarify（曖昧点があれば）
 
 **依頼例:**
 ```
@@ -146,7 +120,7 @@ SSD-MESH の全ワークフロー詳細リファレンスです。
 
 ### fix
 
-**目的:** バグを修正（Issue 作成 → Branch → Fix Spec → 修正）
+**目的:** バグを修正（Issue 作成 → Fix Spec → 修正）
 
 **入力:**
 - Quick Input: `.specify/input/fix-input.md`（任意）
@@ -154,22 +128,16 @@ SSD-MESH の全ワークフロー詳細リファレンスです。
 
 **出力:**
 - GitHub Issue
-- `.specify/specs/fixes/{id}/spec.md`
+- `.specify/specs/{project}/fixes/{fix}/spec.md`
 
 **フロー:**
 1. Quick Input または対話で情報収集
 2. 入力検証
-3. 原因調査
-4. Fix Spec 作成（原因・修正方針）
-5. Deep Interview（質問数制限なし）
-6. Multi-Review（3観点並列）
-7. Lint 実行
-8. **★ CLARIFY GATE ★** ← 必須（曖昧点 = 0）
-9. Clarify（曖昧点があれば → Multi-Review へ戻る）
-10. [HUMAN_CHECKPOINT] Spec 承認
-11. GitHub Issue 作成
-12. Branch 作成（fix/{issue}-{slug}）
-13. Severity 判定（Trivial → implement 直行 / Standard → plan）
+3. GitHub Issue 作成
+4. Fix ブランチ作成
+5. Fix Spec 作成（原因調査・修正方針）
+6. Multi-Review
+7. [HUMAN_CHECKPOINT]
 
 **依頼例:**
 ```
@@ -187,65 +155,27 @@ SSD-MESH の全ワークフロー詳細リファレンスです。
 
 ### issue
 
-**目的:** 既存の GitHub Issue から開発を開始（add/fix への振り分け）
+**目的:** 既存の GitHub Issue から開発を開始
 
 **入力:**
 - GitHub Issue 番号 または URL
 
 **出力:**
-- Branch 作成
-- add または fix ワークフローへ引き継ぎ
+- Feature Spec または Fix Spec
+- ブランチ作成
 
 **フロー:**
-1. Issue 一覧表示・選択
-2. Issue 種別判定（Feature / Fix）
-3. Branch 作成
-4. 適切なワークフローへ引き継ぎ
-   - Feature → add.md (Step 3 から、Step 11-12 はスキップ)
-   - Fix → fix.md (Step 2 から、Step 11-12 はスキップ)
+1. Issue 読み込み
+2. Issue タイプ判定（Feature/Fix）
+3. 対応する Spec 作成
+4. Multi-Review
+5. [HUMAN_CHECKPOINT]
 
 **依頼例:**
 ```
 「Issue #123 から開発を始めて」
 「この Issue を実装して: [URL]」
 ```
-
----
-
-### quick
-
-**目的:** 軽微な変更を Spec なしで直接実装
-
-**適用条件（すべて満たす場合のみ）:**
-- 変更ファイル数 ≤ 3
-- 変更行数 ≤ 20
-- 新規 ID 追加なし
-- ビジネスロジック変更なし
-- API 契約変更なし
-- セキュリティ関連なし
-
-**対象例:**
-- スタイル変更（色、フォント、spacing）
-- テキスト修正（typo、文言調整）
-- 設定値変更（定数、閾値）
-- 軽微なバグ修正（null チェック追加）
-
-**フロー:**
-1. Quick Mode 判定（適用条件チェック）
-2. Impact Guard（Spec/Matrix 参照チェック）
-3. 実装
-4. Lint/テスト実行
-5. コミット
-
-**依頼例:**
-```
-「この typo を直して」
-「ボタンの色を変えて」
-```
-
-**エスカレーション:**
-- Impact Guard で BLOCK → change または fix ワークフローへ
-- 予想より影響範囲が大きい → add/fix ワークフローへ
 
 ---
 
@@ -288,29 +218,25 @@ SSD-MESH の全ワークフロー詳細リファレンスです。
 **目的:** 実装計画を作成
 
 **前提条件:**
-- Feature/Fix Spec が存在すること
-- **★ CLARIFY GATE 通過必須 ★**（`[NEEDS CLARIFICATION]` = 0）
+- Feature Spec が存在し、CLARIFY GATE を通過していること
+- `[NEEDS CLARIFICATION]` が 0 件
 
 **入力:**
-- Feature/Fix Spec
+- Feature Spec
 - 既存コード分析結果
 
 **出力:**
-- Feature: `.specify/specs/features/{id}/plan.md`
-- Fix: `.specify/specs/fixes/{id}/plan.md`
+- `.specify/specs/{project}/features/{feature}/plan.md`
 
 **フロー:**
-1. CLARIFY GATE 確認（曖昧点 = 0 必須）
-2. Feature/Fix Spec 読み込み
+1. Feature Spec 読み込み
+2. CLARIFY GATE チェック（曖昧点 = 0 必須）
 3. 既存コード分析
-4. Plan 作成
-   - High-Level Design
-   - Work Breakdown
-   - Testing Strategy
-   - Risks/Trade-offs
-5. Lint 実行
-6. [HUMAN_CHECKPOINT] Plan 承認
-7. 状態更新
+4. 実装計画作成
+   - 影響範囲
+   - 実装ステップ
+   - リスク評価
+5. [HUMAN_CHECKPOINT] 承認
 
 **依頼例:**
 ```
@@ -331,8 +257,7 @@ SSD-MESH の全ワークフロー詳細リファレンスです。
 - Plan
 
 **出力:**
-- Feature: `.specify/specs/features/{id}/tasks.md`
-- Fix: `.specify/specs/fixes/{id}/tasks.md`
+- `.specify/specs/{project}/features/{feature}/tasks.md`
 
 **フロー:**
 1. Plan 読み込み
@@ -605,7 +530,7 @@ Recommendations:
 - Screen Spec（画面要素情報）
 
 **出力:**
-- `.specify/specs/features/{id}/test-scenarios.md`
+- `.specify/specs/{project}/features/{feature}/test-scenarios.md`
 
 **テストケース種類:**
 
@@ -710,10 +635,8 @@ Recommendations:
 |-------------|-------------|
 | 新規プロジェクト開始 | vision → design |
 | 新機能追加 | add → plan → tasks → implement → pr |
-| バグ修正（Standard） | fix → plan → tasks → implement → pr |
-| バグ修正（Trivial） | fix → implement → pr |
+| バグ修正 | fix → implement → pr |
 | 既存 Issue から | issue → plan → tasks → implement → pr |
-| 軽微な変更 | quick |
 | Spec 変更 | change |
 | テスト作成 | test-scenario |
 | E2E テスト実行 | e2e |
@@ -724,24 +647,9 @@ Recommendations:
 
 以下のタイミングで人間の確認が必要：
 
-- Vision Spec 作成後（Multi-Review + CLARIFY GATE 通過後）
-- Design 完了後（Multi-Review + CLARIFY GATE 通過後）
-- Feature/Fix Spec 作成後（Multi-Review + CLARIFY GATE 通過後）
+- Vision Spec 作成後
+- Design 完了後
+- Feature Spec 作成後（CLARIFY GATE 前）
 - Plan 作成後
 - E2E テスト結果確認
 - change の影響分析後
-
-### CLARIFY GATE
-
-**Plan に進む前の必須条件:**
-- Spec 内の `[NEEDS CLARIFICATION]` マーカー = 0
-- 曖昧点が残った状態での実装は禁止
-
-**フロー:**
-```
-Spec 作成 → Multi-Review → Lint
-    ↓
-[NEEDS CLARIFICATION] あり?
-    → YES: Clarify → Multi-Review へ戻る
-    → NO: ★ CLARIFY GATE 通過 ★ → [HUMAN_CHECKPOINT] → Plan
-```

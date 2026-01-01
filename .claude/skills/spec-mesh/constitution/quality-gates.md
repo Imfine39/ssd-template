@@ -5,33 +5,60 @@ Defines the quality checkpoints and review processes in SSD workflow.
 ---
 
 ## CLARIFY GATE
+<!-- SSOT: CLARIFY GATE 定義 -->
+<!-- 他のファイルはこのセクションを参照すること。定義の複製禁止。 -->
+<!-- アンカー: #clarify-gate -->
 
 ### Definition
 A mandatory gate before proceeding to Plan phase.
 
-**Prerequisite:** `[NEEDS CLARIFICATION]` count = 0
+### Pass Conditions
+
+| 状態 | 条件 | 次のステップ |
+|------|------|-------------|
+| **PASSED** | `[NEEDS CLARIFICATION]` = 0 かつ `[DEFERRED]` = 0 | [HUMAN_CHECKPOINT] へ |
+| **PASSED_WITH_DEFERRED** | `[NEEDS CLARIFICATION]` = 0 かつ `[DEFERRED]` ≥ 1 | [HUMAN_CHECKPOINT] へ（リスク確認） |
+| **BLOCKED** | `[NEEDS CLARIFICATION]` ≥ 1 | clarify ワークフローへ |
 
 ### Purpose
 - Ensure all ambiguities are resolved before implementation planning
 - Prevent assumptions and guesswork from propagating to code
 - Maintain spec-to-code traceability
+- Allow progress with documented risks when items cannot be decided now
+
+### PASSED_WITH_DEFERRED の扱い
+
+1. **リスク記録**: Risks セクションに [DEFERRED] 項目の影響を記載
+2. **HUMAN_CHECKPOINT**: [DEFERRED] 項目を人間に提示し、先に進むことを確認
+3. **実装フェーズ**: [DEFERRED] 項目に遭遇した場合、clarify に戻る
 
 ### Flow
 ```
-Spec作成 → Multi-Review → Lint → [NEEDS CLARIFICATION] あり?
+Spec作成 → Multi-Review → Lint → マーカーカウント
                                         │
-                    YES ←───────────────┤
-                     │                  │ NO
-                     ▼                  ▼
-                  Clarify        ★ CLARIFY GATE 通過 ★
-                     │                  │
-                     └──→ Multi-Review  ▼
-                          (ループ)    Plan へ進む
+            ┌───────────────────────────┤
+            │                           │
+            ▼                           ▼
+[NEEDS CLARIFICATION] > 0    [NEEDS CLARIFICATION] = 0
+            │                           │
+            ▼                           ├── [DEFERRED] = 0 → PASSED
+         BLOCKED                        │
+            │                           └── [DEFERRED] > 0 → PASSED_WITH_DEFERRED
+            ▼                                      │
+         clarify                                   ▼
+            │                           [HUMAN_CHECKPOINT]
+            └──→ Multi-Review                (リスク確認)
+                 (ループ)                        │
+                                                 ▼
+                                              Plan へ
 ```
 
 ---
 
 ## Multi-Review
+<!-- SSOT: Multi-Review 3観点定義 -->
+<!-- 他のファイルはこのセクションを参照すること。定義の複製禁止。 -->
+<!-- アンカー: #multi-review -->
 
 ### Definition
 Parallel review from 3 perspectives immediately after Spec creation.
@@ -52,6 +79,9 @@ Parallel review from 3 perspectives immediately after Spec creation.
 ---
 
 ## HUMAN_CHECKPOINT Policy
+<!-- SSOT: HUMAN_CHECKPOINT ポリシー定義 -->
+<!-- 他のファイルはこのセクションを参照すること。定義の複製禁止。 -->
+<!-- アンカー: #human-checkpoint-policy -->
 
 Human checkpoints are mandatory gates that require explicit human approval.
 Never proceed past a checkpoint without confirmation.
@@ -66,18 +96,45 @@ Never proceed past a checkpoint without confirmation.
 | **Case 3 Decision** | When M-*/API-* modification needed | Impact scope acceptable |
 | **Irreversible Actions** | Before Push, Merge, Delete | Action is intended and safe |
 
-### Standard Format
+### Format Patterns
+
+> **詳細:** [human-checkpoint-patterns.md](../guides/human-checkpoint-patterns.md)
+
+**2つのフォーマットを使い分け:**
+
+#### 重要なCHECKPOINT（ブロック形式）
+
+Spec Approval, Plan Approval, Decision Point, Irreversible Action 用:
 
 ```markdown
-**[HUMAN_CHECKPOINT]**
-- 確認項目1: [具体的な内容]
-- 確認項目2: [具体的な内容]
-- 確認項目3: [具体的な内容]
+=== [HUMAN_CHECKPOINT] {Type} ===
 
-承認後、次のステップ（{next_step}）へ進んでください。
+確認事項:
+- [ ] {具体的な確認項目1}
+- [ ] {具体的な確認項目2}
+
+承認後、{next_step} へ進みます。
+```
+
+#### 結果確認（インライン形式）
+
+Workflow Completion 用:
+
+```markdown
+**[HUMAN_CHECKPOINT]** {結果}を確認してから次のステップに進んでください。
+```
+
+### Recording
+
+**承認後に記録を実行:**
+
+```bash
+node .claude/skills/spec-mesh/scripts/state.cjs branch --add-checkpoint {type}
 ```
 
 ### Checkpoint Details
+
+> **判断基準:** 曖昧表現（「適切か」「妥当か」等）の具体的判断基準は [judgment-criteria.md](../guides/judgment-criteria.md) を参照
 
 #### 1. Spec Approval
 **Triggers:** Vision/Design/Add/Fix Spec 作成後

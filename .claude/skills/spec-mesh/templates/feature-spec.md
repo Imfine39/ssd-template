@@ -9,7 +9,7 @@
     - Examples: S-AUTH-001, S-ORDERS-001, S-DASHBOARD-001
     - See: .claude/skills/spec-mesh/guides/id-naming.md
 
-  Status Values (from constitution/terminology.md - Status Values section):
+  Status Values (from constitution/terminology.md):
     Spec Status:
     - Draft: Initial creation, not reviewed
     - In Review: Under Multi-Review or stakeholder review

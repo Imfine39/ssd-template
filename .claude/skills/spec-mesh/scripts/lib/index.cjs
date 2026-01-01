@@ -1,38 +1,105 @@
 /**
  * Spec-mesh shared library.
- * Central export for all utility modules.
+ * Central export for utility modules.
  *
- * Usage:
- *   const lib = require('./lib');
- *   const { SPECS_ROOT, parseSpec, readJson } = lib;
+ * ## Usage
  *
- * Or import specific modules:
- *   const paths = require('./lib/paths');
- *   const { parseSpec } = require('./lib/spec-parser');
+ * Import specific functions (recommended):
+ *   const { INPUT_DIR, readFile, ensureDir } = require('./lib/index.cjs');
+ *
+ * ## Active Usage (as of 2025-12-31)
+ *
+ * | Module | Used By | Functions Used |
+ * |--------|---------|----------------|
+ * | paths.cjs | input.cjs | INPUT_DIR, INPUT_PATHS, TEMPLATES_DIR, SPECS_ROOT |
+ * | file-utils.cjs | input.cjs, matrix-ops.cjs | ensureDir, readFile, writeFile, fileExists, readJson |
+ * | matrix-utils.cjs | matrix-ops.cjs, generate-matrix-view.cjs | All functions |
+ *
+ * ## Available (not actively used)
+ *
+ * | Module | Functions |
+ * |--------|-----------|
+ * | cli-utils.cjs | run, runSilent, getCurrentBranch, parseArgs, etc. |
+ * | spec-parser.cjs | parseSpec, extractSection, extractMasterIds, etc. |
+ * | paths.cjs | getTemplatePath, findSpecPath, slugFromIdAndTitle, etc. |
+ * | file-utils.cjs | writeJson, hashFile, walkForSpecs, listDirs, listFiles, copyFile, deleteFile |
  */
 'use strict';
 
+// =============================================================================
+// ACTIVELY USED EXPORTS
+// =============================================================================
+
 const paths = require('./paths.cjs');
 const fileUtils = require('./file-utils.cjs');
-const cliUtils = require('./cli-utils.cjs');
-const specParser = require('./spec-parser.cjs');
+const matrixUtils = require('./matrix-utils.cjs');
+
+// Paths - actively used by input.cjs
+const {
+  INPUT_DIR,
+  INPUT_PATHS,
+  TEMPLATES_DIR,
+  SPECS_ROOT
+} = paths;
+
+// File utils - actively used by input.cjs, matrix-ops.cjs
+const {
+  ensureDir,
+  readFile,
+  writeFile,
+  fileExists,
+  readJson
+} = fileUtils;
+
+// =============================================================================
+// AVAILABLE MODULES (for future use)
+// =============================================================================
+
+// Load only when needed to avoid overhead
+let cliUtils = null;
+let specParser = null;
+
+function getCliUtils() {
+  if (!cliUtils) {
+    cliUtils = require('./cli-utils.cjs');
+  }
+  return cliUtils;
+}
+
+function getSpecParser() {
+  if (!specParser) {
+    specParser = require('./spec-parser.cjs');
+  }
+  return specParser;
+}
+
+// =============================================================================
+// EXPORTS
+// =============================================================================
 
 module.exports = {
-  // Re-export all paths
-  ...paths,
+  // Actively used - paths
+  INPUT_DIR,
+  INPUT_PATHS,
+  TEMPLATES_DIR,
+  SPECS_ROOT,
 
-  // Re-export all file utilities
-  ...fileUtils,
+  // Actively used - file utils
+  ensureDir,
+  readFile,
+  writeFile,
+  fileExists,
+  readJson,
 
-  // Re-export all CLI utilities
-  ...cliUtils,
+  // Actively used - matrix utils
+  ...matrixUtils,
 
-  // Re-export all spec parser utilities
-  ...specParser,
+  // Lazy-loaded module accessors (for future use)
+  getCliUtils,
+  getSpecParser,
 
-  // Also export modules for direct access
+  // Full module access (for scripts that need everything)
   paths,
   fileUtils,
-  cliUtils,
-  specParser
+  matrixUtils
 };

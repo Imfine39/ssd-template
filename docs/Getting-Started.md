@@ -114,7 +114,7 @@ Serena は LSP（Language Server Protocol）を通じてコード解析を行う
 
 ```bash
 # テンプレートをコピー
-node .claude/skills/spec-mesh/scripts/input.cjs reset vision
+node .claude/skills/spec-mesh/scripts/reset-input.cjs vision
 
 # エディタで編集
 # .specify/input/vision-input.md
@@ -165,7 +165,9 @@ your-project/
 │   ├── skills/
 │   │   └── spec-mesh/         # SSD フレームワーク
 │   │       ├── SKILL.md       # スキル定義
-│   │       ├── constitution/   # 最上位ルール（分割版）
+│   │       ├── constitution/  # Engineering Constitution
+│   │       │   ├── core.md    # 最上位ルール
+│   │       │   └── quality-gates.md # 品質ゲート定義
 │   │       ├── workflows/     # ワークフロー定義
 │   │       ├── templates/     # Spec テンプレート
 │   │       ├── guides/        # ガイド

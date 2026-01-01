@@ -1,6 +1,18 @@
 /**
  * CLI and Git utilities for spec-mesh scripts.
  * Provides command-line argument parsing and git operations.
+ *
+ * ## Exit Code Convention
+ *
+ * All spec-mesh scripts follow this exit code standard:
+ *
+ * | Code | Meaning | When to Use |
+ * |------|---------|-------------|
+ * | 0 | Success | Normal completion, help display, nothing to process |
+ * | 1 | Validation/Logic Error | Lint failures, invalid input, business logic errors |
+ * | 2 | File/System Error | File not found, parse errors, IO errors |
+ *
+ * Use `exitWithError(message, code)` for consistent error handling.
  */
 'use strict';
 

@@ -224,23 +224,12 @@ node .claude/skills/spec-mesh/scripts/state.cjs branch --name feature/123-slug -
 
 ---
 
-### input.cjs
+### preserve-input.cjs
 
-Manages input files (reset and preserve operations).
-
-**Usage:**
-```bash
-# Reset input to template
-node .claude/skills/spec-mesh/scripts/input.cjs reset <type>     # type: vision|add|fix|all
-
-# Preserve input to spec directory
-node .claude/skills/spec-mesh/scripts/input.cjs preserve <type>  # type: vision|add|fix|design
-  --feature <dir>  # Required for add type
-  --fix <dir>      # Required for fix type
-```
+Preserves input files to spec directories.
 
 **Exit Codes:**
-- `0`: Success, skipped (empty input), or help/list shown
+- `0`: Success or skipped (empty input)
 - `1`: Invalid arguments or missing files
 
 **Common Errors:**
@@ -248,22 +237,45 @@ node .claude/skills/spec-mesh/scripts/input.cjs preserve <type>  # type: vision|
 | Error Message | Cause | Solution |
 |--------------|-------|----------|
 | `ERROR: Type is required` | No type argument | Provide: `vision`, `add`, `fix`, or `design` |
-| `ERROR: Unknown type 'X'` | Invalid type | Use one of: `vision`, `add`, `fix`, `design`, `all` |
+| `ERROR: Unknown type 'X'` | Invalid type | Use one of: `vision`, `add`, `fix`, `design` |
 | `ERROR: --feature is required for add type` | Feature not specified | Add `--feature <dir-name>` |
 | `ERROR: --fix is required for fix type` | Fix not specified | Add `--fix <dir-name>` |
-| `ERROR: Template not found: X` | Template missing | Restore template from git or recreate |
+| `ERROR: Input file not found: X` | Input file doesn't exist | Ensure `.specify/input/` contains the input file |
 | `NOTE: Input file appears to be empty` | Only template content | Not an error; no content to preserve |
 
 **Recovery:**
 ```bash
 # Reset input to template and fill in content
-node .claude/skills/spec-mesh/scripts/input.cjs reset vision
+node .claude/skills/spec-mesh/scripts/reset-input.cjs vision
 
 # Then preserve after adding content
-node .claude/skills/spec-mesh/scripts/input.cjs preserve vision
+node .claude/skills/spec-mesh/scripts/preserve-input.cjs vision
+```
+
+---
+
+### reset-input.cjs
+
+Resets input files to default templates.
+
+**Exit Codes:**
+- `0`: Success or help/list shown
+- `1`: Invalid arguments or missing files
+
+**Common Errors:**
+
+| Error Message | Cause | Solution |
+|--------------|-------|----------|
+| `ERROR: Unknown input type 'X'` | Invalid type | Use: `vision`, `add`, `fix`, `all` |
+| `ERROR: Template not found: X` | Template missing | Restore template from git or recreate |
+
+**Recovery:**
+```bash
+# List available types
+node .claude/skills/spec-mesh/scripts/reset-input.cjs --list
 
 # Reset all inputs
-node .claude/skills/spec-mesh/scripts/input.cjs reset all
+node .claude/skills/spec-mesh/scripts/reset-input.cjs all
 ```
 
 ---
@@ -365,5 +377,6 @@ node .claude/skills/spec-mesh/scripts/state.cjs branch \
 | spec-lint.cjs | Passed (warnings OK) | Failed (errors) | - | - |
 | validate-matrix.cjs | Passed | Missing mappings | File/parse error | - |
 | branch.cjs | Success | Invalid args | - | - |
-| input.cjs | Success/Skip/Help | Invalid args/file | - | - |
+| preserve-input.cjs | Success/Skip | Invalid args/file | - | - |
+| reset-input.cjs | Success/Help | Invalid args | - | - |
 | generate-matrix-view.cjs | Success/Help | File/parse error | - | - |

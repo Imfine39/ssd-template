@@ -1,6 +1,12 @@
 # Quality Flow（品質フロー）共通コンポーネント
 
-Deep Interview → Multi-Review → Lint → CLARIFY GATE の一連のフローを定義。
+> **概念定義:** [quality-gates.md](../../constitution/quality-gates.md) 参照
+> - Multi-Review 3観点: [#multi-review](../../constitution/quality-gates.md#multi-review)
+> - CLARIFY GATE: [#clarify-gate](../../constitution/quality-gates.md#clarify-gate)
+>
+> このファイルは Quality Flow の**運用手順**を定義します。
+
+QA 分析 → Multi-Review → Lint → CLARIFY GATE の一連のフローを定義。
 Spec 作成後の品質担保プロセス。
 
 ---
@@ -21,7 +27,7 @@ Spec 作成完了
 ┌─────────────────────────────────────┐
 │ ★ Quality Flow 開始 ★               │
 ├─────────────────────────────────────┤
-│ 1. Deep Interview（深掘り）          │
+│ 1. QA 回答分析（未回答確認）          │
 │    ↓                                │
 │ 2. Multi-Review（3観点並列）         │
 │    ↓                                │
@@ -32,11 +38,9 @@ Spec 作成完了
 │ 5. CLARIFY GATE                     │
 │    ↓                                │
 │ [BLOCKED → clarify → 2へ戻る]       │
-│    ↓ PASSED                         │
-│ 6. [HUMAN_CHECKPOINT]               │
 └─────────────────────────────────────┘
-    ↓
-次のワークフローへ
+    ↓ PASSED
+呼び出し元の次のステップへ（Cascade Update）
 ```
 
 ---
@@ -45,46 +49,59 @@ Spec 作成完了
 
 | ワークフロー | 対象 Spec | Quality Flow 後の遷移 |
 |-------------|----------|---------------------|
-| vision.md | Vision Spec | design |
-| design.md | Screen + Domain Spec | issue |
+| project-setup.md | Vision + Screen + Domain Spec | issue |
 | add.md | Feature Spec | plan |
 | fix.md | Fix Spec | plan or implement |
+| change.md | Vision/Screen/Domain 変更 | plan |
 
 ---
 
 ## Steps
 
-### Step 1: Deep Interview（深掘りインタビュー）
+### Step 1: QA 回答分析
 
-**★ 必須ステップ・質問数制限なし ★**
+**★ 必須ステップ ★**
 
-> **コンポーネント参照:**
-> - Vision: [_vision-interview.md](_vision-interview.md)（3フェーズ構成）
-> - その他: [_deep-interview.md](_deep-interview.md)（完全網羅）
+> **コンポーネント参照:** [_qa-analysis.md](_qa-analysis.md)
 
 ```markdown
-完了するまで徹底的にインタビューを行う（40問以上になることもある）
+QA ドキュメントの回答状況を確認:
 
-カバーすべき領域:
-- Technical Implementation
-- UI/UX
-- Business Logic
-- Edge Cases
-- Data
-- Integration
-- Operations
-- Security
-- Concerns & Tradeoffs
+1. 回答状況チェック
+   - [必須] 項目: 全て回答済みか
+   - [確認] 項目: 承認/却下が完了しているか
+   - [提案] 項目: 採否が決定しているか
+   - [選択] 項目: 選択が完了しているか
 
-終了条件:
-- すべての領域がカバーされた
-- 追加の曖昧点がなくなった
-- ユーザーが「十分です」と明示した
+2. 未回答項目がある場合
+   → AskUserQuestion で確認（最大4問ずつ）
+
+3. 終了条件
+   - 全ての [必須] に回答あり
+   - Critical な曖昧点がない
+```
+
+#### Post-QA Verification（Feature/Fix のみ）
+
+QA 分析完了後、追加された要件の整合性を検証：
+
+```markdown
+QA で追加・変更された要件を特定:
+- 採用された提案を確認
+- 新たに追加された要件を確認
+- それらが参照する M-*/API-*/SCR-* を抽出
+
+不足要素の対応:
+| 状況 | 対応 |
+|------|------|
+| 全要素が存在 | そのまま続行 |
+| 新規要素が必要 | Spec に仮定義を追記 → Cascade Update で反映 |
+| 既存要素の変更が必要 | change ワークフローを先行 |
 ```
 
 ### Step 2: Multi-Review（3観点並列レビュー）
 
-> **ワークフロー参照:** [../spec-mesh-quality/workflows/review.md](../../spec-mesh-quality/workflows/review.md)
+> **ワークフロー参照:** [review.md](../review.md)
 
 ```markdown
 1. 3 つの reviewer agent を並列で起動:
@@ -135,35 +152,33 @@ node .claude/skills/spec-mesh/scripts/matrix-ops.cjs validate
 
 ```markdown
 1. [NEEDS CLARIFICATION] マーカーをカウント
-2. Open Questions をカウント（Overview Spec のみ）
-3. 合計 > 0 なら BLOCKED、0 なら PASSED
+2. [DEFERRED] マーカーをカウント
+3. Open Questions をカウント（Overview Spec のみ）
+4. 判定:
+   - [NEEDS CLARIFICATION] > 0 → BLOCKED
+   - [NEEDS CLARIFICATION] = 0 かつ [DEFERRED] > 0 → PASSED_WITH_DEFERRED
+   - [NEEDS CLARIFICATION] = 0 かつ [DEFERRED] = 0 → PASSED
 
 BLOCKED の場合:
   → clarify ワークフローを実行
   → clarify 完了後、Step 2 (Multi-Review) へ戻る
 
+PASSED_WITH_DEFERRED の場合:
+  → [HUMAN_CHECKPOINT] で [DEFERRED] 項目を提示
+  → リスクを承知の上で承認を得る
+  → 呼び出し元ワークフローの次のステップへ
+
 PASSED の場合:
-  → Step 6 ([HUMAN_CHECKPOINT]) へ進む
+  → 呼び出し元ワークフローの次のステップへ
 ```
 
-### Step 6: [HUMAN_CHECKPOINT]
-
-**CLARIFY GATE: PASSED の場合のみ表示**
-
-```markdown
-=== [HUMAN_CHECKPOINT] ===
-
-確認事項:
-- [ ] Spec の内容が要件を正確に反映しているか
-- [ ] 重要な項目の漏れがないか
-- [ ] 次のステップに進む準備ができているか
-
-承認後、次のワークフローへ進んでください。
-```
+**Note:** HUMAN_CHECKPOINT は呼び出し元ワークフローの Finalize ステップで実施
 
 ---
 
 ## ワークフロー別チェックリスト
+
+> **判断基準:** 「適切か」「妥当か」等の曖昧表現の具体的判断基準は [judgment-criteria.md](../../guides/judgment-criteria.md) を参照
 
 ### Vision Spec
 
@@ -209,9 +224,11 @@ Quality Flow 完了時の出力：
 
 Spec: {spec_path}
 
-【Deep Interview】
-- 質問数: {N} 問
-- 発見した追加要件: {M} 件
+【QA 分析】
+- [必須]: {n1}/{N1} 回答済
+- [確認]: {n2}/{N2} 完了
+- [提案]: {n3}/{N3} 採用
+- 追加要件: {M} 件
 
 【Multi-Review】
 - Critical: {count} (Fixed: {fixed})
@@ -223,19 +240,29 @@ Spec: {spec_path}
 
 【CLARIFY GATE】
 - [NEEDS CLARIFICATION]: {N} 件
+- [DEFERRED]: {D} 件
 - Open Questions: {M} 件
-- Status: {PASSED | BLOCKED}
+- Status: {PASSED | PASSED_WITH_DEFERRED | BLOCKED}
 
 {if BLOCKED}
 ★ clarify ワークフロー を実行してください。
 clarify 完了後、Multi-Review からやり直します。
 {/if}
 
-{if PASSED}
-=== [HUMAN_CHECKPOINT] ===
-{チェックリスト}
+{if PASSED_WITH_DEFERRED}
+★ [DEFERRED] 項目があります:
+1. {DEFERRED項目1}
+2. {DEFERRED項目2}
 
-承認後、{next_workflow} ワークフローへ進んでください。
+[HUMAN_CHECKPOINT]
+上記のリスクを承知の上で先に進む場合は承認してください。
+実装フェーズで [DEFERRED] に遭遇した場合、clarify に戻る必要があります。
+
+→ 承認後、次のステップ（Cascade Update）へ進む
+{/if}
+
+{if PASSED}
+→ 次のステップ（Cascade Update）へ進む
 {/if}
 ```
 
@@ -243,14 +270,11 @@ clarify 完了後、Multi-Review からやり直します。
 
 ## Self-Check
 
-- [ ] **Deep Interview を完了するまで継続したか（質問数制限なし）**
-- [ ] すべての領域をカバーしたか（Technical, UI/UX, Edge Cases 等）
+- [ ] QA 回答分析を完了したか
 - [ ] Multi-Review を実行したか（3観点並列）
 - [ ] AI 修正可能な問題を修正したか
 - [ ] Lint を実行したか
-- [ ] CLARIFY GATE をチェックしたか
-- [ ] BLOCKED の場合、clarify を促したか
-- [ ] PASSED の場合、[HUMAN_CHECKPOINT] を提示したか
+- [ ] CLARIFY GATE をチェックしたか（BLOCKED → clarify）
 
 ---
 
@@ -259,19 +283,18 @@ clarify 完了後、Multi-Review からやり直します。
 各ワークフローから以下のように呼び出す：
 
 ```markdown
-### Steps N-M: Quality Flow
+### Step N: Quality Flow
 
 **★ 品質担保プロセス（必須） ★**
 
-[shared/_quality-flow.md](shared/_quality-flow.md) を実行：
+> **参照:** [shared/_quality-flow.md] を **Read tool で読み込んで** 実行
 
-1. **Deep Interview** - [_vision-interview.md](_vision-interview.md) or [_deep-interview.md](_deep-interview.md)
-2. **Multi-Review** - [review.md](review.md)
-3. **AI 修正**
-4. **Lint** - `spec-lint.cjs`
-5. **CLARIFY GATE** - [_clarify-gate.md](_clarify-gate.md)
-6. **[HUMAN_CHECKPOINT]**
+1. QA 回答分析
+2. Multi-Review（3観点並列）
+3. AI 修正
+4. Lint
+5. CLARIFY GATE
 
-BLOCKED の場合: clarify → Multi-Review へ戻る
-PASSED の場合: 次のワークフローへ
+BLOCKED → clarify → Multi-Review へ戻る
+PASSED → 次のステップへ
 ```

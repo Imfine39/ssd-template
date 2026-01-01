@@ -1,0 +1,79 @@
+# Feature Quick Input
+
+追加したい機能の概要を入力してください。空欄があってもOKです。
+
+<!--
+  Input → Spec Mapping:
+
+  | Input Section | Feature Spec Section | Notes |
+  |---------------|----------------------|-------|
+  | 機能概要.機能名 | Spec Title, 1.1 | 機能名 → タイトル |
+  | 機能概要.一言で説明 | 1.1 Feature Description | What this feature does |
+  | なぜ必要か.解決したい課題 | 1.1 Problem it solves | ユーザー価値 |
+  | なぜ必要か.誰が使うか | 3. Actors | Feature 固有のアクター |
+  | なぜ必要か.どんな価値 | 1.1, 7. Success Criteria | 価値 → 成功基準 |
+  | 期待する動作 | 4. Use Cases | UC-* として展開 |
+  | 関連する既存機能 | 2.4 Feature Dependencies | Hard/Soft 依存関係 |
+  | UI/UX イメージ | 8. Screen Dependencies | SCR-* 参照 |
+  | 制約・注意点 | 9. Feature-Specific Rules | FR-RULE-* |
+  | 補足情報 | 14. Original Input | 原文保存 |
+-->
+
+---
+
+## 機能概要
+
+- **機能名**:
+- **一言で説明すると**:
+
+---
+
+## なぜ必要か
+
+- **解決したい課題**:
+- **誰が使うか**:
+- **どんな価値があるか**:
+
+---
+
+## 期待する動作 (3-5個)
+
+1.
+2.
+3.
+4.
+5.
+
+---
+
+## 関連する既存機能 (任意)
+
+- **依存する機能**:
+- **影響を受ける機能**:
+
+---
+
+## UI/UX イメージ (任意)
+
+- **画面/操作の概要**:
+- **参考にしたいUI**:
+
+---
+
+## 制約・注意点 (任意)
+
+-
+
+---
+
+## 補足情報 (任意)
+
+自由に追記してください:
+
+---
+
+## 入力完了後
+
+1. このファイルを保存
+2. Claude Code に「この機能を追加して」と依頼
+3. Claude が内容を読み取り、Feature Spec を生成します

@@ -8,7 +8,7 @@
   Component IDs: COMP-{NNN} (e.g., COMP-001, COMP-002)
   See: .claude/skills/spec-mesh/guides/id-naming.md
 
-  Status Values (from constitution/terminology.md - Status Values section):
+  Status Values (from constitution/terminology.md):
     Spec Status:
     - Draft: Initial creation, not reviewed
     - In Review: Under Multi-Review or stakeholder review

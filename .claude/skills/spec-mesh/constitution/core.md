@@ -3,7 +3,7 @@
 This document defines the foundational principles for Spec-Driven Development (SSD).
 All development decisions, code reviews, and architectural choices MUST align with these principles.
 
-Version: 2.2.0 | Ratified: 2025-12-31
+Version: 2.3.0 | Ratified: 2025-12-31
 
 ---
 
@@ -49,6 +49,9 @@ All changes MUST be driven by specifications.
   - See [quality-gates.md](quality-gates.md) for details
 
 **Spec Creation Flow:**
+<!-- SSOT: Spec Creation Flow -->
+<!-- 他のファイルはこの Flow を参照すること。完全な複製禁止。 -->
+<!-- アンカー: #spec-driven-workflow -->
 ```
 Entry (vision/add/fix/issue)
     ↓
@@ -62,13 +65,23 @@ Multi-Review（3観点並列） → AI修正
     ↓
 Lint
     ↓
-[NEEDS CLARIFICATION] あり? → YES: Clarify → Multi-Review へ戻る
-    ↓ NO
-★ CLARIFY GATE 通過 ★
+マーカーカウント
+    │
+    ├─ [NEEDS CLARIFICATION] > 0 → Clarify → Multi-Review へ戻る
+    │
+    └─ [NEEDS CLARIFICATION] = 0
+            │
+            ├─ [DEFERRED] = 0 → ★ CLARIFY GATE: PASSED ★
+            │
+            └─ [DEFERRED] > 0 → ★ CLARIFY GATE: PASSED_WITH_DEFERRED ★
+                                        │
+                                        ▼
+                               [HUMAN_CHECKPOINT]
+                               (リスク確認: [DEFERRED] 項目を提示)
     ↓
 [HUMAN_CHECKPOINT] Spec 承認
     ↓
-Plan → Tasks → Implement → PR
+Plan → Tasks → Implement（[DEFERRED] 遭遇時は Clarify へ戻る） → PR
 ```
 
 ### 5. Git Discipline
@@ -92,6 +105,77 @@ Version control MUST ensure traceability.
 - All PRs verify compliance with these principles
 - Violations flagged during code review
 - Exceptions require documented justification
+
+---
+
+## Advanced Concepts
+
+### Cascade Update
+
+Feature Spec や Fix Spec の変更が Domain/Screen Spec に波及する場合の更新フロー。
+Spec 間の整合性を保つための重要なメカニズム。
+
+**トリガー条件:**
+- Feature Spec で新規 Master/API を定義
+- Fix Spec で既存 Master/API の仕様を修正
+- Feature Spec の承認時に Domain への反映が必要
+
+**フロー:**
+```
+Feature Spec 変更
+    ↓
+影響範囲を特定（impact-analysis.md）
+    ↓
+関連 Spec を更新:
+  - Domain Spec (Masters, APIs, Rules)
+  - Screen Spec (参照する Master/API)
+  - Matrix (cross-reference.json)
+    ↓
+state.cjs に更新ログを記録
+```
+
+**参照:** [_cascade-update.md](../workflows/shared/_cascade-update.md)
+
+### Pending Additions
+
+Feature Spec Section 2.5 で使用される概念。
+Feature 実装時に Domain Spec に追加が予定される要素を事前定義する。
+
+**目的:**
+- 実装前に Domain への影響を明確化
+- Cascade Update の計画を事前に立てる
+- レビュー時に追加予定要素を確認可能にする
+
+**構造例:**
+```markdown
+### 2.5 Pending Additions
+
+| ID | Type | Description | Status | Added Date |
+|----|------|-------------|--------|------------|
+| API-{AREA}-001 | API | {説明} | Pending | - |
+| M-{AREA}-001 | Master | {説明} | Pending | - |
+```
+
+**ステータスライフサイクル:**
+```
+Pending (Feature Spec で仮定義)
+    ↓ Cascade Update 実行
+Added (Domain Spec に正式追加)
+    ↓ Matrix 検証完了
+Verified (相互参照が検証済み)
+```
+
+**ステータス値:**
+- `Pending`: 仮定義、Cascade Update 待ち
+- `Added`: Domain Spec に追加済み、Added Date を記入
+- `Verified`: Matrix 検証完了、全参照が有効
+
+**処理タイミング:**
+1. add ワークフロー Step 4: Pending 項目を定義
+2. add ワークフロー Step 6 (Cascade Update): Domain Spec に追加、Status = Added
+3. Matrix 検証完了後: Status = Verified
+
+**参照:** [_cascade-update.md](../workflows/shared/_cascade-update.md)
 
 ---
 

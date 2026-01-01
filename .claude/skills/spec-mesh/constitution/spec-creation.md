@@ -19,9 +19,10 @@ See [terminology.md](terminology.md) for complete ID format and status definitio
 
 ---
 
-## [NEEDS CLARIFICATION] Marker
+## Clarification Markers
 
-### When to Use
+### [NEEDS CLARIFICATION] Marker
+
 Mark any ambiguous, incomplete, or uncertain content with `[NEEDS CLARIFICATION]`:
 
 ```markdown
@@ -31,25 +32,47 @@ Mark any ambiguous, incomplete, or uncertain content with `[NEEDS CLARIFICATION]
 - Need confirmation on PayPal, Apple Pay requirements
 ```
 
-### Rules
+**Rules:**
 1. **Be specific** - Clearly state what needs clarification
 2. **Provide context** - Include assumptions or options if known
 3. **One marker per issue** - Don't combine multiple questions
 
-### Resolution
+**Resolution:**
 - Clarifications are resolved via the `clarify` workflow
 - Once resolved, remove the marker and update the content
 - All markers MUST be resolved before CLARIFY GATE
+
+### [DEFERRED] Marker
+
+Mark items that cannot be decided now but are acceptable to defer:
+
+```markdown
+### 3.3 API Response Format
+[DEFERRED: 技術検証後に決定] レスポンス形式は JSON または Protocol Buffers
+- 技術検証完了後に最終決定
+- 現時点では JSON を仮定して設計
+```
+
+**使用条件:**
+| 理由カテゴリ | 説明 | 使用例 |
+|-------------|------|-------|
+| 技術検証待ち | 技術選定やPoCの結果待ち | `[DEFERRED: 技術検証後に決定]` |
+| 外部承認待ち | ステークホルダーの確認が必要 | `[DEFERRED: PM承認待ち]` |
+| 後フェーズ詳細化 | MVP以降で対応予定 | `[DEFERRED: Phase 2で詳細化]` |
+| 情報不足 | 追加調査が必要 | `[DEFERRED: 追加調査必要]` |
+
+**重要:** [DEFERRED] は CLARIFY GATE をブロックしないが、実装時に遭遇したら clarify に戻る必要がある。
 
 ---
 
 ## CLARIFY GATE Relationship
 
-The CLARIFY GATE (defined in [quality-gates.md](quality-gates.md)) requires:
-- **[NEEDS CLARIFICATION] count = 0**
-- This is a prerequisite for proceeding to Plan
+### CLARIFY GATE
+
+> **SSOT:** [quality-gates.md#clarify-gate](quality-gates.md#clarify-gate) 参照
 
 Spec作成時は曖昧な箇所を積極的にマークし、CLARIFY GATE までに解消する。
+決められない項目は [DEFERRED] としてリスクを明示した上で続行可能。
 
 ---
 

@@ -10,7 +10,7 @@
     - Test Case (Journey): TC-J{NN} (e.g., TC-J01, TC-J02)
   See: .claude/skills/spec-mesh/guides/id-naming.md
 
-  Status Values (from constitution/terminology.md - Status Values section):
+  Status Values (from constitution/terminology.md):
     Test Scenario Spec Status:
     - Draft: Initial creation
     - In Review: Under stakeholder review

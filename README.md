@@ -153,7 +153,9 @@ Vision 作成 → Design（Screen + Domain）→ Foundation Issue → 実装
 ├── skills/
 │   └── spec-mesh/
 │       ├── SKILL.md              # スキル定義（Claude が読む）
-│       ├── constitution.md       # Engineering Constitution（最上位ルール）
+│       ├── constitution/         # Engineering Constitution（最上位ルール）
+│       │   ├── core.md           # コアルール
+│       │   └── quality-gates.md  # 品質ゲート定義
 │       ├── workflows/            # 各ワークフロー定義
 │       ├── templates/            # Spec テンプレート
 │       │   └── inputs/           # Quick Input テンプレート
@@ -236,7 +238,7 @@ Claude が内部で使用するワークフロー一覧です。
 3. **HUMAN_CHECKPOINT** - 重要な判断は人間が確認
 4. **推測禁止** - 不明点は Clarify で解消
 
-詳細は [Engineering Constitution](.claude/skills/spec-mesh/constitution.md) を参照。
+詳細は [Engineering Constitution](.claude/skills/spec-mesh/constitution/core.md) を参照。
 
 ---
 
@@ -322,7 +324,7 @@ node .claude/skills/spec-mesh/scripts/update.cjs
 | Document | Description |
 |----------|-------------|
 | [SKILL.md](.claude/skills/spec-mesh/SKILL.md) | スキル定義（Claude 向け） |
-| [constitution.md](.claude/skills/spec-mesh/constitution.md) | Engineering Constitution |
+| [constitution/](.claude/skills/spec-mesh/constitution/) | Engineering Constitution（core.md, quality-gates.md 等） |
 | [id-naming.md](.claude/skills/spec-mesh/guides/id-naming.md) | ID 命名規則 |
 | [error-recovery.md](.claude/skills/spec-mesh/guides/error-recovery.md) | エラー回復ガイド |
 | [parallel-development.md](.claude/skills/spec-mesh/guides/parallel-development.md) | 並行開発ガイド |

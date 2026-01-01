@@ -18,28 +18,21 @@
 
 const fs = require('fs');
 const path = require('path');
-const { SPEC_PATHS, LEGACY_SPEC_PATHS, readFile, writeFile, readJson, fileExists } = require('./lib/index.cjs');
+const { readFile, readJson } = require('./lib/index.cjs');
+const {
+  DEFAULT_MATRIX_PATH,
+  LEGACY_MATRIX_PATHS,
+  findExistingPath,
+  loadMatrixJson,
+  generateMarkdown
+} = require('./lib/matrix-utils.cjs');
 
-// Default paths
-const DEFAULT_MATRIX_PATH = '.specify/specs/overview/matrix/cross-reference.json';
-const LEGACY_MATRIX_PATHS = ['.specify/matrix/cross-reference.json'];
-
+// Additional paths for validation
 const DEFAULT_SCREEN_PATH = '.specify/specs/overview/screen/spec.md';
 const LEGACY_SCREEN_PATHS = ['.specify/specs/screen/spec.md'];
 
 const DEFAULT_DOMAIN_PATH = '.specify/specs/overview/domain/spec.md';
 const LEGACY_DOMAIN_PATHS = ['.specify/specs/domain/spec.md', '.specify/specs/overview/spec.md'];
-
-// Find existing path from candidates
-function findExistingPath(candidates) {
-  for (const p of candidates) {
-    const resolved = path.isAbsolute(p) ? p : path.resolve(process.cwd(), p);
-    if (fs.existsSync(resolved)) {
-      return p;
-    }
-  }
-  return null;
-}
 
 // Parse command line arguments
 function parseArgs() {
@@ -119,243 +112,7 @@ Examples:
 `);
 }
 
-// ==================== GENERATE FUNCTIONS ====================
-
-function loadJsonForGenerate(jsonPath) {
-  if (!fs.existsSync(jsonPath)) {
-    console.error(`ERROR: Matrix file not found: ${jsonPath}`);
-    process.exit(1);
-  }
-
-  try {
-    const content = fs.readFileSync(jsonPath, 'utf8');
-    return JSON.parse(content);
-  } catch (e) {
-    console.error(`ERROR: Failed to parse JSON: ${e.message}`);
-    process.exit(1);
-  }
-}
-
-function generateScreenTable(screens) {
-  if (!screens || Object.keys(screens).length === 0) {
-    return '*No screens defined*\n';
-  }
-
-  let md = '| Screen ID | Name | Masters | APIs |\n';
-  md += '|-----------|------|---------|------|\n';
-
-  const sortedIds = Object.keys(screens).sort();
-  for (const id of sortedIds) {
-    const s = screens[id];
-    const masters = (s.masters || []).join(', ') || '-';
-    const apis = (s.apis || []).join(', ') || '-';
-    md += `| ${id} | ${s.name || ''} | ${masters} | ${apis} |\n`;
-  }
-
-  return md;
-}
-
-function generateFeatureTable(features) {
-  if (!features || Object.keys(features).length === 0) {
-    return '*No features defined*\n';
-  }
-
-  let md = '| Feature ID | Title | Screens | Masters | APIs | Rules |\n';
-  md += '|------------|-------|---------|---------|------|-------|\n';
-
-  const sortedIds = Object.keys(features).sort();
-  for (const id of sortedIds) {
-    const f = features[id];
-    const screens = (f.screens || []).join(', ') || '-';
-    const masters = (f.masters || []).join(', ') || '-';
-    const apis = (f.apis || []).join(', ') || '-';
-    const rules = (f.rules || []).join(', ') || '-';
-    md += `| ${id} | ${f.title || ''} | ${screens} | ${masters} | ${apis} | ${rules} |\n`;
-  }
-
-  return md;
-}
-
-function generateReverseMasterLookup(data) {
-  const { screens, features } = data;
-  const masterUsage = {};
-
-  if (screens) {
-    for (const [scrId, scrData] of Object.entries(screens)) {
-      for (const m of (scrData.masters || [])) {
-        if (!masterUsage[m]) masterUsage[m] = { screens: [], features: [] };
-        masterUsage[m].screens.push(scrId);
-      }
-    }
-  }
-
-  if (features) {
-    for (const [featId, featData] of Object.entries(features)) {
-      for (const m of (featData.masters || [])) {
-        if (!masterUsage[m]) masterUsage[m] = { screens: [], features: [] };
-        if (!masterUsage[m].features.includes(featId)) {
-          masterUsage[m].features.push(featId);
-        }
-      }
-    }
-  }
-
-  if (Object.keys(masterUsage).length === 0) {
-    return '*No masters defined*\n';
-  }
-
-  let md = '| Master | Used by Screens | Used by Features |\n';
-  md += '|--------|-----------------|------------------|\n';
-
-  const sortedMasters = Object.keys(masterUsage).sort();
-  for (const m of sortedMasters) {
-    const u = masterUsage[m];
-    const screens = u.screens.length > 0 ? u.screens.sort().join(', ') : '-';
-    const features = u.features.length > 0 ? u.features.sort().join(', ') : '-';
-    md += `| ${m} | ${screens} | ${features} |\n`;
-  }
-
-  return md;
-}
-
-function generateReverseApiLookup(data) {
-  const { screens, features } = data;
-  const apiUsage = {};
-
-  if (screens) {
-    for (const [scrId, scrData] of Object.entries(screens)) {
-      for (const api of (scrData.apis || [])) {
-        if (!apiUsage[api]) apiUsage[api] = { screens: [], features: [] };
-        apiUsage[api].screens.push(scrId);
-      }
-    }
-  }
-
-  if (features) {
-    for (const [featId, featData] of Object.entries(features)) {
-      for (const api of (featData.apis || [])) {
-        if (!apiUsage[api]) apiUsage[api] = { screens: [], features: [] };
-        if (!apiUsage[api].features.includes(featId)) {
-          apiUsage[api].features.push(featId);
-        }
-      }
-    }
-  }
-
-  if (Object.keys(apiUsage).length === 0) {
-    return '*No APIs defined*\n';
-  }
-
-  let md = '| API | Used by Screens | Used by Features |\n';
-  md += '|-----|-----------------|------------------|\n';
-
-  const sortedApis = Object.keys(apiUsage).sort();
-  for (const api of sortedApis) {
-    const u = apiUsage[api];
-    const screens = u.screens.length > 0 ? u.screens.sort().join(', ') : '-';
-    const features = u.features.length > 0 ? u.features.sort().join(', ') : '-';
-    md += `| ${api} | ${screens} | ${features} |\n`;
-  }
-
-  return md;
-}
-
-function generatePermissionTable(permissions) {
-  if (!permissions || Object.keys(permissions).length === 0) {
-    return '*No permissions defined*\n';
-  }
-
-  const allRoles = new Set();
-  for (const roles of Object.values(permissions)) {
-    for (const role of roles) {
-      allRoles.add(role);
-    }
-  }
-  const sortedRoles = Array.from(allRoles).sort();
-
-  let md = '| API | ' + sortedRoles.join(' | ') + ' |\n';
-  md += '|-----|' + sortedRoles.map(() => '---').join('|') + '|\n';
-
-  const sortedApis = Object.keys(permissions).sort();
-  for (const api of sortedApis) {
-    const apiRoles = permissions[api] || [];
-    const cells = sortedRoles.map(role => apiRoles.includes(role) ? '✓' : '-');
-    md += `| ${api} | ${cells.join(' | ')} |\n`;
-  }
-
-  return md;
-}
-
-function generateMarkdown(data, jsonPath) {
-  const now = new Date().toISOString().split('T')[0];
-
-  let md = `# Cross Reference Matrix
-
-> ⚠️ **AUTO-GENERATED** from \`${path.basename(jsonPath)}\`. Do not edit directly.
->
-> Generated: ${now}
-> Source: \`${jsonPath}\`
-> Regenerate: \`node .claude/skills/spec-mesh/scripts/matrix-ops.cjs generate\`
-
----
-
-## 1. Screen → Domain
-
-Which Masters and APIs each screen uses.
-
-${generateScreenTable(data.screens)}
-
----
-
-## 2. Feature → Domain
-
-Which Screens, Masters, APIs, and Rules each feature uses.
-
-${generateFeatureTable(data.features)}
-
----
-
-## 3. Reverse Lookup: Master → Usage
-
-Find all screens and features that use a specific Master.
-
-${generateReverseMasterLookup(data)}
-
----
-
-## 4. Reverse Lookup: API → Usage
-
-Find all screens and features that use a specific API.
-
-${generateReverseApiLookup(data)}
-
----
-
-## 5. Permission Matrix
-
-Role-based API permissions.
-
-${generatePermissionTable(data.permissions)}
-
----
-
-## 6. Statistics
-
-| Metric | Count |
-|--------|-------|
-| Total Screens | ${Object.keys(data.screens || {}).length} |
-| Total Features | ${Object.keys(data.features || {}).length} |
-| Total Masters Referenced | ${new Set([...(Object.values(data.screens || {}).flatMap(s => s.masters || [])), ...(Object.values(data.features || {}).flatMap(f => f.masters || []))]).size} |
-| Total APIs Referenced | ${new Set([...(Object.values(data.screens || {}).flatMap(s => s.apis || [])), ...(Object.values(data.features || {}).flatMap(f => f.apis || []))]).size} |
-| Total Rules Referenced | ${new Set(Object.values(data.features || {}).flatMap(f => f.rules || [])).size} |
-
----
-
-*This file is auto-generated. To update, edit \`${path.basename(jsonPath)}\` and run the generator script.*
-`;
-
-  return md;
-}
+// ==================== GENERATE COMMAND ====================
 
 function generate(args) {
   let jsonPath = args.jsonPath || findExistingPath([DEFAULT_MATRIX_PATH, ...LEGACY_MATRIX_PATHS]) || DEFAULT_MATRIX_PATH;
@@ -365,10 +122,10 @@ function generate(args) {
   }
 
   console.log(`Reading: ${jsonPath}`);
-  const data = loadJsonForGenerate(jsonPath);
+  const data = loadMatrixJson(jsonPath);
 
   const mdPath = jsonPath.replace(/\.json$/, '.md');
-  const markdown = generateMarkdown(data, args.jsonPath || DEFAULT_MATRIX_PATH);
+  const markdown = generateMarkdown(data, args.jsonPath || DEFAULT_MATRIX_PATH, 'matrix-ops.cjs generate');
 
   fs.writeFileSync(mdPath, markdown, 'utf8');
   console.log(`Generated: ${mdPath}`);
@@ -380,7 +137,7 @@ function generate(args) {
   console.log(`Permissions: ${Object.keys(data.permissions || {}).length} APIs`);
 }
 
-// ==================== VALIDATE FUNCTIONS ====================
+// ==================== VALIDATE COMMAND ====================
 
 function extractScreenIds(screenContent) {
   const screenIds = [];
@@ -490,8 +247,8 @@ function validate(args) {
 
   const matrix = readJson(path.resolve(process.cwd(), matrixPath));
   if (!matrix) {
-    console.log(`\nMatrix file not found: ${matrixPath}`);
-    console.log('Run AI-based Matrix generation during /spec-mesh design or create manually.');
+    console.error(`\nERROR: Matrix file not found: ${matrixPath}`);
+    console.error('Run AI-based Matrix generation during /spec-mesh design or create manually.');
     process.exit(1);
   }
 
