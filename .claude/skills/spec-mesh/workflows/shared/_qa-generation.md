@@ -212,6 +212,32 @@ _professional-proposals.md を参照
 3. `[提案]` 項目の採否が決定
 4. Critical な曖昧点がない
 
+## [NEEDS CLARIFICATION] 連携
+
+**重要:** QA 完了後、未回答の `[必須]` 項目は Spec に `[NEEDS CLARIFICATION]` として反映される。
+
+```
+QA 分析時の判定:
+
+[必須] 項目が未回答
+    │
+    ├─ AskUserQuestion で確認を試みる
+    │       │
+    │       ├─ 回答あり → Spec に反映
+    │       │
+    │       └─ 回答なし/不明確
+    │               │
+    │               └─ Spec の該当箇所に [NEEDS CLARIFICATION] を記入
+    │                   → CLARIFY GATE でブロックされる
+```
+
+**実装詳細:**
+- `_qa-analysis.md` Step 1.3 で未回答 [必須] を検出
+- Spec 作成時、該当項目に `[NEEDS CLARIFICATION: {質問内容}]` を記入
+- CLARIFY GATE で検出され、clarify ワークフローに誘導される
+
+> **SSOT:** [quality-gates.md#clarify-gate](../../constitution/quality-gates.md#clarify-gate) 参照
+
 ## 次のステップ
 
 QA 完了後 → `_qa-analysis.md` で回答を分析 → Spec 作成へ

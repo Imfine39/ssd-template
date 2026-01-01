@@ -23,10 +23,10 @@ Multi-Review + Lint 後に実行する必須チェック。
 
 | ワークフロー | チェック対象 Spec | ゲート後の遷移先 |
 |-------------|------------------|-----------------|
-| vision.md | Vision Spec | design or clarify |
-| design.md | Screen + Domain Spec | issue or clarify |
-| add.md | Feature Spec | plan or clarify |
+| project-setup.md | Vision + Screen + Domain Spec | Feature Issues or clarify |
+| feature.md | Feature Spec | plan or clarify |
 | fix.md | Fix Spec | plan/implement or clarify |
+| change.md | 変更対象 Spec | plan or 完了 or clarify |
 
 ---
 
@@ -195,19 +195,18 @@ FORBIDDEN:
 ### 2. Clarify 後は Multi-Review からやり直し
 
 ```
-vision.md の場合:
-  clarify 完了 → Step 5 (Multi-Review) へ戻る
+project-setup.md の場合:
+  clarify 完了 → Multi-Review へ戻る
 
-add.md の場合:
-  clarify 完了 → Step 7 (Multi-Review) へ戻る
+feature.md の場合:
+  clarify 完了 → Multi-Review へ戻る
 ```
 
 ### 3. 次ステップへの遷移条件
 
 | Spec Type | BLOCKED 時 | PASSED 時 |
 |-----------|-----------|-----------|
-| Vision | clarify 必須 | design へ（人間承認後） |
-| Domain/Screen | clarify 必須 | issue へ（人間承認後） |
+| Vision + Domain + Screen (project-setup) | clarify 必須 | issue タイプへ誘導（人間承認後） |
 | Feature | clarify 必須 | plan へ（人間承認後） |
 | Fix (Trivial) | clarify 必須 | implement へ（人間承認後） |
 | Fix (Standard) | clarify 必須 | plan へ（人間承認後） |

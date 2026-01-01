@@ -33,7 +33,7 @@ HUMAN_CHECKPOINT は人間の明示的な承認を必要とするゲートです
 
 ## Pattern 1: Spec Approval
 
-**Trigger:** CLARIFY GATE 通過後（add.md, fix.md, vision.md, design.md）
+**Trigger:** CLARIFY GATE 通過後（feature.md, fix.md, project-setup.md）
 
 ### Template
 

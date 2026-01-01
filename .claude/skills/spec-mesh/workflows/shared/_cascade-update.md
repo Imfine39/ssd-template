@@ -16,7 +16,7 @@ CLARIFY GATE 通過後に実行。Feature/Fix Spec で定義された変更を D
 
 | ワークフロー | トリガー | 更新対象 |
 |-------------|---------|---------|
-| add.md | Feature Spec 確定後 | Domain, Screen, Matrix |
+| feature.md | Feature Spec 確定後 | Domain, Screen, Matrix |
 | fix.md | Fix Spec 確定後 | Screen, Matrix |
 | change.md | Spec 変更確定後 | 関連する全 Spec |
 

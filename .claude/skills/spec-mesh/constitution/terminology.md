@@ -50,6 +50,34 @@ All templates and workflows MUST reference these definitions.
 
 ---
 
+## Entry Types
+
+Request types handled by SKILL.md Entry section.
+
+| Type | Trigger | Input Required | Processing |
+|------|---------|----------------|------------|
+| `add` | "Add feature", "I want to create X" | **Required** | Input → Issue → feature.md |
+| `fix` | "Fix bug", "Fix error" | **Required** | Input → Quick judgment → Small: direct / Large: fix.md |
+| `change` | "Change Spec", "Modify M-*" | **Required** | Input → change.md |
+| `issue` | "Implement Issue #N" | **Depends on state** | State check → appropriate workflow |
+| `quick` | "Small change" | Not required | Impact Guard → direct or redirect to add/fix |
+| `setup` | "Start project" | **Required** | → project-setup.md |
+
+---
+
+## QA Categories
+
+Categories used in dynamically generated QA questions.
+
+| Category | Meaning | Behavior |
+|----------|---------|----------|
+| `[必須]` | Required question | Unanswered → `[NEEDS CLARIFICATION]` |
+| `[確認]` | Confirmation | Verify AI assumptions |
+| `[提案]` | Proposal | Record adoption/rejection with reasons |
+| `[選択]` | Selection | Choose from multiple options |
+
+---
+
 ## Specification IDs
 
 ### Spec Type IDs

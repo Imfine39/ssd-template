@@ -37,6 +37,25 @@ const path = require('path');
 const STATE_DIR = path.join(process.cwd(), '.specify', 'state');
 const BRANCH_STATE_PATH = path.join(STATE_DIR, 'branch-state.cjson');
 
+/**
+ * Input validation to prevent shell injection.
+ * Only allow alphanumeric characters, hyphens, and underscores.
+ */
+function validateInput(value, fieldName) {
+  if (!value) return true; // null/undefined is OK (handled separately)
+  const pattern = /^[a-zA-Z0-9_-]+$/;
+  if (!pattern.test(value)) {
+    console.error(`ERROR: Invalid ${fieldName}: "${value}"`);
+    console.error(`  Only alphanumeric characters, hyphens, and underscores are allowed.`);
+    process.exit(1);
+  }
+  return true;
+}
+
+/**
+ * Execute git command safely.
+ * All inputs MUST be validated before calling this function.
+ */
 function run(cmd) {
   return execSync(cmd, { stdio: ['ignore', 'pipe', 'inherit'] }).toString().trim();
 }
@@ -98,6 +117,19 @@ function parseArgs() {
     showHelp();
     process.exit(1);
   }
+
+  // Validate inputs to prevent shell injection
+  validateInput(out.type, 'type');
+  validateInput(out.slug, 'slug');
+  validateInput(out.issue, 'issue');
+
+  // Additional validation: type must be one of known values
+  const validTypes = ['feature', 'fix', 'spec'];
+  if (!validTypes.includes(out.type)) {
+    console.error(`ERROR: Invalid type "${out.type}". Must be one of: ${validTypes.join(', ')}`);
+    process.exit(1);
+  }
+
   return out;
 }
 

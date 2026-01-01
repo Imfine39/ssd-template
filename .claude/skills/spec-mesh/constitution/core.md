@@ -19,6 +19,87 @@ Why:
 
 ---
 
+## Design Philosophy
+
+### User Understanding
+
+> **Core Insight:** Users don't find writing "troublesome" — they have gaps in knowledge.
+
+| Approach | Assumption | Result |
+|----------|------------|--------|
+| Old | Users avoid detailed input | Minimal input forms → AI guesses |
+| New | Users don't know everything | Detailed input structure → QA fills gaps |
+
+**Conclusion:** Provide detailed Pre-Input structures, then complement with QA/AskUserQuestion for discovery.
+
+### Role Separation: Input / QA / AskUserQuestion
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ Pre-Input（User writes in advance）                          │
+├─────────────────────────────────────────────────────────────┤
+│ Purpose: Extract what the user already knows                 │
+│                                                              │
+│ Characteristics:                                             │
+│   ✅ Detailed structure for comprehensive input              │
+│   ✅ Function-based (data, screens, logic)                   │
+│   ✅ Clear required fields                                   │
+│   ❌ No checklists (that's QA's role)                        │
+│   ❌ No selection questions (that's QA's role)               │
+└─────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────┐
+│ QA（AI generates dynamically）                               │
+├─────────────────────────────────────────────────────────────┤
+│ Purpose: Discover what the user doesn't know                 │
+│                                                              │
+│ Characteristics:                                             │
+│   ✅ Identify unfilled/unclear items from Input              │
+│   ✅ Checklist format OK                                     │
+│   ✅ Present AI assumptions for confirmation                 │
+│   ✅ Professional proposals (security, UX, performance)      │
+│                                                              │
+│ Categories:                                                  │
+│   [必須] → Unanswered triggers [NEEDS CLARIFICATION]         │
+│   [確認] → Confirm AI assumptions                            │
+│   [提案] → Record adoption/rejection with reasons            │
+│   [選択] → Select from multiple options                      │
+└─────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────┐
+│ AskUserQuestion（Interactive clarification）                 │
+├─────────────────────────────────────────────────────────────┤
+│ Purpose: Resolve remaining ambiguities immediately           │
+│                                                              │
+│ Use Cases:                                                   │
+│   - Remaining questions after QA                             │
+│   - Critical design decisions                                │
+│   - Efficiency through selection-based answers               │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Spec Hierarchy
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    Overview Specs（What）                    │
+├─────────────────────────────────────────────────────────────┤
+│  Vision Spec      │ Purpose, goals, constraints, scope       │
+│  Screen Spec      │ Screen list, navigation, UI patterns     │
+│  Domain Spec      │ M-*, API-*, RULE-*                        │
+└─────────────────────────────────────────────────────────────┘
+                              ↓ Referenced by
+┌─────────────────────────────────────────────────────────────┐
+│                    Feature Specs（How）                      │
+├─────────────────────────────────────────────────────────────┤
+│  S-{PREFIX}-{NNN} │ Feature requirements, use cases,          │
+│                   │ implementation details                    │
+│                   │ ← References Screen/Domain                │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
 ## Core Principles
 
 ### 1. Type Safety

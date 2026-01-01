@@ -52,10 +52,13 @@ TodoWrite:
     - content: "Step 12: [HUMAN_CHECKPOINT]"
       status: "pending"
       activeForm: "Awaiting approval"
-    - content: "Step 13: Feature Issues 作成"
+    - content: "Step 13: Feature Drafts 生成"
+      status: "pending"
+      activeForm: "Generating Feature Drafts"
+    - content: "Step 14: Feature Issues 作成"
       status: "pending"
       activeForm: "Creating Feature Issues"
-    - content: "Step 14: Input 保存"
+    - content: "Step 15: Input 保存"
       status: "pending"
       activeForm: "Preserving input"
 ```
@@ -245,20 +248,103 @@ Grep tool:
 - [ ] Domain Spec のエンティティ定義が適切か
 - [ ] Feature Hints の優先順位が正しいか
 
-承認後、Feature Issues を作成します。
+承認後、Feature Drafts と Issues を作成します。
 ```
 
-### Step 13: Feature Issues 作成
+### Step 13: Feature Drafts 生成
 
-Vision Spec Section 3 (Feature Hints) から GitHub Issues を作成：
+Vision Spec Section 3 (Feature Hints) から各機能の Draft Spec を生成。
+
+**Draft Spec の内容:**
+
+| セクション | 状態 | 説明 |
+|-----------|------|------|
+| 基本情報 | ✅ 記入済み | 概要、目的、アクター |
+| Domain 参照 | ✅ 記入済み | M-*, API-* への参照（Domain Spec から抽出） |
+| Screen 参照 | ✅ 記入済み | SCR-* への参照（Screen Spec から抽出） |
+| ユースケース詳細 | ⬜ 空欄 | issue タイプで詳細化 |
+| 機能要件詳細 | ⬜ 空欄 | issue タイプで詳細化 |
+| エラーハンドリング | ⬜ 空欄 | issue タイプで詳細化 |
+| 非機能要件 | ⬜ 空欄 | issue タイプで詳細化 |
+
+**生成処理:**
 
 ```bash
-gh issue create --title "[Feature] {機能名}" --body "{説明}" --label "feature"
+# 各機能について Draft を生成
+node .claude/skills/spec-mesh/scripts/scaffold-spec.cjs --kind feature --id "{S-PREFIX-NNN}" --title "{機能名}" --status Draft
 ```
 
-Issue 作成後、ユーザーに一覧を表示。
+**Draft 生成後の構造:**
 
-### Step 14: Input 保存
+```
+.specify/specs/features/
+├── S-FEAT-001/
+│   └── spec.md  (Status: Draft)
+├── S-FEAT-002/
+│   └── spec.md  (Status: Draft)
+└── ...
+```
+
+**Draft Spec のテンプレート補完:**
+
+Draft 生成後、以下の情報を Input と Overview Specs から補完：
+
+1. **基本情報:** Input の機能概要から
+2. **Domain 参照:** Domain Spec の関連 M-*/API-* を参照として記入
+3. **Screen 参照:** Screen Spec の関連 SCR-* を参照として記入
+4. **空欄セクション:** プレースホルダーを配置し、issue ワークフローで詳細化することを明記
+
+```markdown
+## 4. Use Cases
+
+[この機能の詳細なユースケースは issue ワークフローで詳細化されます]
+
+### UC-{ID}-001: {ユースケース名}
+<!-- issue ワークフローで記入 -->
+```
+
+### Step 14: Feature Issues 作成
+
+Vision Spec Section 3 (Feature Hints) から GitHub Issues を作成。
+**重要:** Issue body に Draft Spec のパスを記載する。
+
+```bash
+gh issue create \
+  --title "[Feature] {機能名}" \
+  --body "$(cat <<'EOF'
+## 概要
+{機能の説明}
+
+## Draft Spec
+Draft Spec: .specify/specs/features/{S-PREFIX-NNN}/spec.md
+
+## Status
+- [ ] Draft Spec 詳細化（issue ワークフロー）
+- [ ] Plan 作成
+- [ ] 実装
+- [ ] テスト
+- [ ] PR マージ
+EOF
+)" \
+  --label "feature"
+```
+
+**Issue 作成後の確認:**
+
+```
+=== Feature Issues 作成完了 ===
+
+| Issue # | 機能名 | Draft Spec |
+|---------|--------|------------|
+| #1 | {機能名1} | .specify/specs/features/S-FEAT-001/spec.md |
+| #2 | {機能名2} | .specify/specs/features/S-FEAT-002/spec.md |
+| ... | ... | ... |
+
+各 Issue から開発を開始できます。
+「Issue #N を実装して」と依頼してください。
+```
+
+### Step 15: Input 保存
 
 ```bash
 node .claude/skills/spec-mesh/scripts/preserve-input.cjs project-setup
@@ -283,7 +369,8 @@ node .claude/skills/spec-mesh/scripts/preserve-input.cjs project-setup
 - [ ] Multi-Review を実行したか
 - [ ] CLARIFY GATE をチェックしたか
 - [ ] [HUMAN_CHECKPOINT] で承認を得たか
-- [ ] Feature Issues を作成したか
+- [ ] **Feature Drafts を生成したか（Status: Draft）**
+- [ ] **Feature Issues を作成したか（Draft パスを記載）**
 - [ ] Input を保存したか（リセットは PR マージ後）
 - [ ] **TodoWrite で全ステップを completed にしたか**
 
@@ -293,5 +380,8 @@ node .claude/skills/spec-mesh/scripts/preserve-input.cjs project-setup
 
 | Condition | Workflow | Description |
 |-----------|----------|-------------|
-| Feature 実装開始 | issue | Issue から Feature Spec 作成 |
-| Spec 変更が必要 | change | Vision/Screen/Domain 変更 |
+| Feature 実装開始 | issue タイプ（SKILL.md Entry） | Draft Spec の詳細化 → Plan → 実装 |
+| Spec 変更が必要 | change タイプ（SKILL.md Entry） | Vision/Screen/Domain 変更 |
+
+> **Note:** 「Issue #N を実装して」と依頼すると、SKILL.md の issue タイプ処理が開始されます。
+> Draft Spec がある場合は詳細化、Clarified Spec がある場合は Plan に進みます。

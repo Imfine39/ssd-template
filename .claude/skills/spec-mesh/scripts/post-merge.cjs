@@ -26,6 +26,21 @@ const { execSync } = require('child_process');
 const root = process.cwd();
 const specsRoot = path.join(root, '.specify', 'specs');
 
+/**
+ * Input validation to prevent shell injection.
+ * Only allow alphanumeric characters, hyphens, underscores, and slashes (for branch names).
+ */
+function validateInput(value, fieldName) {
+  if (!value) return true;
+  const pattern = /^[a-zA-Z0-9_/-]+$/;
+  if (!pattern.test(value)) {
+    console.error(`ERROR: Invalid ${fieldName}: "${value}"`);
+    console.error(`  Only alphanumeric characters, hyphens, underscores, and slashes are allowed.`);
+    process.exit(1);
+  }
+  return true;
+}
+
 // Parse arguments
 const args = process.argv.slice(2);
 let featureId = null;
@@ -64,6 +79,10 @@ if (!featureId && !branchName) {
   console.error('Error: Either --feature or --branch is required');
   process.exit(1);
 }
+
+// Validate inputs to prevent shell injection
+validateInput(featureId, 'feature');
+validateInput(branchName, 'branch');
 
 // If branch provided, try to find feature from state
 if (branchName && !featureId) {
@@ -241,9 +260,15 @@ if (fs.existsSync(resetInputScript)) {
     }
 
     if (inputType) {
-      execSync(`node "${resetInputScript}" ${inputType}`, { stdio: 'pipe', cwd: root });
-      updates.push(`Input reset: ${inputType}-input.md`);
-      console.log(`   Reset ${inputType}-input.md`);
+      // Validate inputType is one of known values (extra safety)
+      const validInputTypes = ['add', 'fix', 'vision', 'change', 'project-setup'];
+      if (!validInputTypes.includes(inputType)) {
+        console.warn(`   Warning: Unknown input type: ${inputType}`);
+      } else {
+        execSync(`node "${resetInputScript}" ${inputType}`, { stdio: 'pipe', cwd: root });
+        updates.push(`Input reset: ${inputType}-input.md`);
+        console.log(`   Reset ${inputType}-input.md`);
+      }
     } else {
       console.log(`   Could not determine input type to reset`);
     }
