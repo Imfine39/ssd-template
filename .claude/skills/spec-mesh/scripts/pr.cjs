@@ -102,10 +102,10 @@ function main() {
   }
 
   console.log('Creating PR via gh...');
-  // Use spawnSync to avoid shell escaping issues
+  // Use spawnSync without shell to avoid shell injection
   const result = spawnSync('gh', ['pr', 'create', '--fill', '--title', title, '--body', bodyContent], {
     stdio: 'inherit',
-    shell: true,
+    shell: false,
   });
 
   if (result.status !== 0) {

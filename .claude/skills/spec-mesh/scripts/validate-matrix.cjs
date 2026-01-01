@@ -48,30 +48,26 @@
 const fs = require('fs');
 const path = require('path');
 
+// Use shared utilities from matrix-utils.cjs
+const {
+  DEFAULT_MATRIX_PATH,
+  LEGACY_MATRIX_PATHS,
+  findExistingPath
+} = require('./lib/matrix-utils.cjs');
+
 // Default paths (no project subdirectory - 1 repo = 1 project)
 const DEFAULT_PATHS = {
   screen: '.specify/specs/overview/screen/spec.md',
   domain: '.specify/specs/overview/domain/spec.md',
-  matrix: '.specify/specs/overview/matrix/cross-reference.json',
+  matrix: DEFAULT_MATRIX_PATH,
 };
 
 // Legacy paths for backward compatibility
 const LEGACY_PATHS = {
   screen: ['.specify/specs/screen/spec.md'],
   domain: ['.specify/specs/domain/spec.md', '.specify/specs/overview/spec.md'],
-  matrix: ['.specify/matrix/cross-reference.json'],
+  matrix: LEGACY_MATRIX_PATHS,
 };
-
-// Find existing path from candidates
-function findExistingPath(candidates) {
-  for (const p of candidates) {
-    const resolved = path.isAbsolute(p) ? p : path.resolve(process.cwd(), p);
-    if (fs.existsSync(resolved)) {
-      return p;
-    }
-  }
-  return null;
-}
 
 // Parse command line arguments
 function parseArgs() {

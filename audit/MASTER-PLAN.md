@@ -191,50 +191,58 @@
 
 ---
 
-### [PHASE-4] Critical 問題の修正 [PENDING]
+### [PHASE-4] Critical 問題の修正 [DONE]
+
+**完了日:** 2026-01-01
 
 > **詳細:** [findings-report.md](./findings-report.md) の Critical セクション
 
-#### [STEP-4.1] スクリプトセキュリティ修正 [PENDING]
+#### [STEP-4.1] スクリプトセキュリティ修正 [DONE]
 
-| ID | ファイル | 修正内容 |
-|----|---------|---------|
-| C-SCR-001 | pr.cjs | Shell Injection 修正（shell: false） |
-| C-SCR-002 | spec-lint.cjs | Incremental Mode 重複チェック修正 |
-| C-SCR-003 | scaffold-spec.cjs | Feature Table 重複挿入防止 |
-| C-SCR-006 | state.cjs | Boolean 検証追加 |
+| ID | ファイル | 修正内容 | 結果 |
+|----|---------|---------|------|
+| C-SCR-001 | pr.cjs | Shell Injection 修正（shell: false） | ✅ 修正済み |
+| C-SCR-002 | spec-lint.cjs | Incremental Mode 重複チェック修正 | ✅ 既に対応済み |
+| C-SCR-003 | scaffold-spec.cjs | Feature Table 重複挿入防止 | ✅ 既に対応済み |
+| C-SCR-006 | state.cjs | Boolean 検証追加 | ✅ 修正済み |
 
-#### [STEP-4.2] 参照パス修正 [PENDING]
+#### [STEP-4.2] 参照パス修正 [DONE]
 
-| ID | ファイル | 修正内容 |
-|----|---------|---------|
-| C-REF-002 | _quality-flow.md | パス修正 |
-| C-REF-004 | 複数ファイル | 相対パス問題修正 |
+旧サブスキル構造への参照がないことを確認済み
 
 ---
 
-### [PHASE-5] Major 問題の修正 [PENDING]
+### [PHASE-5] Major 問題の修正 [DONE]
 
-#### [STEP-5.1] コード重複解消 [PENDING]
+**完了日:** 2026-01-01
 
-- Matrix 関数を lib/matrix-utils.cjs に集約
-- 対象: matrix-ops.cjs, validate-matrix.cjs, generate-matrix-view.cjs
+#### [STEP-5.1] コード重複解消 [DONE]
 
-#### [STEP-5.2] Status 定義統一 [PENDING]
+- generate-matrix-view.cjs を matrix-utils.cjs 使用に変更（約200行削減）
+- validate-matrix.cjs に matrix-utils.cjs からの共有関数をインポート
+
+#### [STEP-5.2] Status 定義統一 [DONE]
 
 - terminology.md に全 Status 定義を集約
+- DEPRECATED, SUPERSEDED を追加
+- IMPLEMENTING の使用禁止を明記
+- post-merge.cjs の Status 値を terminology.md に準拠するよう修正
 
-#### [STEP-5.3] Todo Template 追加 [PENDING]
+#### [STEP-5.3] Todo Template 分析 [DONE]
 
-- 9 ワークフローに Todo Template を追加
+- 22 ワークフロー中 13 に Todo Template が既に存在
+- implement.md, tasks.md は独自の Todo Management セクションを持つ
+- 残りの 7 ワークフローは軽量（4-6 ステップ）で Todo Template は過剰と判断
 
 ---
 
-### [PHASE-6] ドキュメント整備 [PENDING]
+### [PHASE-6] ドキュメント整備 [DONE]
 
-#### [STEP-6.1] ユーザージャーニーの追加 [PENDING]
+**完了日:** 2026-01-01
 
-**追加先:** docs/Workflows-Reference.md
+#### [STEP-6.1] ユーザージャーニーの追加 [DONE]
+
+**追加先:** docs/Workflows-Reference.md（Before vs After セクション追加済み）
 
 ```markdown
 ## ユーザージャーニー: Before vs After
@@ -338,10 +346,10 @@ node .claude/skills/spec-mesh/scripts/spec-lint.cjs
 | PHASE-1 | [DONE] | 2026-01-01 |
 | PHASE-2 | [DONE] | 2026-01-01 |
 | PHASE-3 | [DONE] | 2026-01-01 |
-| PHASE-4 | [PENDING] | - |
-| PHASE-5 | [PENDING] | - |
-| PHASE-6 | [PENDING] | - |
-| PHASE-7 | [PENDING] | - |
+| PHASE-4 | [DONE] | 2026-01-01 |
+| PHASE-5 | [DONE] | 2026-01-01 |
+| PHASE-6 | [DONE] | 2026-01-01 |
+| PHASE-7 | [IN-PROGRESS] | - |
 
 ---
 

@@ -149,19 +149,20 @@ if (fs.existsSync(domainSpecPath)) {
   console.log(`\n3. Updating Feature Index status...`);
   let domainContent = fs.readFileSync(domainSpecPath, 'utf8');
 
-  // Pattern: | S-AUTH-001 | Title | Path | IMPLEMENTING | ... → COMPLETED
+  // Pattern: | S-AUTH-001 | Title | Path | In Review/Approved | ... → Implemented
+  // Status values: Draft, In Review, Clarified, Approved, Implemented (see terminology.md)
   const pattern = new RegExp(
-    `(\\|\\s*${featureId}\\s*\\|[^|]*\\|[^|]*\\|\\s*)(IMPLEMENTING|IN REVIEW|APPROVED)(\\s*\\|)`,
+    `(\\|\\s*${featureId}\\s*\\|[^|]*\\|[^|]*\\|\\s*)(Draft|In Review|Clarified|Approved)(\\s*\\|)`,
     'gi'
   );
 
   if (pattern.test(domainContent)) {
-    domainContent = domainContent.replace(pattern, '$1COMPLETED$3');
+    domainContent = domainContent.replace(pattern, '$1Implemented$3');
     fs.writeFileSync(domainSpecPath, domainContent, 'utf8');
-    updates.push(`Feature ${featureId}: Status → COMPLETED`);
-    console.log(`   Updated ${featureId} to COMPLETED`);
+    updates.push(`Feature ${featureId}: Status → Implemented`);
+    console.log(`   Updated ${featureId} to Implemented`);
   } else {
-    console.log(`   Feature ${featureId} not found in index or already COMPLETED`);
+    console.log(`   Feature ${featureId} not found in index or already Implemented`);
   }
 } else {
   console.log(`\n3. Feature Index update: Skipped (Domain Spec not found)`);
@@ -172,16 +173,17 @@ if (featureSpecPath) {
   console.log(`\n4. Updating Feature Spec status...`);
   let featureContent = fs.readFileSync(featureSpecPath, 'utf8');
 
-  // Pattern: Status: IMPLEMENTING → COMPLETED
-  const pattern = /^(Status:\s*)(IMPLEMENTING|IN REVIEW|APPROVED)/mi;
+  // Pattern: Status: Draft/In Review/Clarified/Approved → Implemented
+  // Status values from terminology.md (uses Mixed Case in spec headers)
+  const pattern = /^(Status:\s*)(Draft|In Review|Clarified|Approved)/mi;
 
   if (pattern.test(featureContent)) {
-    featureContent = featureContent.replace(pattern, '$1COMPLETED');
+    featureContent = featureContent.replace(pattern, '$1Implemented');
     fs.writeFileSync(featureSpecPath, featureContent, 'utf8');
-    updates.push(`Feature Spec ${featureId}: Status → COMPLETED`);
-    console.log(`   Updated Feature Spec status to COMPLETED`);
+    updates.push(`Feature Spec ${featureId}: Status → Implemented`);
+    console.log(`   Updated Feature Spec status to Implemented`);
   } else {
-    console.log(`   Feature Spec already COMPLETED or status not found`);
+    console.log(`   Feature Spec already Implemented or status not found`);
   }
 }
 

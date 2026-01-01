@@ -125,19 +125,29 @@ Design ワークフローで正式な Feature Issue として作成される。
 
 Status values for Vision, Domain, Screen, Feature, and Fix specifications.
 
-| Status | Description |
-|--------|-------------|
-| `None` | Spec does not exist yet |
-| `Scaffold` | Spec file created from template, content not filled |
-| `Draft` | Initial creation, not reviewed |
-| `In Review` | Under Multi-Review or stakeholder review |
-| `Clarified` | All [NEEDS CLARIFICATION] markers resolved |
-| `Approved` | Human approved, ready for implementation |
-| `Implemented` | Code complete |
+| Status | Uppercase Form | Description |
+|--------|---------------|-------------|
+| `None` | - | Spec does not exist yet |
+| `Scaffold` | - | Spec file created from template, content not filled |
+| `Draft` | `DRAFT` | Initial creation, not reviewed |
+| `In Review` | `IN REVIEW` | Under Multi-Review or stakeholder review |
+| `Clarified` | `CLARIFIED` | All [NEEDS CLARIFICATION] markers resolved |
+| `Approved` | `APPROVED` | Human approved, ready for implementation |
+| `Implemented` | `IMPLEMENTED` | Code complete |
+| `Deprecated` | `DEPRECATED` | No longer active, replaced by newer version |
+| `Superseded` | `SUPERSEDED` | Replaced by another spec (reference the new spec) |
 
 **Lifecycle:** `None` → `Scaffold` → `Draft` → `In Review` → `Clarified` → `Approved` → `Implemented`
 
-**Note:** state.cjs uses lowercase with underscores (`none`, `scaffold`, `draft`, `in_review`, `clarified`, `approved`, `implemented`)
+**Alternative endings:** `Deprecated` or `Superseded`
+
+**Prohibited values:**
+- `IMPLEMENTING` - 使用禁止。進行中は `In Review` または `Approved` を使用
+
+**Note:**
+- Spec file headers use Mixed Case: `Status: Draft`
+- spec-lint.cjs validates uppercase forms: `DRAFT`, `IN REVIEW`, etc.
+- state.cjs uses lowercase with underscores: `draft`, `in_review`, etc.
 
 ---
 

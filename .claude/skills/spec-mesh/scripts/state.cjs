@@ -274,10 +274,18 @@ function cmdRepo(args) {
       modified = true;
       i++;
     } else if (arg === '--set-vision-clarify') {
+      if (val !== 'true' && val !== 'false') {
+        console.error(`Invalid value for --set-vision-clarify: ${val}. Must be 'true' or 'false'.`);
+        process.exit(1);
+      }
       repoState.specs.vision.clarifyComplete = val === 'true';
       modified = true;
       i++;
     } else if (arg === '--set-domain-clarify') {
+      if (val !== 'true' && val !== 'false') {
+        console.error(`Invalid value for --set-domain-clarify: ${val}. Must be 'true' or 'false'.`);
+        process.exit(1);
+      }
       repoState.specs.domain.clarifyComplete = val === 'true';
       modified = true;
       i++;
