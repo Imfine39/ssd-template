@@ -4,7 +4,7 @@
 - `CLAUDE.md`
 - `.claude/skills/spec-mesh/templates/*`
 - `.claude/skills/spec-mesh/workflows/*`
-- 付随確認: `.claude/skills/spec-mesh/scripts/post-merge.cjs`, `.claude/skills/spec-mesh/constitution/`
+- 付随確認: `.claude/skills/spec-mesh/scripts/post-merge.cjs`, `.claude/skills/spec-mesh/constitution.md`
 
 ## 重要な問題（優先度高）
 1. Design workflow のセクション指定がテンプレートと不一致
@@ -39,7 +39,7 @@
 
 7. post-merge.cjs のステータス値がConstitution/テンプレと不一致
    - 影響: `COMPLETED`/`IMPLEMENTING` が正規値と混在し、lint/レビュー判断が曖昧化
-   - 参照: `.claude/skills/spec-mesh/scripts/post-merge.cjs:147`, `.claude/skills/spec-mesh/templates/domain-spec.md:261`, `.claude/skills/spec-mesh/templates/feature-spec.md:29`, `.claude/skills/spec-mesh/constitution/terminology.md`
+   - 参照: `.claude/skills/spec-mesh/scripts/post-merge.cjs:147`, `.claude/skills/spec-mesh/templates/domain-spec.md:261`, `.claude/skills/spec-mesh/templates/feature-spec.md:29`, `.claude/skills/spec-mesh/constitution.md:68`
    - 対応案: `Implemented`へ統一、またはConstitution/テンプレ側に語彙を追加
 
 8. Quick Mode 設定変更がCLAUDE.md追記前提だが、同ファイルは自動更新領域

@@ -8,7 +8,7 @@
 - 変更後にこのファイルを更新して履歴を残す
 
 ## 方針（暫定）
-- ステータス語彙は constitution/terminology.md の定義に合わせる
+- ステータス語彙は constitution.md の定義に合わせる
 - Test Scenario は UC/FR を基準にする（AC/US IDは新設しない）
 - Clarify は全 Spec で Clarifications に記録、Feedback は Vision/Domain/Screen=Implementation Notes、Feature/Fix=Clarifications
 

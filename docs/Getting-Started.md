@@ -165,9 +165,7 @@ your-project/
 │   ├── skills/
 │   │   └── spec-mesh/         # SSD フレームワーク
 │   │       ├── SKILL.md       # スキル定義
-│   │       ├── constitution/  # Engineering Constitution
-│   │       │   ├── core.md    # 最上位ルール
-│   │       │   └── quality-gates.md # 品質ゲート定義
+│   │       ├── constitution.md # 最上位ルール
 │   │       ├── workflows/     # ワークフロー定義
 │   │       ├── templates/     # Spec テンプレート
 │   │       ├── guides/        # ガイド
