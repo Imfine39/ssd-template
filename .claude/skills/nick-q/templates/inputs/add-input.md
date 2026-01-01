@@ -89,11 +89,11 @@ AI が内容を解釈し、編集可能な構造化データとして Screen Spe
 
 | ファイル | 説明 | 対応画面 |
 |---------|------|---------|
-| `.specify/input/wireframes/xxx.png` | [このワイヤーフレームの説明] | [画面名] |
+| `.specify/assets/wireframes/xxx.png` | [このワイヤーフレームの説明] | [画面名] |
 | | | |
 
 **注意:**
-- ファイルは `.specify/input/wireframes/` に配置してください
+- ファイルは `.specify/assets/wireframes/` に配置してください
 - AI が構造化するため、ピクセルパーフェクトである必要はありません
 - 後から QA/Change で調整しても、元ファイルの再作成は不要です
 

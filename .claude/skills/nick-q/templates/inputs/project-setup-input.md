@@ -138,11 +138,11 @@ AI が構造化して Screen Spec に統合します。
 
 | ファイル | 説明 | 対応画面 |
 |---------|------|---------|
-| `.specify/input/wireframes/xxx.png` | [説明] | 全画面共通 / SCR-001 等 |
+| `.specify/assets/wireframes/xxx.png` | [説明] | 全画面共通 / SCR-001 等 |
 | | | |
 
 **注意:**
-- ファイルは `.specify/input/wireframes/` に配置してください
+- ファイルは `.specify/assets/wireframes/` に配置してください
 - AI が構造化するため、ピクセルパーフェクトである必要はありません
 - 後から QA/Change で調整しても、元ファイルの再作成は不要です
 
