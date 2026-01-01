@@ -127,6 +127,56 @@ change.md 完了後、Impact Analysis の結果に基づいて分岐する。
 - 誤字修正、説明文の更新
 - 未使用の M-* 定義の削除
 
+### 2.1.3 change タイプの品質フロー
+
+change は「何を変えるか」が明確なので、QA は省略するが品質担保は実施する。
+
+| 項目 | 内容 |
+|------|------|
+| **QA** | 省略（変更内容は Input で明示済み） |
+| **AskUserQuestion** | 使用（影響範囲の確認） |
+| **Multi-Review** | 実施（変更の整合性確認） |
+| **CLARIFY GATE** | 実施 |
+
+### 2.1.4 Quick 判定 / Impact Guard
+
+**目的:** quick タイプと fix タイプの規模判定を統一する仕組み
+
+**判定基準:**
+
+| 基準 | 小規模（直接実装） | 大規模（Spec 経由） |
+|------|-------------------|-------------------|
+| 影響ファイル数 | 1-3 ファイル | 4+ ファイル |
+| Spec 変更 | なし | あり |
+| テスト影響 | 既存テストで OK | 新規テスト必要 |
+| API 変更 | なし | あり |
+| DB スキーマ変更 | なし | あり |
+
+**判定フロー:**
+
+```
+依頼内容
+    ↓
+Impact Guard 判定（上記基準で評価）
+    │
+    ├─ 小規模（すべて「小規模」列に該当）
+    │       │
+    │       └── 直接実装（Plan 不要）
+    │           → implement.md → PR
+    │
+    └─ 大規模（1つでも「大規模」列に該当）
+            │
+            ├─ 機能追加性質 → add タイプへ誘導 → feature.md
+            │
+            └─ バグ修正性質 → fix.md
+```
+
+**`_impact-guard.md` の役割:**
+
+- quick タイプ: 直接実装可否を判定
+- fix タイプ: Quick 判定（小: 直接実装 / 大: fix.md）
+- 判定基準の SSOT
+
 ### 2.2 ワークフロー一覧
 
 ```
@@ -611,19 +661,73 @@ Multi-Review → CLARIFY GATE → [HUMAN_CHECKPOINT]
 
 ## 2. Entry（開発開始）
 
+すべての開発依頼はこのセクションで処理される。
+
 ### 2.1 依頼タイプの判定
+
+ユーザーの発言からタイプを判定：
+
+| キーワード | タイプ |
+|-----------|--------|
+| 「機能を追加」「〇〇を作りたい」「新機能」 | add |
+| 「バグ」「エラー」「修正」「直して」 | fix |
+| 「Spec を変更」「M-* を修正」「定義を変更」 | change |
+| 「Issue #N」「Issue から」 | issue |
+| 「小さな変更」「ちょっと」「Quick」 | quick |
+| 「プロジェクトを始める」「新規プロジェクト」 | setup |
+
+**判定できない場合:** AskUserQuestion で確認
+
 ### 2.2 Input 確認
+
+| タイプ | Input ファイル | 必須？ |
+|--------|---------------|--------|
+| add | `.specify/input/add-input.md` | 必須 |
+| fix | `.specify/input/fix-input.md` | 必須 |
+| change | `.specify/input/change-input.md` | 必須 |
+| issue | - | 状態依存（3章参照） |
+| quick | - | 不要 |
+| setup | `.specify/input/project-setup-input.md` | 必須 |
+
+**Input 必須タイプで未記入の場合:**
+1. 該当 Input ファイルのパスをユーザーに提示
+2. 「記入後に再度依頼してください」と案内
+3. ワークフロー終了
+
 ### 2.3 共通前処理
+
+1. **状態確認:**
+   ```bash
+   node .claude/skills/spec-mesh/scripts/state.cjs query --all
+   ```
+
+2. **前提条件チェック:**
+   - setup 以外: Vision Spec が存在するか
+   - add/fix: Domain Spec が存在するか（警告のみ）
+
+3. **ブランチ状態確認:**
+   - 既存の作業中ブランチがあれば警告
+
 ### 2.4 タイプ別処理
+
+| タイプ | 処理 |
+|--------|------|
+| **add** | Input 読み込み → Issue 作成 → `feature.md` へ |
+| **fix** | Input 読み込み → Impact Guard 判定 → 小: `implement.md` / 大: `fix.md` へ |
+| **change** | Input 読み込み → `change.md` へ |
+| **issue** | 状態判定（3章参照） → 適切なワークフローへ |
+| **quick** | Impact Guard 判定 → 小: `implement.md` / 大: add/fix へ誘導 |
+| **setup** | Input 読み込み → `project-setup.md` へ |
 ```
 
 #### STEP-9.2: 新規ワークフロー作成
 
 | ファイル | 作業 |
 |---------|------|
-| workflows/feature.md | 新規作成（Feature Spec 作成フロー） |
+| workflows/feature.md | 新規作成（Feature Spec 作成フロー）※ add.md の Core 部分を移行 |
 | workflows/fix.md | 改修（Entry 部分を削除、Core 部分を残す） |
 | workflows/change.md | 改修（Input 必須化、Entry 部分を削除） |
+| workflows/shared/_impact-guard.md | 新規作成（Quick 判定 / Impact Guard の SSOT）|
 
 #### STEP-9.3: ワークフロー削除
 
@@ -766,6 +870,8 @@ Multi-Review → CLARIFY GATE → [HUMAN_CHECKPOINT]
 
 #### STEP-13.1: 参照整合性確認
 
+**1. 削除ファイルへの参照確認:**
+
 ```bash
 # 削除ファイルへの参照確認
 grep -r "add\.md\|issue\.md\|quick\.md" .claude/skills/spec-mesh/
@@ -775,6 +881,31 @@ grep -r "_vision-interview" .claude/skills/spec-mesh/
 # Lint 実行
 node .claude/skills/spec-mesh/scripts/spec-lint.cjs
 ```
+
+**2. 参照更新が必要なファイル一覧:**
+
+PHASE-9 で削除したワークフローへの参照が残っているファイル：
+
+| ファイル | 更新内容 |
+|---------|---------|
+| `guides/workflow-map.md` | ワークフロー一覧を新構造に更新 |
+| `guides/decision-tree.md` | 判定ロジックを Entry ベースに更新 |
+| `guides/human-checkpoint-patterns.md` | 参照ワークフロー名を更新 |
+| `constitution.md` | state.cjs 使用例のワークフロー名を更新 |
+| `workflows/shared/_cascade-update.md` | add.md → feature.md |
+| `workflows/shared/_quality-flow.md` | add.md → feature.md |
+| `workflows/shared/_deep-interview.md` | add.md → feature.md, _vision-interview 参照削除 |
+| `workflows/shared/_finalize.md` | add.md → feature.md, issue.md 参照削除 |
+| `workflows/shared/impact-analysis.md` | add.md → feature.md, design.md → project-setup.md, quick.md → SKILL.md Entry |
+
+**3. 更新方針:**
+
+- `add.md` → `feature.md` に置換
+- `vision.md` → `project-setup.md` に置換
+- `design.md` → `project-setup.md` に置換
+- `issue.md` → SKILL.md Entry セクション参照に変更
+- `quick.md` → SKILL.md Entry セクション + `_impact-guard.md` 参照に変更
+- `_vision-interview.md` → `_qa-generation.md` または `_deep-interview.md` に置換
 
 #### STEP-13.2: ワークフロー動作確認
 
@@ -818,7 +949,7 @@ node .claude/skills/spec-mesh/scripts/spec-lint.cjs
 |----|------|------|-----------|
 | M-QA-001 | QA→Spec マッピング不完全 | 未修正 | PHASE-10 |
 | M-INPUT-001 | Input テンプレートが「最小限」志向 | 未修正 | PHASE-10 |
-| M-WF-001 | ワークフロー構造の重複 | 未修正 | PHASE-9 |
+| M-WF-001 | ワークフロー構造の重複 | ✅ 修正済み | PHASE-9 |
 
 ### 7.3 Minor（低優先・参考）
 
@@ -834,12 +965,20 @@ node .claude/skills/spec-mesh/scripts/spec-lint.cjs
 | Phase | ステータス | 完了日 |
 |-------|----------|--------|
 | PHASE-0〜7 | [DONE] | 2026-01-01 |
-| PHASE-8 | [PENDING] | - |
-| PHASE-9 | [PENDING] | - |
-| PHASE-10 | [PENDING] | - |
-| PHASE-11 | [PENDING] | - |
-| PHASE-12 | [PENDING] | - |
-| PHASE-13 | [PENDING] | - |
+| PHASE-8 | [DONE] | 2026-01-01 |
+| PHASE-9 | [DONE] | 2026-01-01 |
+| PHASE-10 | [DONE] | 2026-01-01 |
+| PHASE-11 | [DONE] | 2026-01-01 |
+| PHASE-12 | [DONE] | 2026-01-01 |
+| PHASE-13 | [DONE] | 2026-01-01 |
+
+### PHASE-9 完了時の残作業
+
+以下の作業は PHASE-13 で対応する：
+
+1. **guides/ 以下のファイルの参照更新** - STEP-13.1 で対応
+2. **constitution.md の参照更新** - STEP-13.1 で対応
+3. **workflows/shared/*.md の参照更新** - STEP-13.1 で対応
 
 ---
 
@@ -902,15 +1041,18 @@ compact 発生後、以下を確認：
 
 ### 11.2 発見された問題・改善点 ⚠️
 
-| # | 問題 | 重要度 | 対応 |
-|---|------|--------|------|
-| 1 | **tasks.md / implement.md も Feature Spec 前提の可能性** | 中 | STEP-9.5 に追加確認を追記 |
-| 2 | **fix タイプの Quick 判定後の分岐が不正確** | 高 | 2.1 の表を修正 |
-| 3 | **fix の QA 省略が明記されていない** | 高 | 2.1 または別セクションに追記 |
-| 4 | **change の後のフロー（Plan 要否）が不明確** | 中 | change.md の設計を詳細化 |
-| 5 | **STEP-10.2 と STEP-12.2 の重複** | 低 | 整理（STEP-10.2 に統合） |
-| 6 | **project-setup の QA 形式が未定義** | 中 | PHASE-11 で対応 |
-| 7 | **Multi-Review の対象が不明確** | 高 | feature/fix/change それぞれの品質フローを明記 |
+| # | 問題 | 重要度 | 対応 | 状態 |
+|---|------|--------|------|------|
+| 1 | **tasks.md / implement.md も Feature Spec 前提の可能性** | 中 | STEP-9.5 に追加確認を追記 | 未対応 |
+| 2 | **fix タイプの Quick 判定後の分岐が不正確** | 高 | 2.1 の表を修正 | ✅ 2.1.4 で対応 |
+| 3 | **fix の QA 省略が明記されていない** | 高 | 2.1 または別セクションに追記 | ✅ 2.1.1 で対応済み |
+| 4 | **change の後のフロー（Plan 要否）が不明確** | 中 | change.md の設計を詳細化 | ✅ 2.1.2 で対応済み |
+| 5 | **STEP-10.2 と STEP-12.2 の重複** | 低 | 整理（STEP-10.2 に統合） | ✅ 対応済み |
+| 6 | **project-setup の QA 形式が未定義** | 中 | PHASE-11 で対応 | 未対応 |
+| 7 | **Multi-Review の対象が不明確** | 高 | feature/fix/change それぞれの品質フローを明記 | ✅ 2.1.1, 2.1.3 で対応 |
+| 8 | **`_impact-guard.md` が未定義** | 高 | 2.1.4 + STEP-9.2 に追加 | ✅ 対応済み |
+| 9 | **SKILL.md Entry セクションの詳細が未定義** | 高 | STEP-9.1 を詳細化 | ✅ 対応済み |
+| 10 | **change タイプの品質フロー未定義** | 高 | 2.1.3 を追加 | ✅ 対応済み |
 
 ---
 

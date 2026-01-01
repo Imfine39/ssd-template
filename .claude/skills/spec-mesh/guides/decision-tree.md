@@ -11,6 +11,7 @@
     │
     ▼
 ┌────────────────────────────────┐
+│ SKILL.md Entry                 │
 │ Step 1: プロジェクト状態確認   │
 └────────────────┬───────────────┘
                  │
@@ -19,23 +20,13 @@
     ▼                         ▼
 Vision Spec 存在？        Issue # 指定あり？
     │                         │
-    ├─ NO → vision.md         ├─ YES → issue.md
+    ├─ NO → setup タイプ      ├─ YES → issue タイプ
+    │       → project-setup   │        → 状態判定へ
     │                         │
     ▼ YES                     ▼ NO
     │                         │
-Vision が approved？    依頼内容を分類
-    │                   （Step 2 へ）
-    ├─ NO → vision.md（継続）
-    │
-    ▼ YES
-    │
-Domain/Screen Spec 存在？
-    │
-    ├─ NO → design.md
-    │
-    ▼ YES
-    │
-依頼内容を分類（Step 2 へ）
+依頼内容を分類          依頼内容を分類
+（Step 2 へ）            （Step 2 へ）
 ```
 
 ---
@@ -44,17 +35,17 @@ Domain/Screen Spec 存在？
 
 ### 2.1 トリガーワード優先順位
 
-| 優先度 | トリガーワード | ワークフロー | 備考 |
-|--------|---------------|-------------|------|
-| 1 | Issue #N, #123 | issue.md | GitHub Issue 指定 |
-| 2 | バグ, エラー, 修正, 直して | fix.md | 不具合対応 |
-| 3 | 機能, 追加, 〇〇したい, 新規 | add.md | 新機能実装 |
-| 4 | typo, 軽微, ちょっと | quick.md | 軽微な変更（Impact Guard） |
-| 5 | 画面設計, Design, デザイン | design.md | 画面仕様作成 |
-| 6 | Vision, プロジェクト開始, 新規プロジェクト | vision.md | ビジョン定義 |
-| 7 | Plan, 計画, 実装計画 | plan.md | 実装計画作成 |
-| 8 | レビュー, 確認, チェック | review.md | Spec レビュー |
-| 9 | PR, プルリクエスト | pr.md | PR 作成 |
+| 優先度 | トリガーワード | タイプ | 遷移先 | 備考 |
+|--------|---------------|-------|--------|------|
+| 1 | Issue #N, #123 | issue | 状態判定 | GitHub Issue 指定 |
+| 2 | バグ, エラー, 修正, 直して | fix | fix.md | 不具合対応 |
+| 3 | 機能, 追加, 〇〇したい, 新規 | add | feature.md | 新機能実装 |
+| 4 | Spec を変更, M-* を修正 | change | change.md | Spec 変更 |
+| 5 | typo, 軽微, ちょっと | quick | Impact Guard | 軽微な変更 |
+| 6 | プロジェクト開始, 新規プロジェクト | setup | project-setup.md | 新規プロジェクト |
+| 7 | Plan, 計画, 実装計画 | - | plan.md | 実装計画作成 |
+| 8 | レビュー, 確認, チェック | - | review.md | Spec レビュー |
+| 9 | PR, プルリクエスト | - | pr.md | PR 作成 |
 
 ### 2.2 分類フローチャート
 
@@ -62,19 +53,19 @@ Domain/Screen Spec 存在？
 依頼内容を分析
     │
     ├─ "Issue #" または "#数字" を含む？
-    │   └─ YES → issue.md
+    │   └─ YES → issue タイプ → 状態判定
     │
     ├─ "バグ" "エラー" "動かない" "壊れた" を含む？
-    │   └─ YES → fix.md
+    │   └─ YES → fix タイプ → fix.md
     │
     ├─ "機能" "追加" "したい" "新規" "実装" を含む？
-    │   └─ YES → add.md
+    │   └─ YES → add タイプ → feature.md
+    │
+    ├─ "Spec を変更" "M-* を修正" "定義を変更" を含む？
+    │   └─ YES → change タイプ → change.md
     │
     ├─ "typo" "軽微" "ちょっと" "簡単な" を含む？
-    │   └─ YES → quick.md（Impact Guard で判定）
-    │
-    ├─ "画面" "デザイン" "UI" "UX" を含む？
-    │   └─ YES → design.md（Domain 存在時は add.md へ誘導）
+    │   └─ YES → quick タイプ → Impact Guard (_impact-guard.md)
     │
     ├─ "plan" "計画" "どう実装" を含む？
     │   └─ YES → plan.md（Spec 存在時）
@@ -121,27 +112,27 @@ Domain/Screen Spec 存在？
 
 ## 4. エスカレーションパス
 
-### 4.1 quick.md BLOCK 時
+### 4.1 quick タイプ BLOCK 時
 
 ```
-Quick Mode 判定
+Quick Mode 判定（_impact-guard.md）
     │
-    ├─ Impact Guard PASS → 直接実装
+    ├─ Impact Guard PASS → 直接実装（implement.md）
     │
     └─ Impact Guard BLOCK
         │
         ▼
       理由を分析
         │
-        ├─ 影響範囲が広い → add.md へエスカレーション
-        ├─ バグ修正要素あり → fix.md へエスカレーション
-        └─ Spec 変更必要 → change.md へエスカレーション
+        ├─ 影響範囲が広い → add タイプへ → feature.md
+        ├─ バグ修正要素あり → fix タイプへ → fix.md
+        └─ Spec 変更必要 → change タイプへ → change.md
 ```
 
-### 4.2 add.md で Design 未実行の場合
+### 4.2 add タイプで Overview Spec 未実行の場合
 
 ```
-add.md 開始
+add タイプ開始（feature.md）
     │
     ▼
 Domain/Screen Spec 存在確認
@@ -153,7 +144,7 @@ Domain/Screen Spec 存在確認
         ▼
       ユーザーに通知
         │
-        ├─ "Design を先に実行しますか？" → YES → design.md
+        ├─ "project-setup を先に実行しますか？" → YES → project-setup.md
         │
         └─ NO → Spec なしで進行（非推奨、警告表示）
 ```
@@ -223,28 +214,37 @@ implement.md 実行中
 
 ---
 
-## 5. issue.md 種別判定
+## 5. issue タイプ 状態判定
 
-### 5.1 判定ロジック
+### 5.1 判定ロジック（SKILL.md Entry）
 
 ```
 Issue 情報取得 (gh issue view #N)
     │
     ▼
-ラベルをチェック
+状態を確認
     │
-    ├─ [Feature] [enhancement] [新機能] → add.md
-    ├─ [Bug] [fix] [バグ] → fix.md
+    ├─ Draft Spec あり（Status: Draft）
+    │   └─ Draft 読み込み → 詳細 QA → feature.md（Draft 詳細化モード）
     │
-    └─ ラベルなし
+    ├─ Clarified Spec あり
+    │   └─ plan.md へ（Spec 作成完了済み）
+    │
+    ├─ In Review Spec あり
+    │   └─ Multi-Review から再開
+    │
+    ├─ 保存済み Input あり
+    │   └─ Input 読み込み → ラベルに応じて feature.md or fix.md
+    │
+    └─ Spec なし + Input なし
         │
         ▼
-      タイトル/本文を分析
+      ラベルをチェック
         │
-        ├─ "バグ" "エラー" "修正" → fix.md
-        ├─ "機能" "追加" "実装" → add.md
+        ├─ [Feature] [enhancement] → 「add-input.md に記入後に再度依頼」
+        ├─ [Bug] [fix] → 「fix-input.md に記入後に再度依頼」
         │
-        └─ 判定不能
+        └─ ラベルなし
             │
             ▼
           AskUserQuestion:
@@ -276,8 +276,8 @@ Issue 情報取得 (gh issue view #N)
 AskUserQuestion:
   "複数の作業が含まれています。どちらを先に進めますか？"
     │
-    ├─ バグ修正を優先 → fix.md
-    └─ 機能追加を優先 → add.md
+    ├─ バグ修正を優先 → fix タイプ → fix.md
+    └─ 機能追加を優先 → add タイプ → feature.md
 
 （完了後に次のタスクを促す）
 ```
@@ -300,15 +300,15 @@ AskUserQuestion:
 
 ## 7. ショートカット
 
-| ユーザー発言 | 即座に選択 |
-|-------------|-----------|
-| "/vision" または "ビジョンを作成" | vision.md |
-| "/add" または "機能を追加" | add.md |
-| "/fix" または "バグを修正" | fix.md |
-| "/quick" または "軽微な変更" | quick.md |
-| "/design" または "画面設計" | design.md |
-| "/plan" または "計画を立てて" | plan.md |
-| "/pr" または "PRを作成" | pr.md |
+| ユーザー発言 | タイプ | 遷移先 |
+|-------------|-------|--------|
+| "/setup" または "プロジェクトを始める" | setup | project-setup.md |
+| "/add" または "機能を追加" | add | feature.md |
+| "/fix" または "バグを修正" | fix | fix.md |
+| "/change" または "Spec を変更" | change | change.md |
+| "/quick" または "軽微な変更" | quick | _impact-guard.md |
+| "/plan" または "計画を立てて" | - | plan.md |
+| "/pr" または "PRを作成" | - | pr.md |
 
 ---
 

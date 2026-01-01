@@ -62,6 +62,37 @@ const { execSync } = require('child_process');
 
 const VALID_KINDS = ['vision', 'domain', 'screen', 'feature', 'fix', 'overview', 'test-scenario'];
 
+/**
+ * Input validation to prevent shell injection.
+ * Allow alphanumeric characters, hyphens, underscores, and spaces (for titles).
+ */
+function validateId(value, fieldName) {
+  if (!value) return true;
+  const pattern = /^[a-zA-Z0-9_-]+$/;
+  if (!pattern.test(value)) {
+    console.error(`ERROR: Invalid ${fieldName}: "${value}"`);
+    console.error(`  Only alphanumeric characters, hyphens, and underscores are allowed.`);
+    process.exit(1);
+  }
+  return true;
+}
+
+/**
+ * Validate title - more permissive but still safe.
+ * Allow alphanumeric, spaces, hyphens, underscores, and common punctuation.
+ */
+function validateTitle(value) {
+  if (!value) return true;
+  // Disallow shell-dangerous characters
+  const dangerousPattern = /[`$;|&<>()\\]/;
+  if (dangerousPattern.test(value)) {
+    console.error(`ERROR: Invalid title contains dangerous characters: "${value}"`);
+    console.error(`  Avoid shell special characters: \` $ ; | & < > ( ) \\`);
+    process.exit(1);
+  }
+  return true;
+}
+
 function parseArgs() {
   const args = process.argv.slice(2);
   const out = {
@@ -120,6 +151,19 @@ function parseArgs() {
     console.error('ERROR: Test-scenario requires --feature (Feature directory name)');
     process.exit(1);
   }
+
+  // Validate inputs to prevent shell injection
+  validateId(out.id, 'id');
+  validateId(out.vision, 'vision');
+  validateId(out.domain, 'domain');
+  validateId(out.issue, 'issue');
+  validateId(out.feature, 'feature');
+  validateTitle(out.title);
+
+  // Validate masters and apis (each item)
+  out.masters.forEach((m, i) => validateId(m, `masters[${i}]`));
+  out.apis.forEach((a, i) => validateId(a, `apis[${i}]`));
+
   return out;
 }
 

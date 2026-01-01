@@ -333,14 +333,14 @@ Document any skipped checkpoint in the PR description.
 
 ### Pattern 1: Workflow Step Tracking
 
-**対象ワークフロー:** vision, design, add, fix, issue, change, pr, test-scenario, e2e
+**対象ワークフロー:** project-setup, feature, fix, change, pr, test-scenario, e2e
 
 ワークフロー開始時に**ワークフローのステップ自体**を Todo として登録し、各ステップ完了時に `completed` に更新する。
 
 ```
-例: vision.md
+例: feature.md
 - Step 1: 入力検証 → in_progress → completed
-- Step 2: Scaffold 実行 → in_progress → completed
+- Step 2: QA 生成 → in_progress → completed
 - Step 3: Spec 作成 → in_progress → completed
 ...
 ```
@@ -403,7 +403,7 @@ Document any skipped checkpoint in the PR description.
 | Step | 意味 | 設定するワークフロー |
 |------|------|---------------------|
 | `idle` | 作業なし | 初期値 / ブランチ削除時 |
-| `spec` | Spec 作成中/完了 | issue, add, fix, change |
+| `spec` | Spec 作成中/完了 | feature, fix, change |
 | `spec_review` | Spec レビュー待ち | (オプション) HUMAN_CHECKPOINT 待ち時 |
 | `plan` | Plan 作成完了 | plan |
 | `plan_review` | Plan レビュー待ち | (オプション) HUMAN_CHECKPOINT 待ち時 |
@@ -416,15 +416,14 @@ Document any skipped checkpoint in the PR description.
 
 | ワークフロー | 更新フィールド | タイミング |
 |-------------|---------------|-----------|
-| **issue.md** | `--set-step spec`, `--set-feature {id}` | Step 10: Feature Spec 作成後 |
-| **add.md** | `--set-step spec`, `--set-feature {id}` | Step 7: Feature Spec 作成後 |
-| **fix.md** | `--set-step spec` | Step 7: Fix Spec 作成後 |
-| **change.md** | `--set-step spec` | Step 6: Domain/Screen Spec 更新後 |
-| **plan.md** | `--set-step plan` | Step 7: Plan 作成・承認後 |
-| **tasks.md** | `--set-step tasks`, `--set-task-progress 0/N` | Step 6: Tasks 作成後 |
-| **implement.md** | `--set-task-progress M/N` | Step 3.1: 各タスク完了時 |
-| **implement.md** | `--set-step implement`, `--set-task-progress N/N` | Step 6: 全タスク完了後 |
-| **pr.md** | `--set-step pr` | Step 6: PR 作成後 |
+| **feature.md** | `--set-step spec`, `--set-feature {id}` | Feature Spec 作成後 |
+| **fix.md** | `--set-step spec` | Fix Spec 作成後 |
+| **change.md** | `--set-step spec` | Domain/Screen Spec 更新後 |
+| **plan.md** | `--set-step plan` | Plan 作成・承認後 |
+| **tasks.md** | `--set-step tasks`, `--set-task-progress 0/N` | Tasks 作成後 |
+| **implement.md** | `--set-task-progress M/N` | 各タスク完了時 |
+| **implement.md** | `--set-step implement`, `--set-task-progress N/N` | 全タスク完了後 |
+| **pr.md** | `--set-step pr` | PR 作成後 |
 
 ### Task Progress
 

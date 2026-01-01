@@ -49,8 +49,8 @@ Spec 作成完了
 
 | ワークフロー | 対象 Spec | Quality Flow 後の遷移 |
 |-------------|----------|---------------------|
-| project-setup.md | Vision + Screen + Domain Spec | issue |
-| add.md | Feature Spec | plan |
+| project-setup.md | Vision + Screen + Domain Spec | issue タイプへ誘導 |
+| feature.md | Feature Spec | plan |
 | fix.md | Fix Spec | plan or implement |
 | change.md | Vision/Screen/Domain 変更 | plan |
 

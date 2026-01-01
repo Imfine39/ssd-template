@@ -11,24 +11,116 @@ description: |
 
 Spec-Driven Development の全工程を管理するオーケストレーター。
 
-## Routing
+---
 
-ユーザーの意図に基づいて適切な workflow を実行します。
+## 1. Entry（開発開始）
+
+すべての開発依頼はこのセクションで処理される。
+
+### 1.1 依頼タイプの判定
+
+ユーザーの発言からタイプを判定：
+
+| キーワード | タイプ |
+|-----------|--------|
+| 「機能を追加」「〇〇を作りたい」「新機能」 | add |
+| 「バグ」「エラー」「修正」「直して」 | fix |
+| 「Spec を変更」「M-* を修正」「定義を変更」 | change |
+| 「Issue #N」「Issue から」 | issue |
+| 「小さな変更」「ちょっと」「Quick」 | quick |
+| 「プロジェクトを始める」「新規プロジェクト」 | setup |
+
+**判定できない場合:** AskUserQuestion で確認
+
+### 1.2 Input 確認
+
+| タイプ | Input ファイル | 必須？ |
+|--------|---------------|--------|
+| add | `.specify/input/add-input.md` | 必須 |
+| fix | `.specify/input/fix-input.md` | 必須 |
+| change | `.specify/input/change-input.md` | 必須 |
+| issue | - | 状態依存（1.5 参照） |
+| quick | - | 不要 |
+| setup | `.specify/input/project-setup-input.md` | 必須 |
+
+**Input 必須タイプで未記入の場合:**
+1. 該当 Input ファイルのパスをユーザーに提示
+2. 「記入後に再度依頼してください」と案内
+3. ワークフロー終了
+
+### 1.3 共通前処理
+
+1. **状態確認:**
+   ```bash
+   node .claude/skills/spec-mesh/scripts/state.cjs query --all
+   ```
+
+2. **前提条件チェック:**
+   - setup 以外: Vision Spec が存在するか
+   - add/fix: Domain Spec が存在するか（警告のみ）
+
+3. **ブランチ状態確認:**
+   - 既存の作業中ブランチがあれば警告
+
+### 1.4 タイプ別処理
+
+| タイプ | 処理 |
+|--------|------|
+| **add** | Input 読み込み → Issue 作成 → `feature.md` へ |
+| **fix** | Input 読み込み → Impact Guard 判定（1.6 参照） → 小: `implement.md` / 大: `fix.md` へ |
+| **change** | Input 読み込み → `change.md` へ |
+| **issue** | 状態判定（1.5 参照） → 適切なワークフローへ |
+| **quick** | Impact Guard 判定（1.6 参照） → 小: `implement.md` / 大: add/fix へ誘導 |
+| **setup** | Input 読み込み → `project-setup.md` へ |
+
+### 1.5 issue タイプの状態判定
+
+Issue には複数の状態があり、それぞれ処理が異なる。
+
+| 状態 | 処理 |
+|------|------|
+| **Draft Spec あり** | Draft 読み込み → 詳細 QA → Spec 更新 → Multi-Review → CLARIFY GATE |
+| **Clarified Spec あり** | → `plan.md` へ（Spec 作成は完了済み） |
+| **In Review Spec あり** | Multi-Review から再開 → CLARIFY GATE |
+| **Spec なし + Input あり** | Input 読み込み → `feature.md` or `fix.md` へ |
+| **Spec なし + Input なし** | 「Input に記入してから再度依頼してください」と案内 |
+
+**Draft Spec の検出:**
+```bash
+# Issue body から Draft パスを抽出、または
+ls .specify/specs/features/*/spec.md  # Status: Draft のものを探す
+```
+
+### 1.6 Impact Guard（Quick 判定）
+
+> **SSOT:** [shared/_impact-guard.md](workflows/shared/_impact-guard.md)
+
+| 基準 | 小規模（直接実装） | 大規模（Spec 経由） |
+|------|-------------------|-------------------|
+| 影響ファイル数 | 1-3 ファイル | 4+ ファイル |
+| Spec 変更 | なし | あり |
+| テスト影響 | 既存テストで OK | 新規テスト必要 |
+| API 変更 | なし | あり |
+| DB スキーマ変更 | なし | あり |
+
+**判定結果:**
+- 小規模（すべて「小規模」列）→ 直接 `implement.md` へ
+- 大規模（1つでも「大規模」列）→ `feature.md` or `fix.md` へ
+
+---
+
+## 2. Workflow Routing（Entry 以外）
+
+Entry で処理されない依頼は以下のワークフローへ直接ルーティング：
 
 | ユーザーの意図 | Workflow | Description |
 |---------------|----------|-------------|
-| 「Vision を作成」「プロジェクトを始めたい」 | workflows/vision.md | Vision Spec 作成（プロジェクト初期化） |
-| 「画面設計」「Design を作成」 | workflows/design.md | Screen + Domain + Matrix 同時作成 |
-| 「機能を追加」「〇〇機能を作りたい」 | workflows/add.md | 新機能追加（Issue → Spec → 開発） |
-| 「バグを修正」「エラーを直して」 | workflows/fix.md | バグ修正（調査 → Fix Spec → 修正） |
-| 「Issue #N から開始」 | workflows/issue.md | 既存 Issue から開発開始 |
 | 「実装計画」「Plan を作成」 | workflows/plan.md | 実装計画作成 |
 | 「タスク分割」 | workflows/tasks.md | タスク分割 |
 | 「実装して」 | workflows/implement.md | 実装実行 |
 | 「PR を作成」 | workflows/pr.md | PR 作成 |
-| 「曖昧点を解消」 | workflows/clarify.md | 曖昧点解消（4問バッチ） |
-| 「Spec を変更」「M-* を修正」 | workflows/change.md | Spec 変更（Vision/Domain/Screen） |
-| 「レビュー」「品質チェック」 | workflows/review.md | Multi-Review（3観点並列レビュー） |
+| 「曖昧点を解消」 | workflows/clarify.md | 曖昧点解消 |
+| 「レビュー」「品質チェック」 | workflows/review.md | Multi-Review |
 | 「Lint 実行」 | workflows/lint.md | Spec 整合性チェック |
 | 「実装と Spec を比較」 | workflows/analyze.md | 実装 vs Spec 分析 |
 | 「品質スコアを測定」 | workflows/checklist.md | 要件品質チェックリスト |
@@ -36,13 +128,14 @@ Spec-Driven Development の全工程を管理するオーケストレーター�
 | 「Feature を提案して」 | workflows/featureproposal.md | Feature 提案 |
 | 「Spec を直接編集」 | workflows/spec.md | Spec 直接操作（上級者向け） |
 | 「テストシナリオを作成」 | workflows/test-scenario.md | Test Scenario Spec 作成 |
-| 「E2E テスト実行」 | workflows/e2e.md | E2E テスト実行（Chrome 拡張） |
+| 「E2E テスト実行」 | workflows/e2e.md | E2E テスト実行 |
 
 ## Instructions
 
 1. **Parse user intent**: ユーザーの発言から意図を判断
-2. **Route to workflow**: 対応する `workflows/{name}.md` を Read tool で読み込む
-3. **Execute**: workflow の指示に従って実行
+2. **Entry チェック**: Section 1 の Entry タイプに該当するか確認
+3. **Route to workflow**: 対応する `workflows/{name}.md` を Read tool で読み込む
+4. **Execute**: workflow の指示に従って実行
 
 ## Spec Creation Flow
 
@@ -193,33 +286,50 @@ node .claude/skills/spec-mesh/scripts/state.cjs branch --complete feature/123-au
 利用可能なワークフロー一覧：
 
 ```
-=== Spec-Mesh Workflows ===
+=== Entry（SKILL.md Section 1 で処理） ===
 
-[プロジェクト初期化]
-「Vision を作成して」      - Vision Spec 作成
-「画面設計して」          - Screen + Domain + Matrix 作成
+add    →「機能を追加したい」    → feature.md
+fix    →「バグを修正して」      → fix.md or implement.md
+change →「Spec を変更して」     → change.md
+issue  →「Issue #N から開始」   → 状態に応じて分岐
+quick  →「小さな変更」          → implement.md or 誘導
+setup  →「プロジェクト開始」    → project-setup.md
 
-[開発エントリーポイント]
-「機能を追加したい」      - 新機能追加
-「バグを修正して」        - バグ修正
-「Issue #N から開始」     - 既存 Issue から開始
-「Spec を変更して」       - Spec 変更
 
-[開発フロー]
-「実装計画を作成」        - 実装計画作成
-「タスク分割して」        - タスク分割
-「実装して」              - 実装実行
-「PR を作成」             - PR 作成
+=== Spec 作成ワークフロー ===
 
-[品質管理]
-「レビューして」          - Multi-Review（3観点並列）
-「曖昧点を解消」          - 曖昧点解消
-「Lint 実行」             - 整合性チェック
-「実装を分析」            - 実装分析
-「品質チェック」          - 品質チェックリスト
-「フィードバック記録」    - フィードバック記録
+project-setup.md    - Overview Specs + Feature Drafts 作成
+feature.md          - Feature Spec 作成
+fix.md              - Fix Spec 作成
+change.md           - Spec 変更
 
-[テスト]
-「テストシナリオ作成」    - Test Scenario Spec 作成
-「E2E テスト実行」        - E2E テスト実行（Chrome 拡張）
+
+=== 実装ワークフロー ===
+
+plan.md             - 実装計画作成
+tasks.md            - タスク分割
+implement.md        - 実装実行
+pr.md               - PR 作成
+
+
+=== 品質ワークフロー ===
+
+review.md           - Multi-Review（3観点並列）
+clarify.md          - 曖昧点解消
+lint.md             - 整合性チェック
+
+
+=== テストワークフロー ===
+
+test-scenario.md    - Test Scenario Spec 作成
+e2e.md              - E2E テスト実行
+
+
+=== その他 ===
+
+analyze.md          - 実装 vs Spec 分析
+checklist.md        - 品質チェックリスト
+feedback.md         - フィードバック記録
+featureproposal.md  - Feature 提案
+spec.md             - Spec 直接編集（上級者向け）
 ```

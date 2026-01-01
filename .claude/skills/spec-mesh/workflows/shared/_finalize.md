@@ -17,9 +17,9 @@ Cascade Update 後の完了処理。Input 保存、サマリー表示、CHECKPOI
 
 | ワークフロー | Input 種別 | Issue/Branch |
 |-------------|-----------|--------------|
-| add.md | add-input.md | 作成する |
+| feature.md | add-input.md | 作成する |
 | fix.md | fix-input.md | 作成する |
-| issue.md | なし | スキップ（作成済み） |
+| SKILL.md Entry (issue タイプ) | なし | スキップ（作成済み） |
 
 ---
 
@@ -142,16 +142,16 @@ Branch: {feature|fix}/{issue_num}-{slug}
 
 ---
 
-## issue.md からの呼び出し時
+## issue タイプからの呼び出し時
 
-issue ワークフローでは Issue/Branch が既に存在するため、Step 4-5 をスキップ：
+issue タイプでは Issue/Branch が既に存在するため、Step 4-5 をスキップ：
 
 ```markdown
 ### Step N: Finalize
 
 > **参照:** [shared/_finalize.md](shared/_finalize.md)
 
-※ issue ワークフローからの場合: Step 1-3 のみ実行（Issue/Branch 作成済み）
+※ issue タイプからの場合: Step 1-3 のみ実行（Issue/Branch 作成済み）
 ```
 
 ---

@@ -14,12 +14,11 @@
 | 1 | clarify.md | 曖昧点解消前 | **必須** |
 | 1 | feedback.md | フィードバック記録前 | **必須** |
 | 2 | pr.md | Post-Merge Actions 前 | 必須 |
-| 2 | design.md | Domain/Screen 作成前 | 推奨 |
-| 3 | add.md | Spec-First で既存 Spec 更新時 | 推奨 |
-| 3 | issue.md | Screen/Domain 更新時 | 推奨 |
+| 2 | project-setup.md | Domain/Screen 作成前 | 推奨 |
+| 3 | feature.md | Spec-First で既存 Spec 更新時 | 推奨 |
 | 3 | fix.md | Screen 変更が必要な場合 | 推奨 |
 | 3 | implement.md | Feedback 記録時 | 推奨 |
-| 3 | quick.md | Step 2: Impact Guard | 推奨 |
+| 3 | SKILL.md Entry (quick) | Impact Guard 判定時 | 推奨 |
 
 ---
 
@@ -209,7 +208,7 @@ Matrix 更新: 必要（新規 Feature 追加のため）
 
 ## LIGHT モード（軽量分析）
 
-quick.md や軽微な変更用の簡易チェック。
+quick タイプや軽微な変更用の簡易チェック。
 
 ### Step 1: 参照存在チェック
 

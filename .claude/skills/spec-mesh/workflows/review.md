@@ -40,9 +40,8 @@ TodoWrite:
 ## When to Use
 
 このワークフローは以下の workflow から呼び出される：
-- vision.md (Step 6)
-- design.md (Step 5)
-- add.md (Step 5)
+- project-setup.md (Step 10)
+- feature.md (Step 5)
 - fix.md (Step 5)
 - change.md (Step 4)
 

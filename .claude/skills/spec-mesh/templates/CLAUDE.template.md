@@ -16,35 +16,21 @@
 
 ## Workflow Routing
 
-ユーザーの依頼に応じて、適切なワークフローを選択して実行してください。
-対応するワークフローファイルを Read tool で読み込み、指示に従って実行します。
+開発依頼の処理は [SKILL.md](.claude/skills/spec-mesh/SKILL.md) の Entry セクションで行われます。
+SKILL.md を読み込んで指示に従ってください。
 
-### 依頼 → ワークフロー対応表
+### クイックリファレンス
 
-| ユーザーの依頼 | ワークフロー |
-|---------------|-------------|
-| 「プロジェクトを始めたい」「Vision を作成」 | `workflows/vision.md` |
-| 「画面設計」「Design を作成」 | `workflows/design.md` |
-| 「機能を追加」「〇〇機能を作りたい」 | `workflows/add.md` |
-| 「バグを修正」「エラーを直して」 | `workflows/fix.md` |
-| "Quick Mode" / "small change" | `workflows/quick.md` |
-| 「Issue #N から開始」 | `workflows/issue.md` |
-| 「Spec を変更」「M-* を修正」 | `workflows/change.md` |
-| 「実装計画」「Plan を作成」 | `workflows/plan.md` |
-| 「タスク分割」 | `workflows/tasks.md` |
-| 「実装して」 | `workflows/implement.md` |
-| 「PR を作成」 | `workflows/pr.md` |
-| 「テストシナリオを作成」 | `workflows/test-scenario.md` |
-| 「E2E テスト実行」 | `workflows/e2e.md` |
-| 「品質チェック」「レビュー」 | `workflows/review.md` |
-| 「曖昧点を解消」 | `workflows/clarify.md` |
-| 「Lint 実行」 | `workflows/lint.md` |
-| 「実装と Spec を比較」 | `workflows/analyze.md` |
-| 「品質スコアを測定」 | `workflows/checklist.md` |
-| 「フィードバックを記録」 | `workflows/feedback.md` |
-| 「Feature を提案して」 | `workflows/featureproposal.md` |
-| 「Spec を直接編集」 | `workflows/spec.md` |
-| 「テンプレートを更新」 | `update.cjs` を実行 |
+| 依頼タイプ | Input | 処理先 |
+|-----------|-------|--------|
+| 機能追加 | 必須 | feature.md |
+| バグ修正 | 必須 | fix.md |
+| Spec 変更 | 必須 | change.md |
+| Issue 実装 | 状態依存 | SKILL.md で判定 |
+| 小さな変更 | 不要 | implement.md or 誘導 |
+| 新規プロジェクト | 必須 | project-setup.md |
+
+> **詳細:** [SKILL.md](.claude/skills/spec-mesh/SKILL.md) Section 2 (Entry) を参照
 
 ワークフローファイルは `.claude/skills/spec-mesh/workflows/` にあります。
 

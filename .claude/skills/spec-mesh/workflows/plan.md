@@ -4,9 +4,30 @@ Create implementation plan from spec. **Human must review and approve before pro
 
 ## Prerequisites
 
-- Feature Spec or Fix Spec must exist
+- Feature Spec, Fix Spec, or Change 対象 Spec が存在すること
 - On Issue-linked branch
 - **★ CLARIFY GATE 通過必須**: `[NEEDS CLARIFICATION]` マーカーが 0 件であること
+
+---
+
+## Spec タイプ判定
+
+ブランチ名から Spec タイプを判定：
+
+| ブランチ prefix | Spec タイプ | Spec パス |
+|----------------|------------|----------|
+| `feature/` | Feature Spec | `.specify/specs/features/{id}/spec.md` |
+| `fix/` | Fix Spec | `.specify/specs/fixes/{id}/spec.md` |
+| `spec/` | Change 対象 Spec | 変更対象の Spec ディレクトリ |
+
+**判定方法:**
+```bash
+# ブランチ名取得
+git branch --show-current
+
+# または state.cjs から
+node .claude/skills/spec-mesh/scripts/state.cjs query --branch
+```
 
 ---
 
@@ -51,12 +72,20 @@ TodoWrite:
 
 **Plan 開始前に必ず確認:**
 
-Grep tool で `[NEEDS CLARIFICATION]` マーカーをカウント：
+1. **Spec タイプとパスを特定:**
+   ```bash
+   git branch --show-current
+   # → feature/123-auth → .specify/specs/features/S-AUTH-001/spec.md
+   # → fix/456-bug → .specify/specs/fixes/F-BUG-001/spec.md
+   # → spec/789-change → 変更対象 Spec
+   ```
+
+2. **Grep tool で `[NEEDS CLARIFICATION]` マーカーをカウント:**
 
 ```
 Grep tool:
   pattern: "\[NEEDS CLARIFICATION\]"
-  path: .specify/specs/features/{id}/spec.md
+  path: {Spec パス}  # タイプに応じたパス
   output_mode: count
 ```
 
@@ -77,9 +106,16 @@ Grep tool:
 
 ### Step 1: Load Context
 
-1. **Read Feature/Fix Spec:**
+1. **Read Spec（タイプに応じたパス）:**
    ```
+   # Feature Spec
    Read tool: .specify/specs/features/{id}/spec.md
+
+   # Fix Spec
+   Read tool: .specify/specs/fixes/{id}/spec.md
+
+   # Change 対象 Spec
+   Read tool: {変更対象の Spec パス}
    ```
 
 2. **Read Domain Spec** for M-*/API-* context:
@@ -121,9 +157,16 @@ Grep tool:
 
 ### Step 4: Save Plan
 
-Save to feature directory:
+Save to Spec directory（タイプに応じたパス）:
 ```
+# Feature Spec
 .specify/specs/features/{id}/plan.md
+
+# Fix Spec
+.specify/specs/fixes/{id}/plan.md
+
+# Change 対象 Spec
+{変更対象の Spec ディレクトリ}/plan.md
 ```
 
 ### Step 5: Run Lint

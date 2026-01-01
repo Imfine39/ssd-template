@@ -1,33 +1,40 @@
-# Add Workflow
+# Feature Workflow
 
-Entry point for new features when no Issue exists. Creates Issue → Branch → Feature Spec.
+Feature Spec を作成するワークフロー。Entry（SKILL.md）から呼び出される。
 
 ## Prerequisites
 
-**推奨フロー:**
-1. Vision Spec が存在すること（必須）
-2. Domain Spec + Screen Spec が存在すること（推奨）
+**新規作成モード:**
+- Input ファイル（`.specify/input/add-input.md`）が読み込み済み
+- Vision Spec が存在すること（必須）
+- Domain Spec + Screen Spec が存在すること（推奨）
 
-**新規プロジェクトの場合:**
-- Vision Spec がない → `project-setup ワークフロー` を先に実行
+**Draft 詳細化モード:**
+- Draft Spec（Status: Draft）が存在
+- issue タイプから呼び出される
 
-**既存プロジェクトの場合:**
-- Domain Spec の M-*/API-* を参照して Feature Spec を作成
+---
 
-**警告レベル:**
-| 状態 | レベル | アクション |
-|------|--------|-----------|
-| Vision なし | エラー | project-setup ワークフロー へ誘導 |
-| Domain なし | 警告 | project-setup ワークフロー を推奨（続行可） |
-| Screen なし | 情報 | project-setup ワークフロー を推奨（続行可） |
+## Mode Detection
 
-## Quick Input
+ワークフロー開始時にモードを判定：
 
-**Input file:** `.specify/input/add-input.md`
+```
+Draft Spec が存在するか確認
+    │
+    ├─ Draft Spec あり（Status: Draft）
+    │       └── **Draft 詳細化モード** → Step 0 から開始
+    │
+    └─ Draft Spec なし
+            └── **新規作成モード** → Step 1 から開始
+```
 
-Required fields:
-- 機能名 (non-empty)
-- 期待する動作 (at least 1 item)
+**Draft Spec の検出方法:**
+```bash
+# Issue body から Draft パスを抽出
+# または Spec ファイルの Status を確認
+grep -l "Status: Draft" .specify/specs/features/*/spec.md
+```
 
 ---
 
@@ -35,43 +42,57 @@ Required fields:
 
 **IMPORTANT:** ワークフロー開始時に、以下の Todo を TodoWrite tool で作成すること。
 
+### Draft 詳細化モード用
 ```
 TodoWrite:
   todos:
-    - content: "Step 1: 入力収集"
+    - content: "Step 0: Draft Spec 読み込み"
       status: "pending"
-      activeForm: "Collecting input"
-    - content: "Step 2: 前提条件確認"
+      activeForm: "Loading Draft Spec"
+    - content: "Step 0.5: 空欄セクション特定・詳細 QA 生成"
       status: "pending"
-      activeForm: "Checking prerequisites"
-    - content: "Step 3: コードベース分析"
-      status: "pending"
-      activeForm: "Analyzing codebase"
-    - content: "Step 4: QA ドキュメント生成"
-      status: "pending"
-      activeForm: "Generating QA document"
-    - content: "Step 5: QA 回答分析"
+      activeForm: "Generating detailed QA"
+    - content: "Step 3: QA 回答分析"
       status: "pending"
       activeForm: "Analyzing QA responses"
-    - content: "Step 6: Feature Spec 作成"
+    - content: "Step 4: Feature Spec 更新（Draft → Clarified）"
+      status: "pending"
+      activeForm: "Updating Feature Spec"
+    ... (Step 5 以降は新規作成モードと同じ)
+```
+
+### 新規作成モード用
+```
+TodoWrite:
+  todos:
+    - content: "Step 1: コードベース分析"
+      status: "pending"
+      activeForm: "Analyzing codebase"
+    - content: "Step 2: QA ドキュメント生成"
+      status: "pending"
+      activeForm: "Generating QA document"
+    - content: "Step 3: QA 回答分析"
+      status: "pending"
+      activeForm: "Analyzing QA responses"
+    - content: "Step 4: Feature Spec 作成"
       status: "pending"
       activeForm: "Creating Feature Spec"
-    - content: "Step 7: Multi-Review 実行"
+    - content: "Step 5: Multi-Review 実行"
       status: "pending"
       activeForm: "Executing Multi-Review"
-    - content: "Step 8: CLARIFY GATE チェック"
+    - content: "Step 6: CLARIFY GATE チェック"
       status: "pending"
       activeForm: "Checking CLARIFY GATE"
-    - content: "Step 9: Lint 実行"
+    - content: "Step 7: Lint 実行"
       status: "pending"
       activeForm: "Running Lint"
-    - content: "Step 10: サマリー・[HUMAN_CHECKPOINT]"
+    - content: "Step 8: サマリー・[HUMAN_CHECKPOINT]"
       status: "pending"
       activeForm: "Presenting summary"
-    - content: "Step 11: GitHub Issue & ブランチ作成"
+    - content: "Step 9: GitHub Issue & ブランチ作成"
       status: "pending"
       activeForm: "Creating Issue and branch"
-    - content: "Step 12: 入力保存"
+    - content: "Step 10: 入力保存"
       status: "pending"
       activeForm: "Preserving input"
 ```
@@ -80,43 +101,72 @@ TodoWrite:
 
 ## Steps
 
-### Step 1: Input Collection
+### Step 0: Draft Spec 読み込み（Draft 詳細化モードのみ）
 
-1. **Read input file:**
+**Draft 詳細化モードでのみ実行。新規作成モードはスキップ。**
+
+1. **Draft Spec を読み込み:**
    ```
-   Read tool: .specify/input/add-input.md
+   Read tool: .specify/specs/features/{id}/spec.md
    ```
 
-2. **Determine input source:**
-   - If input file has content → Use it
-   - If ARGUMENTS has content → Use it
-   - If both empty → Prompt user
+2. **Status が Draft であることを確認:**
+   ```markdown
+   Status: Draft
+   ```
 
-3. **Extract:**
-   | Input | Target |
-   |-------|--------|
-   | 機能名 | Feature title, Issue title |
-   | 解決したい課題 | Section 1 (Purpose) |
-   | 誰が使うか | Section 3 (Actors) |
-   | 期待する動作 | Section 4-5 (User Stories, FR) |
-   | 関連する既存機能 | Section 2 (Domain Dependencies) |
+3. **記入済みセクションを確認:**
+   - 基本情報（概要、目的、アクター）
+   - Domain 参照（M-*, API-*）
+   - Screen 参照（SCR-*）
 
-### Step 2: Prerequisites Check
+4. **空欄セクションを特定:**
+   - ユースケース詳細
+   - 機能要件詳細
+   - エラーハンドリング
+   - 非機能要件
 
-```bash
-node .claude/skills/spec-mesh/scripts/state.cjs query --repo
-```
+### Step 0.5: 空欄セクション特定・詳細 QA 生成（Draft 詳細化モードのみ）
 
-- Check Domain status → Warning if not clarified
-- Verify Domain has M-*/API-* definitions
+Draft の空欄セクションに対応する QA を生成：
 
-### Step 3: Analyze Codebase
+1. **空欄セクションから質問を生成:**
+
+   | 空欄セクション | 生成する質問 |
+   |---------------|-------------|
+   | ユースケース詳細 | 「この機能の主要なユースケースは？」「エッジケースは？」 |
+   | 機能要件詳細 | 「入力項目は？」「出力形式は？」「バリデーションは？」 |
+   | エラーハンドリング | 「想定されるエラーは？」「エラー時の動作は？」 |
+   | 非機能要件 | 「パフォーマンス要件は？」「同時アクセス数は？」 |
+
+2. **QA ドキュメントを生成:**
+   ```
+   Write tool: .specify/specs/features/{id}/qa.md
+   ```
+
+3. **ユーザーに QA 回答を依頼:**
+   ```
+   === Draft 詳細化 QA ===
+
+   Draft Spec の空欄セクションについて質問があります。
+   .specify/specs/features/{id}/qa.md を確認し、回答してください。
+
+   完了したら「QA 回答完了」と伝えてください。
+   ```
+
+---
+
+**以下は新規作成モードで使用（Draft 詳細化モードは Step 3 へスキップ）**
+
+---
+
+### Step 1: Analyze Codebase（新規作成モードのみ）
 
 - Identify existing patterns
 - Find related components
 - Note reusable code
 
-### Step 4: QA ドキュメント生成
+### Step 2: QA ドキュメント生成（新規作成モードのみ）
 
 > **参照:** [shared/_qa-generation.md](shared/_qa-generation.md)
 
@@ -134,7 +184,7 @@ Write tool: .specify/specs/features/{feature-id}/qa.md
 
 6. ユーザーに QA 回答を依頼
 
-### Step 5: QA 回答分析
+### Step 3: QA 回答分析
 
 > **参照:** [shared/_qa-analysis.md](shared/_qa-analysis.md)
 
@@ -144,12 +194,27 @@ Write tool: .specify/specs/features/{feature-id}/qa.md
 4. [確認] で「いいえ」の項目を修正
 5. [提案] の採否を記録（理由付き）
 
-### Step 6: Create Feature Spec
+### Step 4: Create/Update Feature Spec
+
+**新規作成モード:**
 
 1. **Run scaffold:**
    ```bash
    node .claude/skills/spec-mesh/scripts/scaffold-spec.cjs --kind feature --id S-XXX-001 --title "{機能名}"
    ```
+
+**Draft 詳細化モード:**
+
+1. **Draft Spec を更新:**
+   - 空欄セクションを QA 回答で埋める
+   - Status を Draft → Clarified に変更
+   ```markdown
+   Status: Clarified
+   ```
+
+---
+
+**両モード共通:**
 
 2. **Spec-First: Update Screen Spec** (if UI changes needed)
    - Add to Screen Index with status `Planned`
@@ -166,19 +231,6 @@ Write tool: .specify/specs/features/{feature-id}/qa.md
 
    > **共通コンポーネント参照:** [shared/impact-analysis.md](shared/impact-analysis.md) を **STANDARD モード** で実行
 
-   Domain への追加/変更が必要な場合、影響範囲を確認：
-   ```
-   === Impact Analysis (STANDARD) ===
-
-   追加/変更: M-NEWENTITY, API-NEWENTITY-LIST
-
-   参照整合性:
-   - [x] 新規 ID が既存と重複していないか
-   - [x] 参照する M-*/API-* が定義済みか
-
-   Matrix 更新: 必要（新規 Feature 追加のため）
-   ```
-
 6. **Update Domain Spec Feature Index**
 
 7. **Update Cross-Reference Matrix**
@@ -191,7 +243,7 @@ Write tool: .specify/specs/features/{feature-id}/qa.md
      --description "Feature Spec 作成: {機能名}"
    ```
 
-### Step 7: Multi-Review
+### Step 5: Multi-Review
 
 Feature Spec の品質を担保するため Multi-Review を実行：
 
@@ -206,11 +258,11 @@ Feature Spec の品質を担保するため Multi-Review を実行：
    - AI 修正可能な問題を修正
 
 3. **Handle results:**
-   - すべてパス → Step 8 へ
-   - 曖昧点あり → Step 8 でブロック
+   - すべてパス → Step 6 へ
+   - 曖昧点あり → Step 6 でブロック
    - Critical 未解決 → 問題をリストし対応を促す
 
-### Step 8: CLARIFY GATE チェック（必須）
+### Step 6: CLARIFY GATE チェック（必須）
 
 **★ このステップはスキップ禁止 ★**
 
@@ -240,18 +292,18 @@ if clarify_count > 0:
     → clarify 完了後、Multi-Review からやり直し
 
 else:
-    → Step 9 (Lint) へ進む
+    → Step 7 (Lint) へ進む
 ```
 
 **重要:** clarify_count > 0 の場合、Plan への遷移は禁止。
 
-### Step 9: Run Lint
+### Step 7: Run Lint
 
 ```bash
 node .claude/skills/spec-mesh/scripts/spec-lint.cjs
 ```
 
-### Step 10: Summary & [HUMAN_CHECKPOINT]
+### Step 8: Summary & [HUMAN_CHECKPOINT]
 
 1. **Display Summary:**
    ```
@@ -280,7 +332,7 @@ node .claude/skills/spec-mesh/scripts/spec-lint.cjs
    承認後、GitHub Issue とブランチを作成します。
    ```
 
-### Step 11: Create GitHub Issue & Branch
+### Step 9: Create GitHub Issue & Branch
 
 **[HUMAN_CHECKPOINT] 承認後に実行:**
 
@@ -304,7 +356,7 @@ node .claude/skills/spec-mesh/scripts/spec-lint.cjs
    次のステップ: plan ワークフロー へ進んでください。
    ```
 
-### Step 12: Preserve Input
+### Step 10: Preserve Input
 
 If input file was used:
 ```bash
@@ -318,11 +370,11 @@ node .claude/skills/spec-mesh/scripts/preserve-input.cjs add --feature {feature-
 
 ## Self-Check
 
+### 共通
 - [ ] **TodoWrite で全ステップを登録したか**
-- [ ] Read tool で入力ファイルを読み込んだか
+- [ ] **モード判定を行ったか（Draft 詳細化 or 新規作成）**
 - [ ] QA ドキュメントを生成したか
 - [ ] QA 回答を分析したか
-- [ ] scaffold-spec.cjs で spec を作成したか
 - [ ] Screen Spec を先に更新したか（Spec-First）
 - [ ] M-*/API-* の Case 判定を行ったか
 - [ ] **Impact Analysis を実行したか（Case 2/3 の場合）**
@@ -330,10 +382,19 @@ node .claude/skills/spec-mesh/scripts/preserve-input.cjs add --feature {feature-
 - [ ] **CLARIFY GATE をチェックしたか**
 - [ ] spec-lint.cjs を実行したか
 - [ ] **[HUMAN_CHECKPOINT] で承認を得たか**
+- [ ] **TodoWrite で全ステップを completed にしたか**
+
+### 新規作成モード
+- [ ] scaffold-spec.cjs で spec を作成したか
 - [ ] gh issue create を実行したか（承認後）
 - [ ] branch.cjs でブランチを作成したか（承認後）
 - [ ] Input を保存したか（リセットは PR マージ後）
-- [ ] **TodoWrite で全ステップを completed にしたか**
+
+### Draft 詳細化モード
+- [ ] Draft Spec を読み込んだか
+- [ ] 空欄セクションを特定したか
+- [ ] 詳細 QA を生成したか
+- [ ] Status を Draft → Clarified に更新したか
 
 ---
 
