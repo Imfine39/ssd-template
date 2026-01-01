@@ -1,0 +1,305 @@
+# Feature Specification: [TITLE]
+
+<!--
+  Template: Feature Spec
+
+  ID Format: S-{AREA}-{NNN}
+    - AREA: Feature area identifier (2-15 uppercase chars)
+    - NNN: Sequential number (001, 002, ...)
+    - Examples: S-AUTH-001, S-ORDERS-001, S-DASHBOARD-001
+    - See: .claude/skills/spec-mesh/guides/id-naming.md
+
+  Status Values (from constitution/terminology.md):
+    Spec Status:
+    - Draft: Initial creation, not reviewed
+    - In Review: Under Multi-Review or stakeholder review
+    - Clarified: All [NEEDS CLARIFICATION] markers resolved
+    - Approved: Human approved, ready for implementation
+    - Implemented: Code complete
+
+  Cross-Reference Note:
+    - ../matrix/cross-reference.json is the source of truth for mappings
+    - Update it manually or via scripts as you refine specs
+    - Run: node .claude/skills/spec-mesh/scripts/generate-matrix-view.cjs
+-->
+
+Spec Type: Feature
+Spec ID: S-{AREA}-001
+Created: {date}
+Status: [Draft | In Review | Clarified | Approved | Implemented]
+Author: [OWNER]
+Related Issue(s): [#123]
+Related Vision: S-VISION-001
+Related Domain: S-DOMAIN-001
+Related Screen: S-SCREEN-001
+
+---
+
+## 1. Purpose and Scope
+
+### 1.1 Feature Description
+
+- What this feature does:
+- What problem does it solve for the user:
+
+### 1.2 Scope
+
+- In-scope:
+- Out-of-scope:
+- How this feature delivers value independently:
+
+---
+
+## 2. Domain Dependencies
+
+This feature depends on the following elements from the Domain Spec.
+**DO NOT redefine these here. Reference by ID only.**
+
+### 2.1 Master Data Dependencies
+
+| Master ID | Name | Usage in this Feature |
+|-----------|------|----------------------|
+| M-{AREA}-001 | {Name} | {How this feature uses it} |
+
+### 2.2 API Dependencies
+
+| API ID | Name | Usage |
+|--------|------|-------|
+| API-{AREA}-001 | {Name} | {Calls/Implements} |
+
+### 2.3 Business Rules Dependencies
+
+| Rule ID | Description | How it applies |
+|---------|-------------|----------------|
+| BR-001 | [Rule] | [How this feature is affected] |
+
+### 2.4 Feature Dependencies
+
+Other features this feature depends on.
+
+| Feature ID | Type | Description |
+|------------|------|-------------|
+| S-{AREA}-001 | Hard/Soft | {Why this feature depends on another} |
+
+**Dependency types:**
+- **Hard**: Cannot implement until dependency is completed (blocks implementation)
+- **Soft**: Can proceed independently, but full integration requires dependency
+- **Parallel**: Can be developed simultaneously with coordination
+
+**Note:** If this feature requires new M-*/API-*/BR-*, update the Domain Spec first.
+
+---
+
+## 3. Actors
+
+Reference from Domain Spec, filtered to actors relevant to this feature.
+
+| Actor | Role in this Feature |
+|-------|---------------------|
+| [Actor] | [What they do in this feature] |
+
+---
+
+## 4. User Stories / Use Cases
+
+Each use case should be independently testable.
+
+### UC-{AREA}-001: {Title}
+
+**Priority:** [P1 | P2 | P3]
+**Actor:** [Actor]
+
+**Pre-conditions:**
+- [Condition 1]
+
+**Main Flow:**
+1. [Step 1]
+2. [Step 2]
+3. [Step 3]
+
+**Alternate Flows:**
+- [Alternative scenario]
+
+**Post-conditions:**
+- [Expected state after completion]
+
+**Acceptance Criteria:**
+- [ ] [Criterion 1]
+- [ ] [Criterion 2]
+
+---
+
+### UC-{AREA}-002: {Title}
+
+**Priority:** [P1 | P2 | P3]
+**Actor:** [Actor]
+
+**Pre-conditions:**
+- [Condition]
+
+**Main Flow:**
+1. [Step 1]
+2. [Step 2]
+
+**Acceptance Criteria:**
+- [ ] [Criterion]
+
+---
+
+## 5. Functional Requirements (FR)
+
+| FR ID | Description | Related UC | Priority |
+|-------|-------------|------------|----------|
+| FR-{AREA}-001 | {Requirement} | UC-{AREA}-001 | P1 |
+| FR-{AREA}-002 | {Requirement} | UC-{AREA}-001 | P2 |
+
+Mark unclear requirements with `[NEEDS CLARIFICATION]`.
+
+---
+
+## 6. Edge Cases and Error Handling
+
+| Case | Trigger | Expected Behavior |
+|------|---------|-------------------|
+| [Case 1] | [When this happens] | [System should...] |
+| [Case 2] | [When this happens] | [System should...] |
+
+---
+
+## 7. Success Criteria (SC)
+
+| SC ID | Description | Measurement |
+|-------|-------------|-------------|
+| SC-{AREA}-001 | {Outcome} | {How to measure} |
+| SC-{AREA}-002 | {Outcome} | {How to measure} |
+
+---
+
+## 8. Screen Dependencies
+
+This feature uses the following screens from the Screen Spec.
+**DO NOT redefine screens here. Reference by SCR-* ID only.**
+
+### 8.1 Related Screens
+
+| Screen ID | Name | Usage in this Feature |
+|-----------|------|----------------------|
+| SCR-{AREA} | {Screen Name} | {How this feature uses/modifies this screen} |
+
+### 8.2 Feature-Specific UI States
+
+States specific to this feature (general states are in Screen Spec):
+
+- Loading state:
+- Empty state:
+- Error state:
+
+### 8.3 Screen Modifications (Spec-First)
+
+If this feature modifies existing screens, the changes are already recorded in Screen Spec.
+**Screen Spec is updated BEFORE Feature Spec creation (Spec-First approach).**
+
+| Screen ID | Modification | Screen Spec Ref |
+|-----------|-------------|-----------------|
+| SCR-{AREA} | {What changes} | Section 2.1 Modification Log |
+
+**Spec-First Policy:**
+- Screen Spec is the **source of truth** for all screen designs
+- Before creating this Feature Spec, modifications were added to Screen Spec Section 2.1 (Modification Log)
+- Screen Spec wireframes show the **planned state** (Status: Planned)
+- After PR merge, Screen Spec Status is updated to `Implemented`
+
+**Workflow:**
+1. Identify screen modifications needed for this feature
+2. Update Screen Spec (add to Modification Log, update wireframe if needed)
+3. Create Feature Spec referencing the updated Screen Spec
+4. Implement the feature
+5. After PR merge, update Screen Spec Status to `Implemented`
+
+**Note:** Both new screens AND modifications require updating Screen Spec first.
+
+---
+
+## 9. Feature-Specific Rules
+
+Rules that apply only to this feature (not shared across domain).
+
+| Rule ID | Description |
+|---------|-------------|
+| FR-RULE-001 | [Rule specific to this feature] |
+
+---
+
+## 10. Testing Strategy
+
+### 10.1 Test Coverage
+
+| UC/FR | Test Type | Test Description |
+|-------|-----------|------------------|
+| UC-{AREA}-001 | Unit | {What to test} |
+| UC-{AREA}-001 | Integration | {What to test} |
+| FR-{AREA}-001 | E2E | {What to test} |
+
+### 10.2 Critical Edge Cases
+
+- [ ] [Edge case that MUST be tested]
+- [ ] [Edge case that MUST be tested]
+
+---
+
+## 11. Open Questions
+
+- [ ] [Question 1]
+- [ ] [Question 2]
+
+---
+
+## 12. Clarifications
+
+| Date | Question | Answer | Impact |
+|------|----------|--------|--------|
+| {date} | {Question} | {Answer} | {Spec section affected} |
+
+---
+
+## 13. Traceability
+
+- Vision Spec: S-VISION-001
+- Domain Spec: S-DOMAIN-001
+- Screen Spec: S-SCREEN-001
+- Related Screens: SCR-{AREA}, SCR-{YYY}
+- Related Issues: #{AREA}
+- Related Plan: [plan path]
+- Related Tasks: [tasks path]
+
+---
+
+## 14. Original Input
+
+User-provided input that was used to generate this spec.
+This section preserves the original context for future reference.
+
+```
+[ORIGINAL_INPUT_CONTENT]
+```
+
+---
+
+## 15. Changelog
+
+| Date | Change Type | Description | Issue |
+|------|-------------|-------------|-------|
+| {date} | Created | Initial feature specification | #XXX |
+
+Change types: Created, Updated, Clarified, Extended, Deprecated, Superseded, Bug Fix
+
+---
+
+## 16. Implementation Notes
+
+Notes discovered during implementation.
+
+- Technical constraints discovered:
+- Design decisions made:
+- Deviations from spec (with justification):
+- Feedback for Domain Spec updates:

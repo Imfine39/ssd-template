@@ -1,0 +1,180 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Cross-Reference Matrix Schema",
+  "description": "Schema for validating cross-reference.json files in spec-mesh. Defines relationships between Screens, Features, Masters, APIs, Rules, and Permissions.",
+  "type": "object",
+  "properties": {
+    "screens": {
+      "type": "object",
+      "description": "Screen definitions and their domain dependencies",
+      "additionalProperties": {
+        "$ref": "#/definitions/screenEntry"
+      },
+      "propertyNames": {
+        "pattern": "^SCR-[0-9]{3}$"
+      }
+    },
+    "features": {
+      "type": "object",
+      "description": "Feature definitions and their dependencies",
+      "additionalProperties": {
+        "$ref": "#/definitions/featureEntry"
+      },
+      "propertyNames": {
+        "pattern": "^S-[A-Z][A-Z0-9_-]*-[0-9]{3}$"
+      }
+    },
+    "permissions": {
+      "type": "object",
+      "description": "API permissions by role",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "List of roles that can access this API"
+      },
+      "propertyNames": {
+        "pattern": "^API-[A-Z][A-Z0-9_-]*$"
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Optional metadata about the matrix",
+      "properties": {
+        "version": {
+          "type": "string",
+          "description": "Schema version"
+        },
+        "generated": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Generation timestamp"
+        },
+        "project": {
+          "type": "string",
+          "description": "Project name"
+        }
+      }
+    }
+  },
+  "required": ["screens", "features"],
+  "definitions": {
+    "screenEntry": {
+      "type": "object",
+      "description": "Screen entry with domain references",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Human-readable screen name"
+        },
+        "masters": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^M-[A-Z][A-Z0-9_-]*$"
+          },
+          "description": "Master data used by this screen"
+        },
+        "apis": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^API-[A-Z][A-Z0-9_-]*$"
+          },
+          "description": "APIs called by this screen"
+        },
+        "features": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^S-[A-Z][A-Z0-9_-]*-[0-9]{3}$"
+          },
+          "description": "Features that use this screen"
+        }
+      },
+      "required": ["name"]
+    },
+    "featureEntry": {
+      "type": "object",
+      "description": "Feature entry with all dependencies",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "Human-readable feature title"
+        },
+        "screens": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^SCR-[0-9]{3}$"
+          },
+          "description": "Screens used by this feature"
+        },
+        "masters": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^M-[A-Z][A-Z0-9_-]*$"
+          },
+          "description": "Master data used by this feature"
+        },
+        "apis": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^API-[A-Z][A-Z0-9_-]*$"
+          },
+          "description": "APIs used by this feature"
+        },
+        "rules": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^(BR|VR|CR)-[0-9]{3}$"
+          },
+          "description": "Business/Validation/Calculation rules used by this feature"
+        },
+        "dependencies": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^S-[A-Z][A-Z0-9_-]*-[0-9]{3}$"
+          },
+          "description": "Other features this feature depends on"
+        }
+      },
+      "required": ["title"]
+    }
+  },
+  "examples": [
+    {
+      "screens": {
+        "SCR-001": {
+          "name": "Login",
+          "masters": ["M-USER"],
+          "apis": ["API-AUTH-LOGIN"]
+        },
+        "SCR-002": {
+          "name": "Dashboard",
+          "masters": ["M-USER", "M-ORDER"],
+          "apis": ["API-USER-DETAIL", "API-ORDER-LIST"]
+        }
+      },
+      "features": {
+        "S-AUTH-001": {
+          "title": "User Authentication",
+          "screens": ["SCR-001"],
+          "masters": ["M-USER"],
+          "apis": ["API-AUTH-LOGIN", "API-AUTH-LOGOUT"],
+          "rules": ["BR-001", "VR-001"]
+        }
+      },
+      "permissions": {
+        "API-AUTH-LOGIN": ["*"],
+        "API-USER-DETAIL": ["admin", "user"],
+        "API-ORDER-LIST": ["admin", "user"]
+      }
+    }
+  ]
+}
