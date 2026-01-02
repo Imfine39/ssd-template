@@ -13,8 +13,8 @@ Multi-Review + Lint 後に実行する必須チェック。
 
 ## Purpose
 
-1. **曖昧点が残ったまま実装に進むことを防止**（従来の CLARIFY GATE）
-2. **Overview 変更が未処理のまま実装に進むことを防止**（新規追加）
+1. **曖昧点が残ったまま実装に進むことを防止**
+2. **Overview 変更が未処理のまま実装に進むことを防止**
 3. **Spec の品質を保証するゲートキーピング**
 4. **適切なワークフローへのルーティング**
 
@@ -307,17 +307,3 @@ Overview Change 完了 → Multi-Review へ戻る
 - [ ] BLOCKED の場合、内訳と次のアクションを提示したか
 - [ ] BLOCKED の場合、次ステップへの遷移を禁止したか
 
----
-
-## CLARIFY GATE からの移行
-
-この SPEC GATE は従来の CLARIFY GATE を拡張したものです。
-
-| 項目 | CLARIFY GATE | SPEC GATE |
-|------|-------------|-----------|
-| `[NEEDS CLARIFICATION]` | チェック対象 | チェック対象（優先度1） |
-| `[PENDING OVERVIEW CHANGE]` | 対象外 | チェック対象（優先度2） |
-| `[DEFERRED]` | チェック対象 | チェック対象（優先度3） |
-| Open Questions | チェック対象 | チェック対象 |
-
-**互換性:** `_clarify-gate.md` は削除済み。すべてのワークフローは `_spec-gate.md` を使用。

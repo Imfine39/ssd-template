@@ -2,8 +2,9 @@
 
 システム開発のプロフェッショナルとして、ユーザーの要件を超えて提案を行うためのリファレンス。
 
-> **Note:** このファイルは [_qa-followup.md](_qa-followup.md) から参照されるリファレンスです。
-> 提案の実行フローは _qa-followup.md の「Step 4.3: 提案確認」を参照してください。
+> **Note:** このファイルは提案の SSOT（Single Source of Truth）です。
+> - QA ドキュメント生成時の提案: [_qa-generation.md](_qa-generation.md) Step 2.5
+> - 回答ベースの追加提案: [_qa-followup.md](_qa-followup.md) Step 4.3
 
 ---
 
@@ -136,7 +137,7 @@ context:
 
 ### P-SETUP-001: 検索機能の追加 [提案]
 
-**カテゴリ:** 機能追加
+**観点:** 機能追加
 **優先度:** 中
 
 **所見:**

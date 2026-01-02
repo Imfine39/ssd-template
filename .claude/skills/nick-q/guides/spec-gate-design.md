@@ -79,7 +79,7 @@ Feature/Fix 開発中に既存の Overview Spec（Vision/Domain/Screen）への�
 
 ### 3.1 概要
 
-既存の CLARIFY GATE を拡張し、`[PENDING OVERVIEW CHANGE]` もチェック対象に追加。
+`[NEEDS CLARIFICATION]` と `[PENDING OVERVIEW CHANGE]` の両方をチェック対象とする統合ゲート。
 
 ### 3.2 チェック項目
 
@@ -296,11 +296,11 @@ Feature B: [PENDING: M-USER email追加]
 | ファイル | 更新内容 |
 |----------|---------|
 | `constitution/quality-gates.md` | SPEC GATE 定義を追加 |
-| `workflows/feature.md` | CLARIFY GATE → SPEC GATE に変更、Case 3 でマーカー記録 |
+| `workflows/feature.md` | SPEC GATE 対応、Case 3 でマーカー記録 |
 | `workflows/fix.md` | 同上 |
 | `workflows/change.md` | サブワークフローとしての呼び出し対応 |
 | `workflows/review.md` | [PENDING OVERVIEW CHANGE] もチェック対象に |
-| `workflows/shared/_clarify-gate.md` | SPEC GATE への統合、または廃止 |
+| `workflows/shared/_spec-gate.md` | SPEC GATE 共通コンポーネント |
 | `scripts/spec-lint.cjs` | 新マーカーの検出ルール追加 |
 | `SKILL.md` | フロー図の更新 |
 | `CLAUDE.md` | SPEC GATE の記載追加 |
@@ -322,10 +322,10 @@ Feature B: [PENDING: M-USER email追加]
 - [x] change.md 更新（サブワークフロー対応、Embedded モード）
 - [x] review.md 更新（[PENDING OVERVIEW CHANGE] チェック追加）
 - [x] project-setup.md 更新（SPEC GATE 対応）
-- [x] _clarify-gate.md 廃止（deprecated マーク、_spec-gate.md へリダイレクト）
+- [x] _spec-gate.md 作成
 
 ### Phase 4: Constitution/Quality Gates
-- [x] quality-gates.md 更新（SPEC GATE 定義、CLARIFY GATE は Legacy として保持）
+- [x] quality-gates.md 更新（SPEC GATE 定義）
 
 ### Phase 5: SKILL.md/CLAUDE.md
 - [x] SKILL.md フロー図更新
@@ -412,7 +412,7 @@ Exit code: 1
 
 | 用語 | 定義 |
 |------|------|
-| SPEC GATE | Multi-Review 後の品質ゲート。CLARIFY GATE を拡張 |
+| SPEC GATE | Multi-Review 後の品質ゲート。曖昧点と Overview 変更をチェック |
 | BLOCKED_CLARIFY | [NEEDS CLARIFICATION] が残っている状態 |
 | BLOCKED_OVERVIEW | [PENDING OVERVIEW CHANGE] が残っている状態 |
 | Overview Spec | Vision/Domain/Screen Spec の総称 |

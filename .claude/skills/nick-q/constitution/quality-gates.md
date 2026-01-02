@@ -5,7 +5,7 @@ Defines the quality checkpoints and review processes in SSD workflow.
 ---
 
 ## SPEC GATE
-<!-- SSOT: SPEC GATE 定義（CLARIFY GATE を拡張） -->
+<!-- SSOT: SPEC GATE 定義 -->
 <!-- 他のファイルはこのセクションを参照すること。定義の複製禁止。 -->
 <!-- アンカー: #spec-gate -->
 
@@ -14,7 +14,7 @@ Defines the quality checkpoints and review processes in SSD workflow.
 > **運用手順:** [shared/_spec-gate.md](../workflows/shared/_spec-gate.md)
 
 ### Definition
-A mandatory gate before proceeding to Plan phase. Extends the original CLARIFY GATE to also check for pending Overview changes.
+A mandatory gate before proceeding to Plan phase. Checks for unresolved clarifications and pending Overview changes.
 
 ### Check Items
 
@@ -91,12 +91,6 @@ BLOCKED_CLARIFY                  BLOCKED_OVERVIEW                  │
                                                ▼
                                             Plan へ
 ```
-
-### Legacy: CLARIFY GATE
-
-CLARIFY GATE は SPEC GATE に統合されました。従来の CLARIFY GATE の機能は SPEC GATE の BLOCKED_CLARIFY 状態として保持されています。
-
-<!-- アンカー: #clarify-gate（後方互換性のため） -->
 
 ---
 
