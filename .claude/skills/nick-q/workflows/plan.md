@@ -6,7 +6,9 @@ Create implementation plan from spec. **Human must review and approve before pro
 
 - Feature Spec, Fix Spec, or Change 対象 Spec が存在すること
 - On Issue-linked branch
-- **★ CLARIFY GATE 通過必須**: `[NEEDS CLARIFICATION]` マーカーが 0 件であること
+- **★ SPEC GATE 通過必須**: すべてのマーカーが 0 件であること
+  - `[NEEDS CLARIFICATION]` = 0
+  - `[PENDING OVERVIEW CHANGE]` = 0 (Feature/Fix Spec の場合)
 
 ---
 
@@ -38,9 +40,9 @@ node .claude/skills/nick-q/scripts/state.cjs query --branch
 ```
 TodoWrite:
   todos:
-    - content: "Step 0: CLARIFY GATE 確認"
+    - content: "Step 0: SPEC GATE 確認"
       status: "pending"
-      activeForm: "Verifying CLARIFY GATE"
+      activeForm: "Verifying SPEC GATE"
     - content: "Step 1: コンテキスト読み込み"
       status: "pending"
       activeForm: "Loading context"
@@ -68,7 +70,7 @@ TodoWrite:
 
 ## Steps
 
-### Step 0: Verify CLARIFY GATE
+### Step 0: Verify SPEC GATE
 
 **Plan 開始前に必ず確認:**
 
@@ -80,26 +82,34 @@ TodoWrite:
    # → spec/789-change → 変更対象 Spec
    ```
 
-2. **Grep tool で `[NEEDS CLARIFICATION]` マーカーをカウント:**
+2. **Grep tool でマーカーをカウント（並列実行）:**
 
 ```
-Grep tool:
-  pattern: "\[NEEDS CLARIFICATION\]"
-  path: {Spec パス}  # タイプに応じたパス
-  output_mode: count
+Grep tool (並列実行):
+  1. pattern: "\[NEEDS CLARIFICATION\]"
+     path: {Spec パス}
+     output_mode: count
+
+  2. pattern: "\[PENDING OVERVIEW CHANGE: [^\]]+\]"
+     path: {Spec パス}
+     output_mode: count
 ```
 
-- **0 件**: CLARIFY GATE 通過 → Step 1 へ進む
-- **1 件以上**: GATE 未通過 → clarify ワークフロー を実行してから再度 Plan を開始
+- **すべて 0 件**: SPEC GATE 通過 → Step 1 へ進む
+- **1 件以上**: GATE 未通過 → 適切なワークフローで解消してから再度 Plan を開始
 
 **GATE 未通過時の表示:**
 ```
-⚠️ CLARIFY GATE 未通過
+⚠️ SPEC GATE 未通過
 
-[NEEDS CLARIFICATION] が {N} 件残っています。
-曖昧点を解消してから Plan に進んでください。
+[NEEDS CLARIFICATION]: {N} 件
+[PENDING OVERVIEW CHANGE]: {M} 件
 
-推奨: clarify ワークフロー
+これらのマーカーを解消してから Plan に進んでください。
+
+推奨:
+- [NEEDS CLARIFICATION] → clarify ワークフロー
+- [PENDING OVERVIEW CHANGE] → Overview Change サブワークフロー
 ```
 
 ---
@@ -212,7 +222,7 @@ node .claude/skills/nick-q/scripts/state.cjs branch --set-step plan
 ## Self-Check
 
 - [ ] **TodoWrite で全ステップを登録したか**
-- [ ] **CLARIFY GATE を確認したか（Step 0）**
+- [ ] **SPEC GATE を確認したか（Step 0）**
 - [ ] Feature Spec を読み込んだか
 - [ ] Domain Spec を読み込んだか
 - [ ] Plan template を使用したか

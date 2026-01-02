@@ -287,12 +287,12 @@ clarify 完了
     ↓
 Multi-Review へ戻る（対象 Spec の review.md を再実行）
     ↓
-CLARIFY GATE 再チェック
+SPEC GATE 再チェック
     ↓
 PASSED → [HUMAN_CHECKPOINT] → 次のワークフローへ
 ```
 
-**重要:** clarify 完了後は必ず Multi-Review に戻り、CLARIFY GATE を再度通過する必要があります。
+**重要:** clarify 完了後は必ず Multi-Review に戻り、SPEC GATE を再度通過する必要があります。
 
 ---
 

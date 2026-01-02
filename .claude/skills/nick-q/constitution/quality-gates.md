@@ -4,24 +4,38 @@ Defines the quality checkpoints and review processes in SSD workflow.
 
 ---
 
-## CLARIFY GATE
-<!-- SSOT: CLARIFY GATE 定義 -->
+## SPEC GATE
+<!-- SSOT: SPEC GATE 定義（CLARIFY GATE を拡張） -->
 <!-- 他のファイルはこのセクションを参照すること。定義の複製禁止。 -->
-<!-- アンカー: #clarify-gate -->
+<!-- アンカー: #spec-gate -->
+
+> **設計ドキュメント:** [spec-gate-design.md](../guides/spec-gate-design.md)
+>
+> **運用手順:** [shared/_spec-gate.md](../workflows/shared/_spec-gate.md)
 
 ### Definition
-A mandatory gate before proceeding to Plan phase.
+A mandatory gate before proceeding to Plan phase. Extends the original CLARIFY GATE to also check for pending Overview changes.
+
+### Check Items
+
+| マーカー | 意味 | 優先度 |
+|---------|------|--------|
+| `[NEEDS CLARIFICATION]` | 曖昧点・未確定事項 | 1（最優先） |
+| `[PENDING OVERVIEW CHANGE]` | Overview Spec への変更が必要 | 2 |
+| `[DEFERRED]` | 後回しにした項目 | 3 |
 
 ### Pass Conditions
 
 | 状態 | 条件 | 次のステップ |
 |------|------|-------------|
-| **PASSED** | `[NEEDS CLARIFICATION]` = 0 かつ `[DEFERRED]` = 0 | [HUMAN_CHECKPOINT] へ |
-| **PASSED_WITH_DEFERRED** | `[NEEDS CLARIFICATION]` = 0 かつ `[DEFERRED]` ≥ 1 | [HUMAN_CHECKPOINT] へ（リスク確認） |
-| **BLOCKED** | `[NEEDS CLARIFICATION]` ≥ 1 | clarify ワークフローへ |
+| **PASSED** | 全マーカー = 0 | [HUMAN_CHECKPOINT] へ |
+| **PASSED_WITH_DEFERRED** | CLARIFY = 0, OVERVIEW = 0, DEFERRED ≥ 1 | [HUMAN_CHECKPOINT] へ（リスク確認） |
+| **BLOCKED_CLARIFY** | `[NEEDS CLARIFICATION]` ≥ 1 | clarify ワークフローへ |
+| **BLOCKED_OVERVIEW** | CLARIFY = 0, `[PENDING OVERVIEW CHANGE]` ≥ 1 | Overview Change サブワークフローへ |
 
 ### Purpose
 - Ensure all ambiguities are resolved before implementation planning
+- Ensure all Overview changes are processed before implementation
 - Prevent assumptions and guesswork from propagating to code
 - Maintain spec-to-code traceability
 - Allow progress with documented risks when items cannot be decided now
@@ -32,26 +46,57 @@ A mandatory gate before proceeding to Plan phase.
 2. **HUMAN_CHECKPOINT**: [DEFERRED] 項目を人間に提示し、先に進むことを確認
 3. **実装フェーズ**: [DEFERRED] 項目に遭遇した場合、clarify に戻る
 
+### BLOCKED_OVERVIEW の扱い
+
+1. **マーカー収集**: Feature/Fix Spec から全 [PENDING OVERVIEW CHANGE] を抽出
+2. **重複チェック**: 他 Feature で既に適用済みかを確認
+3. **Impact Analysis**: 変更の影響範囲を分析
+4. **[HUMAN_CHECKPOINT]**: 変更内容と影響を提示し、承認を取得
+5. **Overview Spec 更新**: Domain/Screen Spec を更新
+6. **マーカー削除**: Feature/Fix Spec からマーカーを削除
+7. **Multi-Review へ戻る**: 変更後の Spec を再レビュー
+
 ### Flow
 ```
 Spec作成 → Multi-Review → Lint → マーカーカウント
                                         │
-            ┌───────────────────────────┤
-            │                           │
-            ▼                           ▼
-[NEEDS CLARIFICATION] > 0    [NEEDS CLARIFICATION] = 0
-            │                           │
-            ▼                           ├── [DEFERRED] = 0 → PASSED
-         BLOCKED                        │
-            │                           └── [DEFERRED] > 0 → PASSED_WITH_DEFERRED
-            ▼                                      │
-         clarify                                   ▼
-            │                           [HUMAN_CHECKPOINT]
-            └──→ Multi-Review                (リスク確認)
-                 (ループ)                        │
-                                                 ▼
-                                              Plan へ
+     ┌──────────────────────────────────┼──────────────────────────┐
+     │                                  │                          │
+     ▼                                  ▼                          ▼
+[NEEDS CLARIFICATION] > 0    [PENDING OVERVIEW CHANGE] > 0    両方 = 0
+     │                                  │                          │
+     ▼                                  ▼                          │
+BLOCKED_CLARIFY                  BLOCKED_OVERVIEW                  │
+     │                                  │                          │
+     ▼                                  ▼                          │
+  clarify                        Overview Change                   │
+     │                           サブワークフロー                   │
+     │                                  │                          │
+     └──────────────┬───────────────────┘                          │
+                    │                                              │
+                    ▼                                              │
+              Multi-Review                                         │
+                (ループ)                                            │
+                                                                   │
+                    ┌──────────────────────────────────────────────┘
+                    │
+                    ├── [DEFERRED] = 0 → PASSED
+                    │
+                    └── [DEFERRED] > 0 → PASSED_WITH_DEFERRED
+                                               │
+                                               ▼
+                                    [HUMAN_CHECKPOINT]
+                                         (リスク確認)
+                                               │
+                                               ▼
+                                            Plan へ
 ```
+
+### Legacy: CLARIFY GATE
+
+CLARIFY GATE は SPEC GATE に統合されました。従来の CLARIFY GATE の機能は SPEC GATE の BLOCKED_CLARIFY 状態として保持されています。
+
+<!-- アンカー: #clarify-gate（後方互換性のため） -->
 
 ---
 
@@ -149,7 +194,7 @@ Workflow Completion 用:
 - [ ] [NEEDS CLARIFICATION] の箇所を確認したか
 
 #### 2. Plan Approval
-**Triggers:** Plan 作成完了時、CLARIFY GATE 通過後
+**Triggers:** Plan 作成完了時、SPEC GATE 通過後
 
 **Human Verifies:**
 - [ ] 技術的アプローチが妥当か

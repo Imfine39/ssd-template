@@ -45,9 +45,9 @@ TodoWrite:
     - content: "Step 5: Multi-Review 実行"
       status: "pending"
       activeForm: "Executing Multi-Review"
-    - content: "Step 6: CLARIFY GATE チェック"
+    - content: "Step 6: SPEC GATE チェック"
       status: "pending"
-      activeForm: "Checking CLARIFY GATE"
+      activeForm: "Checking SPEC GATE"
     - content: "Step 7: Lint 実行"
       status: "pending"
       activeForm: "Running Lint"
@@ -176,9 +176,21 @@ Document findings in Fix Spec.
    - Screen Modification Log に status `Planned` で追加
 
    **3.2 Domain Spec の更新** (M-*/API-* に影響がある場合)
-   - API 仕様の修正が必要 → Domain Spec を更新
-   - 新規 API/Master が必要 → Domain Spec に追加（status: `Planned`）
-   - 大規模変更 → change ワークフローを先行実行
+   - Case 1: 既存のまま使用 → 参照のみ
+   - Case 2: 新規 API/Master が必要 → Domain Spec に追加（status: `Planned`）
+   - Case 3: 既存の変更が必要 → **[PENDING OVERVIEW CHANGE] マーカーを追加**
+
+   **Case 3 の詳細手順:**
+   ```markdown
+   <!-- Fix Spec 内 -->
+   - {対象ID}: {既存の説明}
+     - [PENDING OVERVIEW CHANGE: {対象ID}]
+       - 変更: {変更内容の概要}
+       - 理由: {このバグ修正で必要な理由}
+   ```
+
+   > **Note:** 実際の Overview 変更は SPEC GATE で処理。ここでは発見と記録のみ。
+   > 詳細は [spec-gate-design.md](../guides/spec-gate-design.md) 参照。
 
 ### Step 5: Multi-Review (3観点並列レビュー)
 
@@ -199,40 +211,69 @@ Fix Spec の品質を担保するため Multi-Review を実行：
    - 曖昧点あり → Step 6 でブロック
    - Critical 未解決 → 問題をリストし対応を促す
 
-### Step 6: CLARIFY GATE チェック（必須）
+### Step 6: SPEC GATE チェック（必須）
 
 **★ このステップはスキップ禁止 ★**
 
-Multi-Review 後、Grep tool で `[NEEDS CLARIFICATION]` マーカーをカウント：
+> **共通コンポーネント参照:** [shared/_spec-gate.md](shared/_spec-gate.md) を実行
+
+Multi-Review 後、以下のマーカーをカウント：
 
 ```
-Grep tool:
-  pattern: "\[NEEDS CLARIFICATION\]"
-  path: .specify/specs/fixes/{id}/spec.md
-  output_mode: count
+Grep tool (並列実行):
+  1. pattern: "\[NEEDS CLARIFICATION\]"
+     path: .specify/specs/fixes/{id}/spec.md
+     output_mode: count
+
+  2. pattern: "\[PENDING OVERVIEW CHANGE: [^\]]+\]"
+     path: .specify/specs/fixes/{id}/spec.md
+     output_mode: count
+
+  3. pattern: "\[DEFERRED:[^\]]+\]"
+     path: .specify/specs/fixes/{id}/spec.md
+     output_mode: count
 ```
 
 **判定ロジック:**
 
 ```
 clarify_count = [NEEDS CLARIFICATION] マーカー数
+overview_count = [PENDING OVERVIEW CHANGE] マーカー数
+deferred_count = [DEFERRED] マーカー数
 
 if clarify_count > 0:
     ┌─────────────────────────────────────────────────────────────┐
-    │ ★ CLARIFY GATE: 曖昧点が {clarify_count} 件あります         │
+    │ ★ SPEC GATE: BLOCKED_CLARIFY                                │
+    │                                                             │
+    │ [NEEDS CLARIFICATION]: {clarify_count} 件                   │
     │                                                             │
     │ 実装に進む前に clarify ワークフロー が必須です。             │
-    │                                                             │
-    │ 「clarify を実行して」と依頼してください。                   │
     └─────────────────────────────────────────────────────────────┘
     → clarify ワークフロー を実行（必須）
     → clarify 完了後、Multi-Review からやり直し
 
+elif overview_count > 0:
+    ┌─────────────────────────────────────────────────────────────┐
+    │ ★ SPEC GATE: BLOCKED_OVERVIEW                               │
+    │                                                             │
+    │ [PENDING OVERVIEW CHANGE]: {overview_count} 件              │
+    │                                                             │
+    │ Overview Spec への変更が必要です。                          │
+    └─────────────────────────────────────────────────────────────┘
+    → Overview Change サブワークフロー を実行
+    → 参照: shared/_overview-change.md
+    → 完了後、Multi-Review からやり直し
+
+elif deferred_count > 0:
+    → PASSED_WITH_DEFERRED
+    → [HUMAN_CHECKPOINT] でリスク確認後、Step 7 へ
+
 else:
+    → PASSED
     → Step 7 (Lint) へ進む
 ```
 
-**重要:** clarify_count > 0 の場合、実装への遷移は禁止。
+**重要:** BLOCKED の場合、実装への遷移は禁止。
 
 ### Step 7: Run Lint
 
@@ -252,16 +293,22 @@ node .claude/skills/nick-q/scripts/spec-lint.cjs
    Root Cause: {原因の要約}
    Impact: {影響範囲}
 
-   === CLARIFY GATE ===
+   === SPEC GATE ===
    [NEEDS CLARIFICATION]: {N} 箇所
-   Status: {PASSED | BLOCKED}
+   [PENDING OVERVIEW CHANGE]: {M} 箇所
+   [DEFERRED]: {D} 箇所
+   Status: {PASSED | PASSED_WITH_DEFERRED | BLOCKED_CLARIFY | BLOCKED_OVERVIEW}
 
-   {if BLOCKED}
+   {if BLOCKED_CLARIFY}
    ★ clarify ワークフロー を実行してください。
+   {/if}
+
+   {if BLOCKED_OVERVIEW}
+   ★ Overview Change サブワークフローを実行します。
    {/if}
    ```
 
-2. **CLARIFY GATE が PASSED の場合のみ:**
+2. **SPEC GATE が PASSED/PASSED_WITH_DEFERRED の場合のみ:**
    ```
    === [HUMAN_CHECKPOINT] ===
    確認事項:
@@ -397,7 +444,8 @@ Root Cause: {概要}
 - [ ] **Impact Analysis を実行したか（Screen/Domain 変更時）** → [shared/impact-analysis.md](shared/impact-analysis.md)
 - [ ] **Severity Classification を実行したか（Trivial/Standard）**
 - [ ] **Multi-Review を実行したか（3観点並列）**
-- [ ] **CLARIFY GATE をチェックしたか**
+- [ ] **SPEC GATE をチェックしたか（CLARIFY + OVERVIEW）**
+- [ ] **BLOCKED_OVERVIEW の場合、Overview Change を実行したか**
 - [ ] spec-lint.cjs を実行したか
 - [ ] **[HUMAN_CHECKPOINT] で承認を得たか**
 - [ ] gh issue create を実行したか（承認後）
@@ -411,6 +459,7 @@ Root Cause: {概要}
 
 | Condition | Workflow | Description |
 |-----------|----------|-------------|
-| CLARIFY GATE: BLOCKED | clarify | **必須** - 曖昧点を解消 |
-| CLARIFY GATE: PASSED + Trivial | implement | 直接修正 |
-| CLARIFY GATE: PASSED + Standard | plan | 修正計画作成 |
+| SPEC GATE: BLOCKED_CLARIFY | clarify | **必須** - 曖昧点を解消 |
+| SPEC GATE: BLOCKED_OVERVIEW | _overview-change.md | **必須** - Overview 変更を処理 |
+| SPEC GATE: PASSED + Trivial | implement | 直接修正 |
+| SPEC GATE: PASSED + Standard | plan | 修正計画作成 |

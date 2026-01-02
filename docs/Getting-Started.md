@@ -134,7 +134,7 @@ Claude が以下を実行します：
 3. **QA 分析 + 対話** - 回答を分析し、残りの曖昧点を AskUserQuestion で解消
 4. **Vision Spec 作成** - プロジェクトの目的・ゴールを定義
 5. **Multi-Review** - 3 観点から自動レビュー
-6. **CLARIFY GATE** - 曖昧点が解消されていることを確認
+6. **SPEC GATE** - 曖昧点が解消されていることを確認
 7. **Domain/Screen Spec 作成** - データモデル・API・画面定義
 
 ### 3. 機能追加
@@ -150,7 +150,7 @@ Claude が以下を実行：
 1. **feature ワークフロー開始**
 2. **Impact Guard** - スコープ判定（小規模→直接実装 / 大規模→Spec 作成）
 3. **Feature Spec 作成** - 詳細な機能要件を定義
-4. **Multi-Review → Lint → CLARIFY GATE**
+4. **Multi-Review → Lint → SPEC GATE**
 5. **Plan → Tasks → Implement → PR**
 
 ---

@@ -295,7 +295,7 @@ Step B: clarify.md を実行（必要な場合）
 Step C: review.md（Multi-Review）を再実行
     │
     ├─ 1. 更新した Spec を 3 観点でレビュー
-    ├─ 2. CLARIFY GATE を再通過
+    ├─ 2. SPEC GATE を再通過
     └─ 3. [HUMAN_CHECKPOINT] で承認
     │
     ▼

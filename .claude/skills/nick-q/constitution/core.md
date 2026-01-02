@@ -126,7 +126,9 @@ All changes MUST be driven by specifications.
 - Every non-trivial change from a GitHub Issue
 - Specifications in `.specify/specs/` are the single source of truth
 - Ambiguity → Escalate, never guess
-- **CLARIFY GATE**: [NEEDS CLARIFICATION] = 0 is required before Plan
+- **SPEC GATE**: All markers resolved before Plan
+  - `[NEEDS CLARIFICATION]` = 0 required
+  - `[PENDING OVERVIEW CHANGE]` = 0 required (after Overview Change subworkflow)
   - See [quality-gates.md](quality-gates.md) for details
 
 **Spec Creation Flow:**
@@ -150,15 +152,19 @@ Multi-Review（3観点並列） → AI修正
     ↓
 Lint
     ↓
-マーカーカウント
+★ SPEC GATE チェック ★
     │
-    ├─ [NEEDS CLARIFICATION] > 0 → Clarify → Multi-Review へ戻る
+    ├─ [NEEDS CLARIFICATION] > 0
+    │     └─→ BLOCKED_CLARIFY → Clarify → Multi-Review へ戻る
     │
-    └─ [NEEDS CLARIFICATION] = 0
+    ├─ [PENDING OVERVIEW CHANGE] > 0 (Feature/Fix Spec のみ)
+    │     └─→ BLOCKED_OVERVIEW → Overview Change サブワークフロー → Multi-Review へ戻る
+    │
+    └─ [NEEDS CLARIFICATION] = 0 かつ [PENDING OVERVIEW CHANGE] = 0
             │
-            ├─ [DEFERRED] = 0 → ★ CLARIFY GATE: PASSED ★
+            ├─ [DEFERRED] = 0 → ★ SPEC GATE: PASSED ★
             │
-            └─ [DEFERRED] > 0 → ★ CLARIFY GATE: PASSED_WITH_DEFERRED ★
+            └─ [DEFERRED] > 0 → ★ SPEC GATE: PASSED_WITH_DEFERRED ★
                                         │
                                         ▼
                                [HUMAN_CHECKPOINT]

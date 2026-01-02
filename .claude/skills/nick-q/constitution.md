@@ -43,11 +43,14 @@ Code MUST be maintainable and consistent.
 ### 4. Spec-Driven Workflow
 All changes MUST be driven by specifications.
 - Every non-trivial change from a GitHub Issue
-- Core sequence: Entry → 入力検証 → Spec作成 → Multi-Review → [Clarify] → Plan → Tasks → Implement → PR
+- Core sequence: Entry → 入力検証 → Spec作成 → Multi-Review → [Clarify/Overview Change] → Plan → Tasks → Implement → PR
   - 入力検証: Spec作成前に必須項目を確認（不足時は追加入力を要求）
   - Multi-Review: Spec 作成直後に自動実行
   - Clarify: [NEEDS CLARIFICATION] がある場合のみ実行
-  - **CLARIFY GATE**: [NEEDS CLARIFICATION] = 0 が Plan の前提条件
+  - Overview Change: [PENDING OVERVIEW CHANGE] がある場合のみ実行
+  - **SPEC GATE**: すべてのマーカー解消が Plan の前提条件
+    - `[NEEDS CLARIFICATION]` = 0
+    - `[PENDING OVERVIEW CHANGE]` = 0
 - Specifications in `.specify/specs/` are the single source of truth
 - Ambiguity → Escalate, never guess
 
@@ -158,12 +161,18 @@ See `guides/id-naming.md` for complete ID format definitions.
 6. [HUMAN_CHECKPOINT] Spec 確認
    → ユーザーが Spec 内容を確認
 
-7. Clarify (clarify ワークフロー) [条件付き]
-   → [NEEDS CLARIFICATION] がある場合のみ実行
-   → 解消後 Step 4 へ戻りループ
+7. SPEC GATE チェック
+   ┌─ [NEEDS CLARIFICATION] > 0
+   │     → Clarify (clarify ワークフロー) → Step 4 へ戻る
+   │
+   ├─ [PENDING OVERVIEW CHANGE] > 0 (Feature/Fix のみ)
+   │     → Overview Change → Step 4 へ戻る
+   │
+   └─ すべてのマーカー = 0
+         → PASSED → 次へ
 
    ════════════════════════════════════════════════════
-   ★ CLARIFY GATE: [NEEDS CLARIFICATION] = 0 必須
+   ★ SPEC GATE: すべてのマーカー = 0 必須
    ════════════════════════════════════════════════════
 
 8. Test Scenario (test-scenario ワークフロー) [任意]
@@ -171,7 +180,7 @@ See `guides/id-naming.md` for complete ID format definitions.
    → テストデータ定義
 
 9. Plan (plan ワークフロー)
-   → CLARIFY GATE 通過が前提条件
+   → SPEC GATE 通過が前提条件
    → Implementation plan
    → HUMAN_CHECKPOINT: approval required
 
@@ -258,7 +267,7 @@ When reaching a checkpoint, present it in this format:
 
 **Triggers:**
 - Plan 作成完了時
-- CLARIFY GATE 通過後
+- SPEC GATE 通過後
 
 **Human Verifies:**
 - [ ] 技術的アプローチが妥当か

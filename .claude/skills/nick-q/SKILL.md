@@ -79,9 +79,9 @@ Issue には複数の状態があり、それぞれ処理が異なる。
 
 | 状態 | 処理 |
 |------|------|
-| **Draft Spec あり** | Draft 読み込み → 詳細 QA → Spec 更新 → Multi-Review → CLARIFY GATE |
+| **Draft Spec あり** | Draft 読み込み → 詳細 QA → Spec 更新 → Multi-Review → SPEC GATE |
 | **Clarified Spec あり** | → `plan.md` へ（Spec 作成は完了済み） |
-| **In Review Spec あり** | Multi-Review から再開 → CLARIFY GATE |
+| **In Review Spec あり** | Multi-Review から再開 → SPEC GATE |
 | **Spec なし + Input あり** | Input 読み込み → `feature.md` or `fix.md` へ |
 | **Spec なし + Input なし** | 「Input に記入してから再度依頼してください」と案内 |
 
@@ -150,20 +150,19 @@ Spec 作成は以下のフローで品質を担保：
 │    └─ OK → 次へ                                                 │
 │    ↓                                                            │
 │ 3. Spec 作成                                                    │
+│    ├─ Case 3（Overview 変更必要）→ [PENDING OVERVIEW CHANGE]    │
 │    ↓                                                            │
 │ 4. Multi-Review (3観点並列) → AI修正可能な問題を自動修正       │
 │    ↓                                                            │
 │ 5. Lint 実行                                                    │
 │    ↓                                                            │
-│ 6. [HUMAN_CHECKPOINT] ← Spec 内容を確認                         │
-│    ↓                                                            │
-│    [NEEDS CLARIFICATION] あり?                                  │
-│    ├─ YES → Spec Clarify → Step 4 へ戻る（ループ）             │
-│    │                                                            │
-│    └─ NO → ★ CLARIFY GATE 通過 ★                               │
+│ 6. ★ SPEC GATE ★                                                │
+│    ├─ [NEEDS CLARIFICATION] > 0 → clarify → Step 4 へ戻る      │
+│    ├─ [PENDING OVERVIEW CHANGE] > 0 → Overview Change → Step 4 │
+│    └─ 両方 = 0 → [HUMAN_CHECKPOINT]                             │
 │                                                                 │
 │ ════════════════════════════════════════════════════════════════│
-│ ★ CLARIFY GATE: [NEEDS CLARIFICATION] = 0 が Plan の前提条件   │
+│ ★ SPEC GATE: 曖昧点 = 0 かつ Overview変更 = 0 が Plan の前提   │
 │ ════════════════════════════════════════════════════════════════│
 │                                                                 │
 │ 7. Plan → [HUMAN_CHECKPOINT]                                    │
@@ -184,11 +183,16 @@ Spec 作成は以下のフローで品質を担保：
 |------|-----------|------|------|
 | 入力検証 | Spec作成前 | 入力の必須項目・明らかな不足 | ユーザーに追加入力を要求 |
 | Spec Clarify | Multi-Review後 | Spec内の[NEEDS CLARIFICATION] | 曖昧点解消ワークフローで解消 |
+| Overview Change | SPEC GATE後 | [PENDING OVERVIEW CHANGE] | Overview Change サブワークフローで解消 |
 
-**重要: CLARIFY GATE**
-- **Plan に進む前提条件:** `[NEEDS CLARIFICATION]` マーカーが 0 件であること
-- 曖昧点が残っている状態で Plan に進むことは禁止
-- Clarify → Multi-Review → Lint のループを曖昧点解消まで繰り返す
+**重要: SPEC GATE**
+> **SSOT:** [quality-gates.md#spec-gate](constitution/quality-gates.md#spec-gate) 参照
+
+- **Plan に進む前提条件:**
+  - `[NEEDS CLARIFICATION]` マーカーが 0 件
+  - `[PENDING OVERVIEW CHANGE]` マーカーが 0 件
+- 曖昧点または Overview 変更が残っている状態で Plan に進むことは禁止
+- Clarify/Overview Change → Multi-Review → Lint のループを解消まで繰り返す
 
 ### Multi-Review (Spec 作成後に自動実行)
 

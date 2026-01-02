@@ -82,6 +82,7 @@ TodoWrite:
 - [ ] 他 Spec への参照が妥当 (存在する ID を参照)
 - [ ] ビジネスロジックが論理的に成立する
 - [ ] ユーザー役割と権限が一貫している
+- [ ] `[PENDING OVERVIEW CHANGE]` の内容が明確で実行可能 (Feature/Fix Spec のみ)
 
 ### Reviewer C: 完全性・網羅性 (Completeness & Coverage)
 
@@ -284,6 +285,11 @@ elif has_ambiguity_markers:
     // [NEEDS CLARIFICATION] が残っている
     suggest: "clarify ワークフローで曖昧点を解消してください"
 
+elif has_pending_overview_change:
+    // [PENDING OVERVIEW CHANGE] が残っている (Feature/Fix Spec のみ)
+    report: "[PENDING OVERVIEW CHANGE] が検出されました"
+    suggest: "SPEC GATE で Overview Change サブワークフローを実行してください"
+
 elif lint_failed:
     // Lint エラーがある
     fix lint errors and re-run
@@ -293,6 +299,9 @@ else:
     report: "Multi-Review 完了。[HUMAN_CHECKPOINT] 承認待ち"
     suggest: "次のステップへ進んでください"
 ```
+
+> **Note:** `[PENDING OVERVIEW CHANGE]` のチェックは Feature/Fix Spec でのみ実行。
+> Overview Spec ではこのマーカーは使用しないため、チェックをスキップする。
 
 ---
 

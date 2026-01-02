@@ -43,9 +43,9 @@ TodoWrite:
     - content: "Step 9: Multi-Review"
       status: "pending"
       activeForm: "Running Multi-Review"
-    - content: "Step 10: CLARIFY GATE"
+    - content: "Step 10: SPEC GATE"
       status: "pending"
-      activeForm: "Checking CLARIFY GATE"
+      activeForm: "Checking SPEC GATE"
     - content: "Step 11: [HUMAN_CHECKPOINT]"
       status: "pending"
       activeForm: "Awaiting approval"
@@ -275,21 +275,33 @@ node .claude/skills/nick-q/scripts/matrix-ops.cjs validate
 
 AI 修正可能な問題を修正。
 
-### Step 10: CLARIFY GATE
+### Step 10: SPEC GATE
 
-> **参照:** [shared/_clarify-gate.md](shared/_clarify-gate.md)
+> **参照:** [shared/_spec-gate.md](shared/_spec-gate.md)
+>
+> **Note:** Overview Spec では `[PENDING OVERVIEW CHANGE]` は使用しない（自身への変更なので）。
+> ここでは `[NEEDS CLARIFICATION]` と `[DEFERRED]` のみをチェック。
 
 ```
-Grep tool:
-  pattern: "\[NEEDS CLARIFICATION\]"
-  path: .specify/specs/overview/
-  output_mode: count
+Grep tool (並列実行):
+  1. pattern: "\[NEEDS CLARIFICATION\]"
+     path: .specify/specs/overview/
+     output_mode: count
+
+  2. pattern: "\[DEFERRED:[^\]]+\]"
+     path: .specify/specs/overview/
+     output_mode: count
+
+  3. pattern: "^- \[ \]"  # Open Questions
+     path: .specify/specs/overview/
+     output_mode: count
 ```
 
-| 結果 | 判定 | アクション |
-|------|------|----------|
-| > 0 | BLOCKED | clarify ワークフロー → Step 9 へ戻る |
-| = 0 | PASSED | Step 11 へ |
+| マーカー | 結果 | 判定 | アクション |
+|---------|------|------|----------|
+| [NEEDS CLARIFICATION] / Open Questions | > 0 | BLOCKED_CLARIFY | clarify ワークフロー → Step 9 へ戻る |
+| [DEFERRED] | > 0 | PASSED_WITH_DEFERRED | [HUMAN_CHECKPOINT] でリスク確認 |
+| 全て | = 0 | PASSED | Step 11 へ |
 
 ### Step 11: [HUMAN_CHECKPOINT]
 
@@ -428,7 +440,7 @@ node .claude/skills/nick-q/scripts/preserve-input.cjs project-setup
 - [ ] Domain Spec を作成したか
 - [ ] Matrix を生成・検証したか
 - [ ] Multi-Review を実行したか
-- [ ] CLARIFY GATE をチェックしたか
+- [ ] SPEC GATE をチェックしたか
 - [ ] [HUMAN_CHECKPOINT] で承認を得たか
 - [ ] **Feature Drafts を生成したか（Status: Draft）**
 - [ ] **Feature Issues を作成したか（Draft パスを記載）**

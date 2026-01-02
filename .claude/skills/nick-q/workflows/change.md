@@ -8,9 +8,17 @@ Handle changes to shared specifications that may impact multiple Features.
 
 ## When to Use
 
+**スタンドアロンモード（直接呼び出し）:**
 - Case 3: Feature requires changes to existing M-*/API-*
 - Design evolution: Screen layout needs modification
 - Business rule change: BR-*/VR-* update
+
+**Embedded モード（SPEC GATE から呼び出し）:**
+- Feature/Fix Spec に `[PENDING OVERVIEW CHANGE]` マーカーがある場合
+- SPEC GATE: BLOCKED_OVERVIEW 状態から呼び出される
+- 詳細は [shared/_overview-change.md](shared/_overview-change.md) 参照
+
+> **Note:** Embedded モードでは Step 1-3 がスキップされ、マーカーから変更内容を抽出する。
 
 ---
 
@@ -42,9 +50,9 @@ TodoWrite:
     - content: "Step 7: Multi-Review 実行"
       status: "pending"
       activeForm: "Executing Multi-Review"
-    - content: "Step 8: CLARIFY GATE チェック"
+    - content: "Step 8: SPEC GATE チェック"
       status: "pending"
-      activeForm: "Checking CLARIFY GATE"
+      activeForm: "Checking SPEC GATE"
     - content: "Step 9: Lint 実行"
       status: "pending"
       activeForm: "Running Lint"
@@ -183,40 +191,59 @@ node .claude/skills/nick-q/scripts/branch.cjs --type spec --slug {slug} --issue 
    - 曖昧点あり → Step 8 でブロック
    - Critical 未解決 → 問題をリストし対応を促す
 
-### Step 8: CLARIFY GATE チェック（必須）
+### Step 8: SPEC GATE チェック（必須）
 
 **★ このステップはスキップ禁止 ★**
 
-Multi-Review 後、Grep tool で `[NEEDS CLARIFICATION]` マーカーをカウント：
+> **共通コンポーネント参照:** [shared/_spec-gate.md](shared/_spec-gate.md) を実行
+>
+> **Note:** Overview Spec の変更では `[PENDING OVERVIEW CHANGE]` は使用しない（自身への変更なので）。
+> したがって、ここでは `[NEEDS CLARIFICATION]` と `[DEFERRED]` のみをチェック。
+
+Multi-Review 後、以下のマーカーをカウント：
 
 ```
-Grep tool:
-  pattern: "\[NEEDS CLARIFICATION\]"
-  path: .specify/specs/overview/{spec_type}/spec.md
-  output_mode: count
+Grep tool (並列実行):
+  1. pattern: "\[NEEDS CLARIFICATION\]"
+     path: .specify/specs/overview/{spec_type}/spec.md
+     output_mode: count
+
+  2. pattern: "\[DEFERRED:[^\]]+\]"
+     path: .specify/specs/overview/{spec_type}/spec.md
+     output_mode: count
+
+  3. pattern: "^- \[ \]"  # Open Questions
+     path: .specify/specs/overview/{spec_type}/spec.md
+     output_mode: count
 ```
 
 **判定ロジック:**
 
 ```
-clarify_count = [NEEDS CLARIFICATION] マーカー数
+clarify_count = [NEEDS CLARIFICATION] + Open Questions
+deferred_count = [DEFERRED] マーカー数
 
 if clarify_count > 0:
     ┌─────────────────────────────────────────────────────────────┐
-    │ ★ CLARIFY GATE: 曖昧点が {clarify_count} 件あります         │
+    │ ★ SPEC GATE: BLOCKED_CLARIFY                                │
+    │                                                             │
+    │ [NEEDS CLARIFICATION]: {clarify_count} 件                   │
     │                                                             │
     │ 次のステップに進む前に clarify ワークフロー が必須です。     │
-    │                                                             │
-    │ 「clarify を実行して」と依頼してください。                   │
     └─────────────────────────────────────────────────────────────┘
     → clarify ワークフロー を実行（必須）
     → clarify 完了後、Multi-Review からやり直し
 
+elif deferred_count > 0:
+    → PASSED_WITH_DEFERRED
+    → [HUMAN_CHECKPOINT] でリスク確認後、Step 9 へ
+
 else:
+    → PASSED
     → Step 9 (Lint) へ進む
 ```
 
-**重要:** clarify_count > 0 の場合、次のステップへの遷移は禁止。
+**重要:** BLOCKED の場合、次のステップへの遷移は禁止。
 
 ### Step 9: Run Lint
 
@@ -241,16 +268,17 @@ node .claude/skills/nick-q/scripts/validate-matrix.cjs
 
    Matrix: 更新済み
 
-   === CLARIFY GATE ===
+   === SPEC GATE ===
    [NEEDS CLARIFICATION]: {N} 箇所
-   Status: {PASSED | BLOCKED}
+   [DEFERRED]: {D} 箇所
+   Status: {PASSED | PASSED_WITH_DEFERRED | BLOCKED_CLARIFY}
 
-   {if BLOCKED}
+   {if BLOCKED_CLARIFY}
    ★ clarify ワークフロー を実行してください。
    {/if}
    ```
 
-2. **CLARIFY GATE が PASSED の場合のみ:**
+2. **SPEC GATE が PASSED/PASSED_WITH_DEFERRED の場合のみ:**
    ```
    === [HUMAN_CHECKPOINT] ===
    確認事項:
@@ -273,7 +301,7 @@ node .claude/skills/nick-q/scripts/validate-matrix.cjs
 - [ ] Matrix を更新したか
 - [ ] 影響を受ける Feature Spec を更新したか
 - [ ] **Multi-Review を実行したか（3観点並列）**
-- [ ] **CLARIFY GATE をチェックしたか**
+- [ ] **SPEC GATE をチェックしたか**
 - [ ] lint を実行したか
 - [ ] **TodoWrite で全ステップを completed にしたか**
 
@@ -283,6 +311,7 @@ node .claude/skills/nick-q/scripts/validate-matrix.cjs
 
 | Condition | Workflow | Description |
 |-----------|----------|-------------|
-| CLARIFY GATE: BLOCKED | clarify | **必須** - 曖昧点を解消 |
-| CLARIFY GATE: PASSED + Spec のみ | pr | PR 作成 |
-| CLARIFY GATE: PASSED + 実装必要 | implement | Feature 作業を再開 |
+| SPEC GATE: BLOCKED_CLARIFY | clarify | **必須** - 曖昧点を解消 |
+| SPEC GATE: PASSED + Spec のみ | pr | PR 作成 |
+| SPEC GATE: PASSED + 実装必要 | implement | Feature 作業を再開 |
+| Embedded モード | (呼び出し元へ) | Feature/Fix の Multi-Review へ戻る |

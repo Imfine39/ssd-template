@@ -98,13 +98,14 @@ Vision Spec 存在？        Issue # 指定あり？
 | clarified | HUMAN_CHECKPOINT 待ち → approved |
 | approved | plan, implement へ進行可能 |
 
-### 3.3 CLARIFY GATE 結果別
+### 3.3 SPEC GATE 結果別
 
-> **SSOT:** [quality-gates.md](../constitution/quality-gates.md#clarify-gate) 参照
+> **SSOT:** [quality-gates.md](../constitution/quality-gates.md#spec-gate) 参照
 
 | 結果 | 次ステップ |
 |------|-----------|
-| BLOCKED | clarify.md で曖昧点を解消 → review へ戻る |
+| BLOCKED_CLARIFY | clarify.md で曖昧点を解消 → review へ戻る |
+| BLOCKED_OVERVIEW | Overview Change サブワークフロー → review へ戻る |
 | PASSED | [HUMAN_CHECKPOINT] → 承認後 plan/implement へ |
 | PASSED_WITH_DEFERRED | [HUMAN_CHECKPOINT]（リスク確認）→ plan/implement へ |
 

@@ -22,6 +22,8 @@
  *     - Matrix references undefined entities
  *     - Superseded spec without successor reference
  *     - Circular dependency between Features
+ *     - Unresolved [PENDING OVERVIEW CHANGE] markers in Feature/Fix specs
+ *     - [NEEDS CLARIFICATION] markers in APPROVED/IMPLEMENTED specs
  *
  * Warnings (exit code still 0):
  *   - Unexpected status value
@@ -33,6 +35,7 @@
  *   - Deprecated spec without documented reason
  *   - No cross-reference.json found
  *   - Duplicate T-NNN/TC-NNN IDs within same spec (local scope)
+ *   - [NEEDS CLARIFICATION] markers in DRAFT/IN REVIEW specs (reminder to resolve)
  *
  * Incremental Mode:
  *   Uses a cache file (.specify/state/lint-cache.json) to track file hashes.
@@ -624,6 +627,53 @@ if (domainSpecs.length > 0) {
           `Feature ${spec.relFile} was last modified ${daysDiff} days before the latest Domain update; consider reviewing for consistency`
         );
       }
+    }
+  }
+}
+
+// ============================================================================
+// SPEC GATE Marker Checks
+// ============================================================================
+
+// Check for unresolved [PENDING OVERVIEW CHANGE] markers in Feature/Fix specs
+const pendingOverviewChangeRegex = /\[PENDING OVERVIEW CHANGE: [^\]]+\]/g;
+const needsClarificationRegex = /\[NEEDS CLARIFICATION\]/g;
+
+for (const spec of specs) {
+  // Only check Feature and Fix specs (not Overview specs)
+  if (!['FEATURE', 'FIX'].includes(spec.specType)) continue;
+
+  const content = fileContentCache.get(spec.file);
+  if (!content) continue;
+
+  // Check for [PENDING OVERVIEW CHANGE] markers
+  const pendingMatches = content.match(pendingOverviewChangeRegex);
+  if (pendingMatches && pendingMatches.length > 0) {
+    errors.push(
+      `${spec.relFile} has ${pendingMatches.length} unresolved [PENDING OVERVIEW CHANGE] marker(s). ` +
+      `Run Overview Change subworkflow before proceeding to Plan.`
+    );
+    // List the specific markers
+    for (const marker of pendingMatches) {
+      errors.push(`  → ${marker}`);
+    }
+  }
+
+  // Check for [NEEDS CLARIFICATION] markers (warning in approved+ specs, error otherwise depends on status)
+  const clarifyMatches = content.match(needsClarificationRegex);
+  if (clarifyMatches && clarifyMatches.length > 0) {
+    if (['APPROVED', 'IMPLEMENTED'].includes(spec.status)) {
+      // Should not have clarification markers in approved/implemented specs
+      errors.push(
+        `${spec.relFile} has ${clarifyMatches.length} [NEEDS CLARIFICATION] marker(s) in ${spec.status} status. ` +
+        `Resolve via clarify workflow.`
+      );
+    } else {
+      // Warning for draft/in-review specs
+      warnings.push(
+        `${spec.relFile} has ${clarifyMatches.length} [NEEDS CLARIFICATION] marker(s). ` +
+        `Resolve before proceeding to Plan.`
+      );
     }
   }
 }

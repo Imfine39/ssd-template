@@ -40,7 +40,7 @@ Mark any ambiguous, incomplete, or uncertain content with `[NEEDS CLARIFICATION]
 **Resolution:**
 - Clarifications are resolved via the `clarify` workflow
 - Once resolved, remove the marker and update the content
-- All markers MUST be resolved before CLARIFY GATE
+- All markers MUST be resolved before SPEC GATE
 
 ### [DEFERRED] Marker
 
@@ -61,18 +61,43 @@ Mark items that cannot be decided now but are acceptable to defer:
 | 後フェーズ詳細化 | MVP以降で対応予定 | `[DEFERRED: Phase 2で詳細化]` |
 | 情報不足 | 追加調査が必要 | `[DEFERRED: 追加調査必要]` |
 
-**重要:** [DEFERRED] は CLARIFY GATE をブロックしないが、実装時に遭遇したら clarify に戻る必要がある。
+**重要:** [DEFERRED] は SPEC GATE をブロックしないが、実装時に遭遇したら clarify に戻る必要がある。
+
+### [PENDING OVERVIEW CHANGE] Marker
+
+Feature/Fix Spec 作成中に Overview Spec（Vision/Domain/Screen）への変更が必要と判明した場合に使用：
+
+```markdown
+### Domain References
+
+- M-USER: ユーザー情報
+  - [PENDING OVERVIEW CHANGE: M-USER]
+    - 変更: `email: string (required)` を追加
+    - 理由: メール通知機能で必要
+```
+
+**Rules:**
+1. **対象 ID を明記** - M-*, API-*, SCR-*, VIS-* 等
+2. **変更内容を具体的に** - 何を追加/変更するか
+3. **理由を記載** - なぜこの Feature/Fix で必要か
+
+**Resolution:**
+- SPEC GATE で検出され、Overview Change サブワークフローを実行
+- Overview Spec 更新後、マーカーを削除して正式な参照に書き換え
+
+> **詳細:** [spec-gate-design.md](../guides/spec-gate-design.md) 参照
 
 ---
 
-## CLARIFY GATE Relationship
+## SPEC GATE Relationship
 
-### CLARIFY GATE
+### SPEC GATE
 
-> **SSOT:** [quality-gates.md#clarify-gate](quality-gates.md#clarify-gate) 参照
+> **SSOT:** [quality-gates.md#spec-gate](quality-gates.md#spec-gate) 参照
 
-Spec作成時は曖昧な箇所を積極的にマークし、CLARIFY GATE までに解消する。
+Spec作成時は曖昧な箇所を積極的にマークし、SPEC GATE までに解消する。
 決められない項目は [DEFERRED] としてリスクを明示した上で続行可能。
+Overview 変更が必要な場合は [PENDING OVERVIEW CHANGE] でマークし、SPEC GATE で処理する。
 
 ---
 

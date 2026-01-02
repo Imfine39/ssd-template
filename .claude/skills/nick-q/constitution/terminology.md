@@ -226,10 +226,34 @@ Status values for the overall Test Scenario Spec document.
 
 Markers used to indicate ambiguity status in specifications.
 
-| Marker | 意味 | 使用条件 | CLARIFY GATE への影響 |
+| Marker | 意味 | 使用条件 | SPEC GATE への影響 |
 |--------|------|---------|---------------------|
-| `[NEEDS CLARIFICATION]` | 曖昧で解消が必要 | 曖昧点を発見した時 | ブロック（解消必須） |
-| `[DEFERRED: 理由]` | 現時点では決められない | 下記条件に該当 | 通過可能（リスク記録） |
+| `[NEEDS CLARIFICATION]` | 曖昧で解消が必要 | 曖昧点を発見した時 | BLOCKED_CLARIFY（解消必須） |
+| `[PENDING OVERVIEW CHANGE: ID]` | Overview Spec への変更が必要 | Feature/Fix Spec で Overview 変更が必要と判明した時 | BLOCKED_OVERVIEW（Overview Change 必須） |
+| `[DEFERRED: 理由]` | 現時点では決められない | 下記条件に該当 | PASSED_WITH_DEFERRED（リスク記録） |
+
+### [PENDING OVERVIEW CHANGE] の使用
+
+Feature/Fix Spec 作成中に Overview Spec（Vision/Domain/Screen）への変更が必要と判明した場合に使用：
+
+```markdown
+- M-USER: ユーザー情報
+  - [PENDING OVERVIEW CHANGE: M-USER]
+    - 変更: `email: string (required)` を追加
+    - 理由: メール通知機能で必要
+```
+
+**対象 ID の種類:**
+| 種類 | 例 | Spec ファイル |
+|------|-----|--------------|
+| Model | M-USER, M-ORDER | domain/spec.md |
+| API | API-USER-CREATE | domain/spec.md |
+| Business Rule | BR-001 | domain/spec.md |
+| Validation Rule | VR-001 | domain/spec.md |
+| Screen | SCR-001 | screen/spec.md |
+| Vision | VIS-GOAL-1 | vision/spec.md |
+
+> **詳細:** [spec-gate-design.md](../guides/spec-gate-design.md) 参照
 
 ### [DEFERRED] の使用条件
 

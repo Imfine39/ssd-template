@@ -13,7 +13,7 @@
   Prerequisites:
     - Implementation Plan must exist and be approved
     - Feature Spec must be approved
-    - CLARIFY GATE must be passed ([NEEDS CLARIFICATION] = 0)
+    - SPEC GATE must be passed ([NEEDS CLARIFICATION] = 0, [PENDING OVERVIEW CHANGE] = 0)
 
   Task Guidelines:
     - Each task: 1-2 hours of work

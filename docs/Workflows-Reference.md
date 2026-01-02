@@ -41,7 +41,7 @@ NICK-Q の全ワークフロー詳細リファレンスです。
 5. Vision Spec 作成
 6. Multi-Review（3観点並列）
 7. Lint 実行
-8. CLARIFY GATE チェック
+8. SPEC GATE チェック
 9. [HUMAN_CHECKPOINT]
 10. Domain Spec + Screen Spec 作成
 11. Cross-Reference Matrix 生成
@@ -81,7 +81,7 @@ NICK-Q の全ワークフロー詳細リファレンスです。
 6. Feature Spec 作成
 7. Multi-Review
 8. Lint 実行
-9. CLARIFY GATE チェック
+9. SPEC GATE チェック
 10. [HUMAN_CHECKPOINT]
 11. GitHub Issue 作成
 12. Feature ブランチ作成
@@ -116,7 +116,7 @@ NICK-Q の全ワークフロー詳細リファレンスです。
 4. （大規模の場合）QA 生成 → QA 分析
 5. Fix Spec 作成（原因調査・修正方針）
 6. Multi-Review
-7. CLARIFY GATE チェック
+7. SPEC GATE チェック
 8. [HUMAN_CHECKPOINT]
 9. Issue & ブランチ作成
 
@@ -178,7 +178,7 @@ NICK-Q の全ワークフロー詳細リファレンスです。
 **目的:** 実装計画を作成
 
 **前提条件:**
-- Feature Spec が存在し、CLARIFY GATE を通過していること
+- Feature Spec が存在し、SPEC GATE を通過していること
 - `[NEEDS CLARIFICATION]` が 0 件
 
 **入力:**
@@ -190,7 +190,7 @@ NICK-Q の全ワークフロー詳細リファレンスです。
 
 **フロー:**
 1. Feature Spec 読み込み
-2. CLARIFY GATE チェック（曖昧点 = 0 必須）
+2. SPEC GATE チェック（曖昧点 = 0 必須）
 3. 既存コード分析
 4. 実装計画作成
    - 影響範囲
@@ -555,10 +555,10 @@ Recommendations:
 
 | コンポーネント | 目的 | 使用ワークフロー |
 |---------------|------|-----------------|
-| `_quality-flow.md` | 🐱 QA → 😼 Review → Lint → 🙀 CLARIFY GATE オーケストレーション | project-setup, feature, fix, change |
+| `_quality-flow.md` | 🐱 QA → 😼 Review → Lint → 🙀 SPEC GATE オーケストレーション | project-setup, feature, fix, change |
 | `_qa-generation.md` | 🐱 入力ギャップに基づく動的 QA 生成 | feature, fix, project-setup |
 | `_qa-analysis.md` | 🐱 QA 回答分析、残りの曖昧点特定 | 全 Spec 作成ワークフロー |
-| `_clarify-gate.md` | 🙀 ゲートキーピングロジック | Quality flow |
+| `_spec-gate.md` | 🙀 ゲートキーピングロジック | Quality flow |
 | `_cascade-update.md` | Feature Spec が M-*/API-* を追加した場合の Domain/Screen 更新 | feature, change |
 | `_impact-guard.md` | 小規模/大規模スコープ判定 | Entry routing |
 | `_wireframe-processing.md` | ワイヤーフレーム画像/ファイル処理 | Spec 作成 |
@@ -588,16 +588,17 @@ Recommendations:
 | タイミング | 確認内容 |
 |-----------|---------|
 | project-setup 完了後 | Overview Specs（Vision/Domain/Screen）の妥当性 |
-| Feature Spec 作成後 | 要件の妥当性、🙀 CLARIFY GATE |
-| Fix Spec 作成後 | 修正方針の妥当性、🙀 CLARIFY GATE |
+| Feature Spec 作成後 | 要件の妥当性、🙀 SPEC GATE |
+| Fix Spec 作成後 | 修正方針の妥当性、🙀 SPEC GATE |
 | Plan 作成後 | 実装計画の承認 |
 | E2E テスト後 | テスト結果の確認 |
 | change の影響分析後 | 影響範囲の確認 |
 
-### 🙀 CLARIFY GATE
+### 🙀 SPEC GATE
 
 | Status | Condition | Action |
 |--------|-----------|--------|
-| 😸 PASSED | 🙀 `[NEEDS CLARIFICATION]` = 0 & 😿 `[DEFERRED]` = 0 | Plan へ進行 |
-| 😼 PASSED_WITH_DEFERRED | 🙀 `[NEEDS CLARIFICATION]` = 0 & 😿 `[DEFERRED]` ≥ 1 | 😻 Human がリスク確認後進行 |
-| 😾 BLOCKED | 🙀 `[NEEDS CLARIFICATION]` ≥ 1 | clarify → 😼 Multi-Review ループ |
+| 😾 BLOCKED_CLARIFY | 🙀 `[NEEDS CLARIFICATION]` ≥ 1 | clarify → 😼 Multi-Review ループ |
+| 😾 BLOCKED_OVERVIEW | 📋 `[PENDING OVERVIEW CHANGE]` ≥ 1 | Overview Change → 😼 Multi-Review ループ |
+| 😼 PASSED_WITH_DEFERRED | 🙀 `[NEEDS CLARIFICATION]` = 0 & 📋 `[PENDING OVERVIEW CHANGE]` = 0 & 😿 `[DEFERRED]` ≥ 1 | 😻 Human がリスク確認後進行 |
+| 😸 PASSED | すべてのマーカー = 0 | Plan へ進行 |

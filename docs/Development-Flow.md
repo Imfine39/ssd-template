@@ -107,7 +107,7 @@ Multi-Review（3観点並列）
     ↓
 Lint
     ↓
-CLARIFY GATE チェック
+SPEC GATE チェック
     ↓
 [HUMAN_CHECKPOINT] 確認
     ↓
@@ -166,14 +166,14 @@ Multi-Review（3観点並列）
     ↓
 Lint 実行
     ↓
-★ CLARIFY GATE ★
+★ SPEC GATE ★
     ↓
 [HUMAN_CHECKPOINT] 確認
     ↓
 Issue & Branch 作成
 ```
 
-### 2.2 🙀 CLARIFY GATE
+### 2.2 🙀 SPEC GATE
 
 **目的:** 曖昧点が残った状態で実装に進むことを禁止
 
@@ -210,7 +210,7 @@ Claude: test-scenario ワークフローを実行
 **目的:** 実装計画を立てる
 
 **前提条件:**
-- Feature Spec が CLARIFY GATE を通過していること
+- Feature Spec が SPEC GATE を通過していること
 
 ```
 人間: 「実装計画を作成して」
@@ -221,7 +221,7 @@ Claude: plan ワークフローを実行
 ```
 Feature Spec 読み込み
     ↓
-CLARIFY GATE チェック（曖昧点 = 0 必須）
+SPEC GATE チェック（曖昧点 = 0 必須）
     ↓
 既存コード分析
     ↓
@@ -383,7 +383,7 @@ Recommendations:
 ├─────────────────────────────────────────────────────────────────────────┤
 │                                                                          │
 │  project-setup → 🐱 QA 生成 → 🐱 QA 分析 → Spec 作成                    │
-│              → 😼 Multi-Review → Lint → 🙀 CLARIFY GATE                 │
+│              → 😼 Multi-Review → Lint → 🙀 SPEC GATE                    │
 │              → 😻 [HUMAN] → 😸 Specs 承認                               │
 │                                                                          │
 └─────────────────────────────────────────────────────────────────────────┘
@@ -395,7 +395,7 @@ Recommendations:
 │                                                                          │
 │  feature/fix → [Impact Guard] → 🐱 QA 生成 → 🐱 QA 分析                 │
 │            → Feature Spec → 😼 Multi-Review → Lint                      │
-│            → 🙀 ★ CLARIFY GATE ★                                       │
+│            → 🙀 ★ SPEC GATE ★                                       │
 │            │                                                            │
 │            ├─ 😾 BLOCKED → clarify → 😼 Multi-Review ループ             │
 │            │                                                            │
@@ -450,7 +450,7 @@ node .claude/skills/nick-q/scripts/reset-input.cjs vision
 - Plan 承認
 - E2E テスト結果確認
 
-### 3. CLARIFY GATE を尊重する
+### 3. SPEC GATE を尊重する
 
 曖昧な点は早期に解消することで、手戻りを防ぎます。
 `[NEEDS CLARIFICATION]` が残っている状態で Plan に進むことは禁止されています。

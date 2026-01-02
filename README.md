@@ -58,7 +58,7 @@ Vision Spec → Domain/Screen Spec → 実装
 - **20+ ワークフロー** - 一貫した開発フロー
 - **Hybrid Discovery Model** - Pre-Input + QA + AskUserQuestion による要件発見
 - **Multi-Review** - 3 観点並列レビュー（構造/内容/完全性）
-- **CLARIFY GATE** - 曖昧点が残った状態での実装を禁止
+- **SPEC GATE** - 曖昧点が残った状態での実装を禁止
 - **Impact Guard** - スコープ判定による適切なルーティング
 - **状態管理** - プロジェクトとブランチの状態追跡
 
@@ -181,7 +181,7 @@ Lint
     ↓
 🙀 [NEEDS CLARIFICATION] あり? → YES: Clarify → Multi-Review へ戻る
     ↓ NO
-🙀 ★ CLARIFY GATE ★
+🙀 ★ SPEC GATE ★
     │
     ├─ 😿 [DEFERRED] = 0 → 😸 PASSED → 😻 [HUMAN_CHECKPOINT]
     │
@@ -306,7 +306,7 @@ Claude が内部で使用するワークフロー一覧です。
 
 1. **Spec-First** - すべての変更は仕様から始まる
 2. **Multi-Review 必須** - Spec 作成後は必ず 3 観点レビュー
-3. **CLARIFY GATE** - 曖昧点がある状態で実装に進むことは禁止
+3. **SPEC GATE** - 曖昧点がある状態で実装に進むことは禁止
 4. **HUMAN_CHECKPOINT** - 重要な判断は人間が確認
 5. **推測禁止** - 不明点は Clarify で解消
 

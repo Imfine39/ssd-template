@@ -42,8 +42,8 @@ Spec-Mesh ワークフローの全体像と遷移図。
 | ワークフロー | トリガー | 入力 | 出力 | 次のステップ |
 |-------------|---------|------|------|-------------|
 | review.md | Spec 作成後 | Spec | レビュー結果 | lint |
-| lint.md | Review 後 | Spec | Lint 結果 | clarify-gate |
-| clarify.md | CLARIFY GATE BLOCKED / [DEFERRED] 解消時 | Spec + 曖昧点 | 解消済み Spec | review |
+| lint.md | Review 後 | Spec | Lint 結果 | spec-gate |
+| clarify.md | SPEC GATE BLOCKED_CLARIFY / [DEFERRED] 解消時 | Spec + 曖昧点 | 解消済み Spec | review |
 | analyze.md | 実装中 | Spec + 実装 | 差分レポート | - |
 | checklist.md | 任意 | Spec | 品質スコア | - |
 
@@ -68,10 +68,11 @@ Spec-Mesh ワークフローの全体像と遷移図。
 
 | コンポーネント | 役割 | 呼び出し元 |
 |---------------|------|-----------|
-| _quality-flow.md | QA分析 → Multi-Review → Lint → CLARIFY GATE | project-setup, feature, fix |
+| _quality-flow.md | QA分析 → Multi-Review → Lint → SPEC GATE | project-setup, feature, fix |
 | _qa-generation.md | QA 動的生成 | feature, fix, project-setup |
 | _qa-followup.md | QA フォローアップ（回答分析 + 提案確認） | project-setup, feature |
-| _clarify-gate.md | 曖昧点チェック＆ゲートキーピング | 全 Spec 作成ワークフロー |
+| _spec-gate.md | マーカーチェック＆ゲートキーピング（CLARIFY/OVERVIEW/DEFERRED） | 全 Spec 作成ワークフロー |
+| _overview-change.md | Overview Spec 変更サブワークフロー | SPEC GATE BLOCKED_OVERVIEW 時 |
 | _cascade-update.md | Spec 間の連鎖更新 | feature, fix, change |
 | _finalize.md | HUMAN_CHECKPOINT 実装 | 全ワークフロー |
 | _impact-guard.md | Quick 判定 / Impact Guard | SKILL.md Entry (quick, fix) |
@@ -107,7 +108,7 @@ Spec-Mesh ワークフローの全体像と遷移図。
  Overview      ┌─────────────────────────────┐  plan    implement
  Specs +       │      Quality Flow           │   へ       へ
  Feature       │ (QA + Multi-Review + Lint   │
- Drafts        │  + CLARIFY GATE)            │
+ Drafts        │  + SPEC GATE)               │
       │        └───────────┬─────────────────┘
       │                    │
       ▼            ├── BLOCKED ──► clarify ──┐
@@ -188,16 +189,17 @@ initialization → vision → design → foundation → development
 none → scaffold → draft → clarified → approved
          │          │          │          │
          │          │          │          └─ 人間承認済み
-         │          │          └─ CLARIFY GATE 通過
+         │          │          └─ SPEC GATE 通過
          │          └─ 内容記入済み
          └─ テンプレート生成済み
 ```
 
-### CLARIFY GATE 結果
+### SPEC GATE 結果
 
-> **SSOT:** [quality-gates.md](../constitution/quality-gates.md#clarify-gate) 参照
+> **SSOT:** [quality-gates.md](../constitution/quality-gates.md#spec-gate) 参照
 
-PASSED / PASSED_WITH_DEFERRED / BLOCKED の3状態。[NEEDS CLARIFICATION]=0 で通過。
+PASSED / PASSED_WITH_DEFERRED / BLOCKED_CLARIFY / BLOCKED_OVERVIEW の4状態。
+- `[NEEDS CLARIFICATION]` = 0 かつ `[PENDING OVERVIEW CHANGE]` = 0 で通過。
 - 仮定を置いて続行 → Assumption Log に記録
 
 ### ブランチステップ

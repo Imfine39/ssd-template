@@ -1,6 +1,6 @@
 # Cascade Update（関連 Spec 同期更新）共通コンポーネント
 
-CLARIFY GATE 通過後に実行。Feature/Fix Spec で定義された変更を Domain/Screen/Matrix に反映。
+SPEC GATE 通過後に実行。Feature/Fix Spec で定義された変更を Domain/Screen/Matrix に反映。
 
 ---
 
@@ -26,7 +26,7 @@ CLARIFY GATE 通過後に実行。Feature/Fix Spec で定義された変更を D
 
 ## 前提条件
 
-- CLARIFY GATE: PASSED または PASSED_WITH_DEFERRED
+- SPEC GATE: PASSED または PASSED_WITH_DEFERRED
 - Impact Analysis 完了済み
 
 ---

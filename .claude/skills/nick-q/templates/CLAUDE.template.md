@@ -55,23 +55,27 @@ Multi-Review（3観点並列） → AI修正
     ↓
 Lint
     ↓
-[NEEDS CLARIFICATION] あり? → YES: Clarify → Multi-Review へ戻る
-    ↓ NO
-★ CLARIFY GATE ★
+★ SPEC GATE チェック ★
     │
-    ├─ [DEFERRED] = 0 → PASSED → [HUMAN_CHECKPOINT]
+    ├─ [NEEDS CLARIFICATION] > 0
+    │     └─→ BLOCKED_CLARIFY → Clarify → Multi-Review へ戻る
     │
-    └─ [DEFERRED] ≥ 1 → PASSED_WITH_DEFERRED → [HUMAN_CHECKPOINT]（リスク確認）
+    ├─ [PENDING OVERVIEW CHANGE] > 0 (Feature/Fix のみ)
+    │     └─→ BLOCKED_OVERVIEW → Overview Change → Multi-Review へ戻る
+    │
+    └─ すべてのマーカー = 0
+        ├─ [DEFERRED] = 0 → PASSED → [HUMAN_CHECKPOINT]
+        └─ [DEFERRED] ≥ 1 → PASSED_WITH_DEFERRED → [HUMAN_CHECKPOINT]（リスク確認）
     ↓
 Plan → [HUMAN_CHECKPOINT]
     ↓
 Tasks → Implement → E2E → PR
 ```
 
-### CLARIFY GATE
+### SPEC GATE
 
-- **Plan に進む前提条件:** `[NEEDS CLARIFICATION]` = 0
-- 曖昧点が残った状態での実装は禁止
+- **Plan に進む前提条件:** `[NEEDS CLARIFICATION]` = 0 かつ `[PENDING OVERVIEW CHANGE]` = 0
+- 曖昧点や未処理の Overview 変更が残った状態での実装は禁止
 
 ---
 
@@ -125,8 +129,8 @@ tabs_context_mcp → tabs_create_mcp → navigate → find → form_input → co
 | タイミング | 確認内容 |
 |-----------|---------|
 | project-setup 完了後 | Overview Specs（Vision/Domain/Screen）の妥当性 |
-| Feature Spec 作成後 | 要件の妥当性、CLARIFY GATE |
-| Fix Spec 作成後 | 修正方針の妥当性、CLARIFY GATE |
+| Feature Spec 作成後 | 要件の妥当性、SPEC GATE |
+| Fix Spec 作成後 | 修正方針の妥当性、SPEC GATE |
 | Plan 作成後 | 実装計画の承認 |
 | E2E テスト後 | テスト結果の確認 |
 

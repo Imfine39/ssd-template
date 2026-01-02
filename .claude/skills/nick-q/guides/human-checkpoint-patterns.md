@@ -23,7 +23,7 @@ HUMAN_CHECKPOINT は人間の明示的な承認を必要とするゲートです
 
 | Pattern | 用途 | Trigger |
 |---------|------|---------|
-| **Spec Approval** | Spec の最終承認 | CLARIFY GATE 通過後 |
+| **Spec Approval** | Spec の最終承認 | SPEC GATE 通過後 |
 | **Plan Approval** | Plan の承認 | Plan 作成完了後 |
 | **Workflow Completion** | ワークフロー結果確認 | 各ワークフロー完了時 |
 | **Decision Point** | 重大な決定の確認 | Case 3 等の判断時 |
@@ -33,7 +33,7 @@ HUMAN_CHECKPOINT は人間の明示的な承認を必要とするゲートです
 
 ## Pattern 1: Spec Approval
 
-**Trigger:** CLARIFY GATE 通過後（feature.md, fix.md, project-setup.md）
+**Trigger:** SPEC GATE 通過後（feature.md, fix.md, project-setup.md）
 
 ### Template
 

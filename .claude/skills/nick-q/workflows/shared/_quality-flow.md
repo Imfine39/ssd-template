@@ -2,11 +2,11 @@
 
 > **概念定義:** [quality-gates.md](../../constitution/quality-gates.md) 参照
 > - Multi-Review 3観点: [#multi-review](../../constitution/quality-gates.md#multi-review)
-> - CLARIFY GATE: [#clarify-gate](../../constitution/quality-gates.md#clarify-gate)
+> - SPEC GATE: [#spec-gate](../../constitution/quality-gates.md#spec-gate)
 >
 > このファイルは Quality Flow の**運用手順**を定義します。
 
-QA 分析 → Multi-Review → Lint → CLARIFY GATE の一連のフローを定義。
+QA 分析 → Multi-Review → Lint → SPEC GATE の一連のフローを定義。
 Spec 作成後の品質担保プロセス。
 
 ---
@@ -35,7 +35,7 @@ Spec 作成完了
 │    ↓                                │
 │ 4. Lint                             │
 │    ↓                                │
-│ 5. CLARIFY GATE                     │
+│ 5. SPEC GATE                        │
 │    ↓                                │
 │ [BLOCKED → clarify → 2へ戻る]       │
 └─────────────────────────────────────┘
@@ -144,11 +144,11 @@ Matrix が存在する場合:
 node .claude/skills/nick-q/scripts/matrix-ops.cjs validate
 ```
 
-### Step 5: CLARIFY GATE チェック
+### Step 5: SPEC GATE チェック
 
 **★ スキップ禁止 ★**
 
-> **コンポーネント参照:** [_clarify-gate.md](_clarify-gate.md)
+> **コンポーネント参照:** [_spec-gate.md](_spec-gate.md)
 
 ```markdown
 1. [NEEDS CLARIFICATION] マーカーをカウント
@@ -238,7 +238,7 @@ Spec: {spec_path}
 【Lint】
 - Status: PASSED
 
-【CLARIFY GATE】
+【SPEC GATE】
 - [NEEDS CLARIFICATION]: {N} 件
 - [DEFERRED]: {D} 件
 - Open Questions: {M} 件
@@ -274,7 +274,7 @@ clarify 完了後、Multi-Review からやり直します。
 - [ ] Multi-Review を実行したか（3観点並列）
 - [ ] AI 修正可能な問題を修正したか
 - [ ] Lint を実行したか
-- [ ] CLARIFY GATE をチェックしたか（BLOCKED → clarify）
+- [ ] SPEC GATE をチェックしたか（BLOCKED_CLARIFY → clarify, BLOCKED_OVERVIEW → Overview Change）
 
 ---
 
@@ -293,8 +293,9 @@ clarify 完了後、Multi-Review からやり直します。
 2. Multi-Review（3観点並列）
 3. AI 修正
 4. Lint
-5. CLARIFY GATE
+5. SPEC GATE
 
-BLOCKED → clarify → Multi-Review へ戻る
+BLOCKED_CLARIFY → clarify → Multi-Review へ戻る
+BLOCKED_OVERVIEW → Overview Change → Multi-Review へ戻る
 PASSED → 次のステップへ
 ```

@@ -8,7 +8,9 @@
 
   Prerequisites:
     - Feature Spec must exist and be approved
-    - [NEEDS CLARIFICATION] count must be 0 (CLARIFY GATE)
+    - All markers must be resolved (SPEC GATE):
+      - [NEEDS CLARIFICATION] count must be 0
+      - [PENDING OVERVIEW CHANGE] count must be 0
 
   See: .claude/skills/nick-q/guides/id-naming.md for ID formats
   See: .claude/skills/nick-q/constitution/core.md for workflow rules

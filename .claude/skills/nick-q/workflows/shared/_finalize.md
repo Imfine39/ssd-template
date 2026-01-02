@@ -49,7 +49,7 @@ Spec: {spec_path}
 【Quality Flow】
 - Interview: {N} 問（{covered}/9 領域カバー）
 - Review Issues: Critical {N} / Major {N}
-- CLARIFY GATE: {PASSED | PASSED_WITH_DEFERRED}
+- SPEC GATE: {PASSED | PASSED_WITH_DEFERRED}
 
 【Cascade Update】
 - Domain: {N} 件更新

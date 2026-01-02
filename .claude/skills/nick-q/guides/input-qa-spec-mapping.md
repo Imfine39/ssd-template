@@ -25,7 +25,11 @@ This guide is the **authoritative reference** for the data flow from Input files
 ```
 Pre-Input（ユーザーが知っていること）
     ↓
-QA（ユーザーが知らないことを発見）
+QA（ユーザーが知らないことを発見 + AI からの提案）
+├─ [必須] / [確認] / [選択]（質問）
+└─ [提案]（10 観点からの能動的提案）
+    ↓
+QA フォローアップ（回答ベースの追加確認・追加提案）
     ↓
 Spec（完成した仕様）
 ```
@@ -150,8 +154,16 @@ Spec（完成した仕様）
 |------------|---------------|
 | `[必須]` | `[NEEDS CLARIFICATION: {質問内容}]` を Spec に記入 |
 | `[確認]` | AI の推測をデフォルトとして採用 |
-| `[提案]` | 不採用として処理 |
 | `[選択]` | `[NEEDS CLARIFICATION: 選択が必要: {選択肢}]` を Spec に記入 |
+| `[提案]` | 未回答は不採用として処理、「後で検討」は `[DEFERRED]` として記録 |
+
+### 提案の採否 → Spec 反映
+
+| 採否 | Spec への反映 |
+|------|--------------|
+| 採用する | 該当セクションに要件として追加 |
+| 後で検討 | `[DEFERRED: {提案内容}]` として記録 |
+| 不要 | 反映しない（採否記録のみ保持） |
 
 ### マーカーの配置先
 
@@ -173,17 +185,18 @@ Spec（完成した仕様）
 
 1. 既存の `[DEFERRED]` マーカーは保持する
 2. `[DEFERRED]` を `[NEEDS CLARIFICATION]` に変換しない
-3. CLARIFY GATE は `[DEFERRED]` を PASSED_WITH_DEFERRED として処理
+3. SPEC GATE は `[DEFERRED]` を PASSED_WITH_DEFERRED として処理
 
-### CLARIFY GATE との関係
+### SPEC GATE との関係
 
-| マーカー | CLARIFY GATE 結果 |
+| マーカー | SPEC GATE 結果 |
 |---------|------------------|
-| `[NEEDS CLARIFICATION]` > 0 | BLOCKED |
-| `[NEEDS CLARIFICATION]` = 0, `[DEFERRED]` > 0 | PASSED_WITH_DEFERRED |
-| `[NEEDS CLARIFICATION]` = 0, `[DEFERRED]` = 0 | PASSED |
+| `[NEEDS CLARIFICATION]` > 0 | BLOCKED_CLARIFY |
+| `[PENDING OVERVIEW CHANGE]` > 0 (Feature/Fix のみ) | BLOCKED_OVERVIEW |
+| 上記 = 0, `[DEFERRED]` > 0 | PASSED_WITH_DEFERRED |
+| 上記 = 0, `[DEFERRED]` = 0 | PASSED |
 
-> **SSOT:** [quality-gates.md#clarify-gate](../constitution/quality-gates.md#clarify-gate) 参照
+> **SSOT:** [quality-gates.md#spec-gate](../constitution/quality-gates.md#spec-gate) 参照
 
 ---
 
@@ -195,6 +208,6 @@ Spec（完成した仕様）
 | `templates/inputs/fix-input.md` | Fix Input テンプレート |
 | `templates/inputs/change-input.md` | Change Input テンプレート |
 | `templates/inputs/project-setup-input.md` | Project Setup Input テンプレート |
-| `workflows/shared/_qa-generation.md` | QA ドキュメント生成ロジック |
-| `workflows/shared/_qa-followup.md` | QA フォローアップ（回答分析 + 提案確認） |
-| `workflows/shared/_clarify-gate.md` | CLARIFY GATE 運用手順 |
+| `workflows/shared/_qa-generation.md` | QA ドキュメント生成ロジック（[提案] 含む） |
+| `workflows/shared/_qa-followup.md` | QA フォローアップ（回答分析 + 追加確認 + 追加提案） |
+| `workflows/shared/_spec-gate.md` | SPEC GATE 運用手順 |

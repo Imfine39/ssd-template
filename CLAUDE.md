@@ -53,14 +53,17 @@ QA ドキュメント生成（必須）
 QA 回答分析 + AskUserQuestion（残り不明点を対話解消）
     ↓
 Spec 作成（QA 結果を反映）
+    ├─ Case 3（Overview 変更必要）→ [PENDING OVERVIEW CHANGE] マーク
     ↓
 Multi-Review（3観点並列） → AI修正
     ↓
 Lint
     ↓
-[NEEDS CLARIFICATION] あり? → YES: Clarify → Multi-Review へ戻る
-    ↓ NO
-★ CLARIFY GATE ★
+★ SPEC GATE ★
+    │
+    ├─ [NEEDS CLARIFICATION] > 0 → Clarify → Multi-Review へ戻る
+    │
+    ├─ [PENDING OVERVIEW CHANGE] > 0 → Overview Change → Multi-Review へ戻る
     │
     ├─ [DEFERRED] = 0 → PASSED → [HUMAN_CHECKPOINT]
     │
@@ -71,10 +74,15 @@ Plan → [HUMAN_CHECKPOINT]
 Tasks → Implement → E2E → PR
 ```
 
-### CLARIFY GATE
+### SPEC GATE
 
-- **Plan に進む前提条件:** `[NEEDS CLARIFICATION]` = 0
-- 曖昧点が残った状態での実装は禁止
+> **SSOT:** [quality-gates.md#spec-gate](.claude/skills/nick-q/constitution/quality-gates.md#spec-gate) 参照
+
+- **Plan に進む前提条件:**
+  - `[NEEDS CLARIFICATION]` = 0
+  - `[PENDING OVERVIEW CHANGE]` = 0
+- 曖昧点または Overview 変更が残った状態での実装は禁止
+- Overview 変更は Feature ブランチ内で Embedded 処理
 
 ---
 
@@ -128,8 +136,8 @@ tabs_context_mcp → tabs_create_mcp → navigate → find → form_input → co
 | タイミング | 確認内容 |
 |-----------|---------|
 | project-setup 完了後 | Overview Specs（Vision/Domain/Screen）の妥当性 |
-| Feature Spec 作成後 | 要件の妥当性、CLARIFY GATE |
-| Fix Spec 作成後 | 修正方針の妥当性、CLARIFY GATE |
+| Feature Spec 作成後 | 要件の妥当性、SPEC GATE |
+| Fix Spec 作成後 | 修正方針の妥当性、SPEC GATE |
 | Plan 作成後 | 実装計画の承認 |
 | E2E テスト後 | テスト結果の確認 |
 
