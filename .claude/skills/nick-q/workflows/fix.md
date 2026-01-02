@@ -168,8 +168,17 @@ Document findings in Fix Spec.
    - Section 3: Proposed Fix (修正方針、影響するファイル)
    - Section 4: Verification Plan (テスト方法)
 
-3. **Check Screen impact** (if UI affected):
-   - Add to Screen Modification Log with status `Planned`
+3. **Spec-First: Overview Specs の先行更新**
+
+   > **原則:** Fix Spec を書く前に、影響のある Screen/Domain Spec を先に更新する
+
+   **3.1 Screen Spec の更新** (UI に影響がある場合)
+   - Screen Modification Log に status `Planned` で追加
+
+   **3.2 Domain Spec の更新** (M-*/API-* に影響がある場合)
+   - API 仕様の修正が必要 → Domain Spec を更新
+   - 新規 API/Master が必要 → Domain Spec に追加（status: `Planned`）
+   - 大規模変更 → change ワークフローを先行実行
 
 ### Step 5: Multi-Review (3観点並列レビュー)
 
@@ -385,7 +394,7 @@ Root Cause: {概要}
 - [ ] 不明点を AskUserQuestion で確認したか
 - [ ] 原因調査を実施したか
 - [ ] Fix Spec に Root Cause を記載したか
-- [ ] **Impact Analysis を実行したか（Screen 変更時）** → [shared/impact-analysis.md](shared/impact-analysis.md)
+- [ ] **Impact Analysis を実行したか（Screen/Domain 変更時）** → [shared/impact-analysis.md](shared/impact-analysis.md)
 - [ ] **Severity Classification を実行したか（Trivial/Standard）**
 - [ ] **Multi-Review を実行したか（3観点並列）**
 - [ ] **CLARIFY GATE をチェックしたか**

@@ -273,26 +273,30 @@ Spec 作成に進みます。
 
 **両モード共通:**
 
-2. **Spec-First: Update Screen Spec** (if UI changes needed)
-   - Add to Screen Index with status `Planned`
-   - Or add to Modification Log
+2. **Spec-First: Overview Specs の先行更新**
+
+   > **原則:** Feature Spec を書く前に、Screen/Domain Spec を先に更新する
+
+   **2.1 Screen Spec の更新** (UI 変更がある場合)
+   - Screen Index に status `Planned` で追加
+   - または Modification Log に記録
+
+   **2.2 Domain Spec の更新** (M-*/API-* 変更がある場合)
+   - Case 1: 全て存在 → 参照のみ（更新不要）
+   - Case 2: 新規必要 → Domain Spec に追加（status: `Planned`）
+   - Case 3: 変更必要 → change ワークフローを推奨
 
 3. **Fill spec sections from input**
 
-4. **Check M-*/API-* requirements (Case 1/2/3):**
-   - Case 1: All exist → Reference only
-   - Case 2: Need new → Add to Domain
-   - Case 3: Need change → Recommend change ワークフロー
-
-5. **Impact Analysis (Case 2/3 の場合)**
+4. **Impact Analysis (Case 2/3 の場合)**
 
    > **共通コンポーネント参照:** [shared/impact-analysis.md](shared/impact-analysis.md) を **STANDARD モード** で実行
 
-6. **Update Domain Spec Feature Index**
+5. **Update Domain Spec Feature Index**
 
-7. **Update Cross-Reference Matrix**
+6. **Update Cross-Reference Matrix**
 
-8. **Record Changelog:**
+7. **Record Changelog:**
    ```bash
    node .claude/skills/nick-q/scripts/changelog.cjs record \
      --feature S-XXX-001 \
