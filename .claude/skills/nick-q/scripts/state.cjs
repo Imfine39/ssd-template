@@ -57,29 +57,12 @@ const SPEC_PATHS = {
   matrix: '.specify/specs/overview/matrix/cross-reference.json',
 };
 
-// Legacy paths for backward compatibility
-const LEGACY_SPEC_PATHS = {
-  vision: ['.specify/specs/vision/spec.md'],
-  domain: ['.specify/specs/domain/spec.md', '.specify/specs/overview/spec.md'],
-  screen: ['.specify/specs/screen/spec.md'],
-  matrix: ['.specify/matrix/cross-reference.json'],
-};
-
-// Find existing path from candidates
-function findExistingSpecPath(specPath, legacyPaths) {
+// Check if spec path exists
+function specPathExists(specPath) {
   const resolved = path.isAbsolute(specPath)
     ? specPath
     : path.resolve(process.cwd(), specPath);
-  if (fs.existsSync(resolved)) {
-    return specPath;
-  }
-  for (const p of legacyPaths) {
-    const legacyResolved = path.resolve(process.cwd(), p);
-    if (fs.existsSync(legacyResolved)) {
-      return p;
-    }
-  }
-  return specPath; // Return spec path as default even if not exists
+  return fs.existsSync(resolved);
 }
 
 // Create default repo state
@@ -92,13 +75,13 @@ function createDefaultRepoState() {
     },
     specs: {
       vision: {
-        path: findExistingSpecPath(SPEC_PATHS.vision, LEGACY_SPEC_PATHS.vision),
+        path: SPEC_PATHS.vision,
         status: 'none',
         lastModified: null,
         clarifyComplete: false
       },
       domain: {
-        path: findExistingSpecPath(SPEC_PATHS.domain, LEGACY_SPEC_PATHS.domain),
+        path: SPEC_PATHS.domain,
         status: 'none',
         lastModified: null,
         clarifyComplete: false,
@@ -109,7 +92,7 @@ function createDefaultRepoState() {
         }
       },
       screen: {
-        path: findExistingSpecPath(SPEC_PATHS.screen, LEGACY_SPEC_PATHS.screen),
+        path: SPEC_PATHS.screen,
         status: 'none',
         lastModified: null,
         screenCount: 0
@@ -195,31 +178,22 @@ function cmdInit() {
     repoState.project.name = getProjectName();
     repoState.project.createdAt = new Date().toISOString();
 
-    // Check if Vision spec exists (new path first, then legacy)
-    const visionPath = findExistingSpecPath(SPEC_PATHS.vision, LEGACY_SPEC_PATHS.vision);
-    const resolvedVisionPath = path.resolve(process.cwd(), visionPath);
-    if (fs.existsSync(resolvedVisionPath)) {
+    // Check if Vision spec exists
+    if (specPathExists(SPEC_PATHS.vision)) {
       repoState.specs.vision.status = 'draft';
       repoState.specs.vision.lastModified = new Date().toISOString();
-      repoState.specs.vision.path = visionPath;
     }
 
-    // Check if Domain spec exists (new path first, then legacy)
-    const domainPath = findExistingSpecPath(SPEC_PATHS.domain, LEGACY_SPEC_PATHS.domain);
-    const resolvedDomainPath = path.resolve(process.cwd(), domainPath);
-    if (fs.existsSync(resolvedDomainPath)) {
+    // Check if Domain spec exists
+    if (specPathExists(SPEC_PATHS.domain)) {
       repoState.specs.domain.status = 'draft';
       repoState.specs.domain.lastModified = new Date().toISOString();
-      repoState.specs.domain.path = domainPath;
     }
 
-    // Check if Screen spec exists (new path first, then legacy)
-    const screenPath = findExistingSpecPath(SPEC_PATHS.screen, LEGACY_SPEC_PATHS.screen);
-    const resolvedScreenPath = path.resolve(process.cwd(), screenPath);
-    if (fs.existsSync(resolvedScreenPath)) {
+    // Check if Screen spec exists
+    if (specPathExists(SPEC_PATHS.screen)) {
       repoState.specs.screen.status = 'draft';
       repoState.specs.screen.lastModified = new Date().toISOString();
-      repoState.specs.screen.path = screenPath;
     }
 
     writeJson(REPO_STATE_PATH, repoState);

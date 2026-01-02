@@ -300,7 +300,7 @@ Grep tool:
 - Vision: .specify/specs/overview/vision/spec.md
 - Screen: .specify/specs/overview/screen/spec.md
 - Domain: .specify/specs/overview/domain/spec.md
-- Matrix: .specify/matrix/cross-reference.md
+- Matrix: .specify/specs/overview/matrix/cross-reference.md
 
 === [HUMAN_CHECKPOINT] ===
 確認事項:

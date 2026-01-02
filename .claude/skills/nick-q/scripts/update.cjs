@@ -25,7 +25,6 @@
  *   - .specify/input/
  *   - .specify/state/
  *   - .specify/memory/
- *   - .specify/matrix/
  *   - CLAUDE.md (project-specific)
  */
 
@@ -72,7 +71,6 @@ const CONFIG = {
     '.specify/input/',
     '.specify/state/',
     '.specify/memory/',
-    '.specify/matrix/',
     '.claude/settings.json',
     '.claude/settings.local.json',
     'CLAUDE.md',

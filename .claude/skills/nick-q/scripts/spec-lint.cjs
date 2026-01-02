@@ -694,20 +694,10 @@ for (const cycle of cycles) {
 // Cross-Reference Matrix Validation
 // ============================================================================
 
-// Matrix paths - check new structure first, then legacy locations
+// Matrix path
 function findMatrixPath() {
-  // New structure: .specify/specs/overview/matrix/
-  const newPath = path.join(specsRoot, 'overview', 'matrix', 'cross-reference.json');
-  if (fs.existsSync(newPath)) return newPath;
-
-  // Legacy: .specify/matrix/
-  const legacyPath1 = path.join(root, '.specify', 'matrix', 'cross-reference.json');
-  if (fs.existsSync(legacyPath1)) return legacyPath1;
-
-  // Legacy: .specify/specs/matrix/
-  const legacyPath2 = path.join(specsRoot, 'matrix', 'cross-reference.json');
-  if (fs.existsSync(legacyPath2)) return legacyPath2;
-
+  const matrixPath = path.join(specsRoot, 'overview', 'matrix', 'cross-reference.json');
+  if (fs.existsSync(matrixPath)) return matrixPath;
   return null;
 }
 

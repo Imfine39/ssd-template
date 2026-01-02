@@ -8,9 +8,8 @@
 const fs = require('fs');
 const path = require('path');
 
-// Default paths
+// Default path
 const DEFAULT_MATRIX_PATH = '.specify/specs/overview/matrix/cross-reference.json';
-const LEGACY_MATRIX_PATHS = ['.specify/matrix/cross-reference.json'];
 
 /**
  * Find existing path from candidates
@@ -307,7 +306,6 @@ ${generatePermissionTable(data.permissions)}
 
 module.exports = {
   DEFAULT_MATRIX_PATH,
-  LEGACY_MATRIX_PATHS,
   findExistingPath,
   loadMatrixJson,
   generateScreenTable,

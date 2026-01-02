@@ -27,7 +27,8 @@ const SPEC_PATHS = {
   vision: path.join(OVERVIEW_DIR, 'vision', 'spec.md'),
   domain: path.join(OVERVIEW_DIR, 'domain', 'spec.md'),
   screen: path.join(OVERVIEW_DIR, 'screen', 'spec.md'),
-  matrix: path.join(OVERVIEW_DIR, 'cross-reference-matrix.md')
+  matrix: path.join(OVERVIEW_DIR, 'matrix', 'cross-reference.json'),
+  matrixMd: path.join(OVERVIEW_DIR, 'matrix', 'cross-reference.md')
 };
 
 // Legacy spec paths (for backward compatibility)

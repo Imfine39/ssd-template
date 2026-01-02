@@ -30,8 +30,6 @@ const path = require('path');
 // Use shared utilities from matrix-utils.cjs
 const {
   DEFAULT_MATRIX_PATH,
-  LEGACY_MATRIX_PATHS,
-  findExistingPath,
   loadMatrixJson,
   generateMarkdown
 } = require('./lib/matrix-utils.cjs');
@@ -74,9 +72,9 @@ Examples:
     }
   }
 
-  // Determine JSON path: explicit > existing default path > existing legacy path > default path
+  // Determine JSON path: explicit > default path
   if (!jsonPath) {
-    jsonPath = findExistingPath([DEFAULT_MATRIX_PATH, ...LEGACY_MATRIX_PATHS]) || DEFAULT_MATRIX_PATH;
+    jsonPath = DEFAULT_MATRIX_PATH;
   }
 
   return { jsonPath };

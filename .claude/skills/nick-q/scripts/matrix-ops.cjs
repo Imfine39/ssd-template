@@ -21,18 +21,13 @@ const path = require('path');
 const { readFile, readJson } = require('./lib/index.cjs');
 const {
   DEFAULT_MATRIX_PATH,
-  LEGACY_MATRIX_PATHS,
-  findExistingPath,
   loadMatrixJson,
   generateMarkdown
 } = require('./lib/matrix-utils.cjs');
 
-// Additional paths for validation
+// Paths for validation
 const DEFAULT_SCREEN_PATH = '.specify/specs/overview/screen/spec.md';
-const LEGACY_SCREEN_PATHS = ['.specify/specs/screen/spec.md'];
-
 const DEFAULT_DOMAIN_PATH = '.specify/specs/overview/domain/spec.md';
-const LEGACY_DOMAIN_PATHS = ['.specify/specs/domain/spec.md', '.specify/specs/overview/spec.md'];
 
 // Parse command line arguments
 function parseArgs() {
@@ -115,7 +110,7 @@ Examples:
 // ==================== GENERATE COMMAND ====================
 
 function generate(args) {
-  let jsonPath = args.jsonPath || findExistingPath([DEFAULT_MATRIX_PATH, ...LEGACY_MATRIX_PATHS]) || DEFAULT_MATRIX_PATH;
+  let jsonPath = args.jsonPath || DEFAULT_MATRIX_PATH;
 
   if (!path.isAbsolute(jsonPath)) {
     jsonPath = path.resolve(process.cwd(), jsonPath);
@@ -226,9 +221,9 @@ function validate(args) {
   console.log('=== Cross-Reference Matrix Validator ===\n');
 
   // Determine paths
-  const screenPath = args.screenPath || findExistingPath([DEFAULT_SCREEN_PATH, ...LEGACY_SCREEN_PATHS]) || DEFAULT_SCREEN_PATH;
-  const domainPath = args.domainPath || findExistingPath([DEFAULT_DOMAIN_PATH, ...LEGACY_DOMAIN_PATHS]) || DEFAULT_DOMAIN_PATH;
-  const matrixPath = args.matrixPath || findExistingPath([DEFAULT_MATRIX_PATH, ...LEGACY_MATRIX_PATHS]) || DEFAULT_MATRIX_PATH;
+  const screenPath = args.screenPath || DEFAULT_SCREEN_PATH;
+  const domainPath = args.domainPath || DEFAULT_DOMAIN_PATH;
+  const matrixPath = args.matrixPath || DEFAULT_MATRIX_PATH;
 
   console.log('Loading files...');
 

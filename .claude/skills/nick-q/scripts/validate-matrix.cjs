@@ -50,9 +50,7 @@ const path = require('path');
 
 // Use shared utilities from matrix-utils.cjs
 const {
-  DEFAULT_MATRIX_PATH,
-  LEGACY_MATRIX_PATHS,
-  findExistingPath
+  DEFAULT_MATRIX_PATH
 } = require('./lib/matrix-utils.cjs');
 
 // Default paths (no project subdirectory - 1 repo = 1 project)
@@ -60,13 +58,6 @@ const DEFAULT_PATHS = {
   screen: '.specify/specs/overview/screen/spec.md',
   domain: '.specify/specs/overview/domain/spec.md',
   matrix: DEFAULT_MATRIX_PATH,
-};
-
-// Legacy paths for backward compatibility
-const LEGACY_PATHS = {
-  screen: ['.specify/specs/screen/spec.md'],
-  domain: ['.specify/specs/domain/spec.md', '.specify/specs/overview/spec.md'],
-  matrix: LEGACY_MATRIX_PATHS,
 };
 
 // Parse command line arguments
@@ -124,11 +115,11 @@ Examples:
     }
   }
 
-  // Use explicitly provided paths, or find existing (default path first, then legacy)
+  // Use explicitly provided paths, or default paths
   const options = {
-    screenPath: screenPath || findExistingPath([DEFAULT_PATHS.screen, ...LEGACY_PATHS.screen]) || DEFAULT_PATHS.screen,
-    domainPath: domainPath || findExistingPath([DEFAULT_PATHS.domain, ...LEGACY_PATHS.domain]) || DEFAULT_PATHS.domain,
-    matrixPath: matrixPath || findExistingPath([DEFAULT_PATHS.matrix, ...LEGACY_PATHS.matrix]) || DEFAULT_PATHS.matrix,
+    screenPath: screenPath || DEFAULT_PATHS.screen,
+    domainPath: domainPath || DEFAULT_PATHS.domain,
+    matrixPath: matrixPath || DEFAULT_PATHS.matrix,
     fix: fix,
   };
 
